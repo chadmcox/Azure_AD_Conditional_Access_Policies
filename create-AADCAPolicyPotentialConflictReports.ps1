@@ -1,5 +1,7 @@
-param($resultslocation = "$env:USERPROFILE\Downloads",$querydate=$(get-date (get-date).AddDays(-7) -Format yyyy-MM-dd))
+param($resultslocation = "$env:USERPROFILE\Downloads",$howmanydaysback=7,[switch]$skipprivilegedusers,[switch]$skipguest,[switch]$skipallusers)
 
+#this date is used to filter the graph queries to the number of days back from today 
+$startdate=$(get-date (get-date).AddDays(-$howmanydaysback) -Format yyyy-MM-dd)
 cd $resultslocation
 
 Connect-MgGraph -Scopes "Policy.Read.All","Reports.Read.All","AuditLog.Read.All","Directory.Read.All","Directory.Read.All","User.Read.All","AuditLog.Read.All"
@@ -123,19 +125,20 @@ function exportAADRoleMembers{
 #Require privileged user to MFA
 #retrieve a unique list of role members
 $rolemembers = exportAADRoleMembers | select * -unique
+write-host "Found $($rolemembers.count) unique privileged users that will be evaluated."
 function findRolemembersnotmfa{
     [cmdletbinding()] 
     param()
     
     foreach($rm in $rolemembers){
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=userId eq '$($rm.subjectid)' and status/errorCode eq 0 and authenticationRequirement eq 'singleFactorAuthentication'"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=userId eq '$($rm.subjectid)' and status/errorCode eq 0 and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement | select * -first 100 | select * -Unique
     }
 }
-write-host "Starting"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Starting Privileged user search--------"
 findRolemembersnotmfa | export-csv ".\Require privileged user to MFA.csv" -notypeinformation
-write-host "Finished: Require privileged user to MFA"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require privileged user to MFA"
 
 #Require privileged user to use compliant device
 function findRolemembersnotcompliantdevice{
@@ -143,7 +146,7 @@ function findRolemembersnotcompliantdevice{
     param()
     
     foreach($rm in $rolemembers){
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,@{name='trustType';expression={$_.deviceDetail.trustType}}, `
         @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} | where {$_.trustType -ne "Hybrid Azure AD joined" -and $_.isCompliant -ne $true} | select * -first 100 | select * -Unique
@@ -151,7 +154,8 @@ function findRolemembersnotcompliantdevice{
 }
 
 findRolemembersnotcompliantdevice | export-csv ".\Require privileged user to use compliant device.csv" -notypeinformation
-write-host "Finished: Block when privileged user sign in risk is low medium high"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require privileged user to use compliant device"
+
 
 #Block when privileged user sign in risk is low medium high
 function findRolememberssigninrisk{
@@ -159,20 +163,20 @@ function findRolememberssigninrisk{
     param()
     
     foreach($rm in $rolemembers){
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'low' and userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'low' and userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,riskLevelDuringSignIn | select * -first 100
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'medium' and userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'medium' and userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,riskLevelDuringSignIn | select * -first 100
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'high' and userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'high' and userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,riskLevelDuringSignIn | select * -first 100
     }
 }
 
 findRolememberssigninrisk  | select * -Unique | export-csv ".\Block when privileged user sign in risk is low medium high.csv" -notypeinformation
-write-host "Finished: Block when privileged users user risk is low medium high"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Block when privileged user sign in risk is low medium high"
 
 #Block when privileged users user risk is low medium high
 function findRolemembersrisklevel{
@@ -180,131 +184,162 @@ function findRolemembersrisklevel{
     param()
     
     foreach($rm in $rolemembers){
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'low' and userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'low' and userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,RiskLevelAggregated | select * -first 100
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'medium' and userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'medium' and userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,RiskLevelAggregated | select * -first 100
-        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'high' and userId eq '$($rm.subjectid)' and status/errorCode eq 0"
+        $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'high' and userId eq '$($rm.subjectid)' and status/errorCode eq 0 and createdDateTime ge $startDate"
         fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement,RiskLevelAggregated | select * -first 100
     }
 }
 
 findRolemembersrisklevel  | select * -Unique | export-csv ".\Block when privileged users user risk is low medium high.csv" -notypeinformation
-write-host "Finished: Block when privileged users user risk is low medium high"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Block when privileged users user risk is low medium high"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Privileged users search--------"
 #endregion
 #region guest user
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Starting: Guest users search--------"
 #Require guest to MFA for Low and Medium Sign-in Risk
 #Get-MgAuditLogSignIn -filter "riskLevelDuringSignIn eq 'low' and status/errorCode eq 0" -All
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'medium' and status/errorCode eq 0 and userType eq 'guest' and authenticationRequirement eq 'singleFactorAuthentication'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'medium' and status/errorCode eq 0 and userType eq 'guest' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn,userType,crossTenantAccessType,authenticationRequirement -first 5000 | select * -Unique | export-csv ".\Require guest to MFA for Medium Sign-in Risk.csv" -notypeinformation
-write-host "Finished: Require guest to MFA for Low and Medium Sign-in Risk"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn,userType,crossTenantAccessType,authenticationRequirement -first 5000 | `
+        select * -Unique | export-csv ".\Require guest to MFA for Medium Sign-in Risk.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require guest to MFA for Low Medium Sign-in Risk"
 
 #Get-MgAuditLogSignIn -filter "riskLevelDuringSignIn eq 'medium' and status/errorCode eq 0" -All
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'low' and status/errorCode eq 0 and userType eq 'guest' and authenticationRequirement eq 'singleFactorAuthentication'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'low' and status/errorCode eq 0 and userType eq 'guest' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn,userType,crossTenantAccessType,authenticationRequirement -first 5000 | select * -Unique | export-csv ".\Require guest to MFA for Low Sign-in Risk.csv" -notypeinformation
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn,userType,crossTenantAccessType,authenticationRequirement -first 5000 | `
+        select * -Unique | export-csv ".\Require guest to MFA for Low Sign-in Risk.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require guest to MFA for Low Sign-in Risk"
 
-write-host "Finished: Require guest to MFA for Low and Medium Sign-in Risk"
 #require guest to mfa
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'guest' and authenticationRequirement eq 'singleFactorAuthentication'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'guest' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},userType,crossTenantAccessType,authenticationRequirement -first 5000 | select * -Unique | export-csv ".\Require guest to MFA.csv" -notypeinformation
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},userType,crossTenantAccessType,authenticationRequirement -first 5000 | `
+        select * -Unique | export-csv ".\Require guest to MFA.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require guest to mfa"
 
-write-host "Finished: Require guest to mfa"
 #block guest from Azure Management
 "Windows Azure Service Management API" | foreach{
-    $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'guest' and resourceDisplayName eq '$($_)'"
+    $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'guest' and resourceDisplayName eq '$($_)' and createdDateTime ge $startDate"
     fromSigninLogs -uri $uri | where {$_.AADTenantId -eq $_.ResourceTenantId} | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},userType,crossTenantAccessType,authenticationRequirement -first 5000
 } | select * -Unique | export-csv ".\Block guest from Azure Management.csv" -notypeinformation
-write-host "Finished: Block guest from Azure Management"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Block guest from Azure Management"
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Guest users search--------"
 #endregion
 #region all users
-
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Starting: All users search--------"
 #Require MFA when sign-in risk is low, medium, or high
 #Get-MgAuditLogSignIn -filter "riskLevelDuringSignIn eq 'low' and status/errorCode eq 0" -All
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'low' and status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'low' and status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn, authenticationRequirement -first 15000 | select * -Unique | export-csv ".\Require MFA when sign-in risk is low.csv" -notypeinformation
-write-host "Finished: Require MFA when sign-in risk is low, medium, or high"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn, authenticationRequirement -first 15000 | `
+        select * -Unique | export-csv ".\Require MFA when sign-in risk is low.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require MFA when sign-in risk is low, medium, or high"
 
 #Get-MgAuditLogSignIn -filter "riskLevelDuringSignIn eq 'medium' and status/errorCode eq 0" -All
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'medium' and status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'medium' and status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn, authenticationRequirement -first 15000 | select * -Unique | export-csv ".\Require MFA when sign-in risk is medium.csv" -notypeinformation
-write-host "Finished: Require MFA when sign-in risk is low, medium, or high"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn, authenticationRequirement -first 15000 | `
+        select * -Unique | export-csv ".\Require MFA when sign-in risk is medium.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require MFA when sign-in risk is low, medium, or high"
 
 #Block when sign-in risk is high
 #Get-MgAuditLogSignIn -filter "riskLevelDuringSignIn eq 'high' and status/errorCode eq 0" -All
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'high' and status/errorCode eq 0 and userType eq 'member'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=riskLevelDuringSignIn eq 'high' and status/errorCode eq 0 and userType eq 'member' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn, authenticationRequirement -first 15000 | select * -Unique | export-csv ".\Block when sign-in risk is high.csv" -notypeinformation
-write-host "Finished: Block when sign-in risk is high"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},riskLevelDuringSignIn, authenticationRequirement -first 15000 | `
+        select * -Unique | export-csv ".\Block when sign-in risk is high.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Block when sign-in risk is high"
 
 #Block when user risk is high
 #Get-MgAuditLogSignIn -filter "RiskLevelAggregated eq 'high' and status/errorCode eq 0" -All
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'high' and status/errorCode eq 0 and userType eq 'member'"
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=RiskLevelAggregated eq 'high' and status/errorCode eq 0 and userType eq 'member' and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},RiskLevelAggregated, authenticationRequirement -first 15000 | select * -Unique  | export-csv ".\Block when user risk is high.csv" -notypeinformation
-
-#Always require MFA from untrusted networks
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication'"
-fromSigninLogs -uri $uri | where {$_.networkLocationDetails.networktype -ne "trustedNamedLocation"} | where {$_.appDisplayName -notin "Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V"} | select `
-    userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
-    @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} -first 15000 | export-csv ".\Always require MFA from untrusted networks.csv" -notypeinformation
-write-host "Finished: Always require MFA from untrusted networks"
-#Always require MFA or Trusted Device or Compliant Device from untrusted networks
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication'"
-fromSigninLogs -uri $uri | where {$_.networkLocationDetails.networktype -ne "trustedNamedLocation"} | select `
-    userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
-    @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} | where {$_.trustType -ne "Hybrid Azure AD joined" -and $_.isCompliant -ne $true}  | select * -first 15000 | export-csv ".\Always require MFA or Trusted Device or Compliant Device from untrusted networks.csv" -notypeinformation
-write-host "Finished: Always require MFA or Trusted Device or Compliant Device from untrusted networks"
-
-#Always require MFA or Trusted Device or Compliant Device
-$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication'"
-fromSigninLogs -uri $uri | select `
-    userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
-    @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} | where {$_.trustType -ne "Hybrid Azure AD joined" -and $_.isCompliant -ne $true}  | select * -first 15000 | export-csv ".\Always require MFA or Trusted Device or Compliant Device.csv" -notypeinformation
-write-host "Finished: Always require MFA or Trusted Device or Compliant Device"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},RiskLevelAggregated, authenticationRequirement -first 15000 | `
+        select * -Unique  | export-csv ".\Block when user risk is high.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Block when user risk is high"
 
 #Block clients that do not support modern authentication
-$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'Exchange ActiveSync' and status/errorCode eq 0"
+$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'Exchange ActiveSync' and status/errorCode eq 0 and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation
-$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'IMAP4' and status/errorCode eq 0"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | `
+        export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation
+$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'IMAP4' and status/errorCode eq 0 and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation -Append
-$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'Other clients' and status/errorCode eq 0"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | `
+        export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation -Append
+$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'Other clients' and status/errorCode eq 0 and createdDateTime ge $startDate"
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation -Append
-$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'Exchange Web Services' and status/errorCode eq 0" 
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | `
+        export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation -Append
+$uri =  "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=ClientAppUsed eq 'Exchange Web Services' and status/errorCode eq 0 and createdDateTime ge $startDate" 
 fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
-    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation -Append
-write-host "Finished: Block clients that do not support modern authentication"
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},authenticationRequirement -Unique  | `
+        export-csv ".\Block clients that do not support modern authentication.csv" -notypeinformation -Append
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Block clients that do not support modern authentication"
 
 #Require MFA for Microsoft Azure Management
 "Windows Azure Service Management API" | foreach{
-    $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and resourceDisplayName eq '$($_)' and authenticationRequirement eq 'singleFactorAuthentication'"
+    $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and resourceDisplayName eq '$($_)' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
     fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},userType,crossTenantAccessType,authenticationRequirement -first 5000
 } | select * -Unique | export-csv ".\Require MFA for Microsoft Azure Management.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require MFA for Microsoft Azure Management"
 
-write-host "Finished: Require MFA for Microsoft Azure Management"
 #Require MFA for Microsoft Graph PowerShell and Explorer
 "Graph Explorer","Microsoft Graph PowerShell" | foreach{
-    $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and appDisplayName eq '$($_)' and authenticationRequirement eq 'singleFactorAuthentication'"
+    $uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and appDisplayName eq '$($_)' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
     fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
         @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}},userType,authenticationRequirement -first 5000
-} | select * -Unique | export-csv ".\Require MFA for Microsoft Azure Management.csv" -notypeinformation
+} | select * -Unique | export-csv ".\Require MFA for Microsoft Graph PowerShell and Explorer.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Require MFA for Microsoft Graph PowerShell and Explorer"
 
-write-host "Finished: Require MFA for Microsoft Graph PowerShell and Explorer"
+#No Persistent Browser and 1 Hour Session for Unmanaged Devices
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and clientAppUsed eq 'Browser' and createdDateTime ge $startDate"
+fromSigninLogs -uri $uri  | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
+    @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} | where {$_.trustType -ne "Hybrid Azure AD joined" -and $_.isCompliant -ne $true}  | `
+        select * -first 15000 | export-csv ".\No Persistent Browser and 1 Hour Session for Unmanaged Devices.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: No Persistent Browser and 1 Hour Session for Unmanaged Devices"
+
 #All Devices - Require Compliant Device for Office 365
+
+
+#Always require MFA or Trusted Device or Compliant Device from untrusted networks
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
+fromSigninLogs -uri $uri | where {$_.networkLocationDetails.networktype -ne "trustedNamedLocation"} | select `
+    userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
+    @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} | where {$_.trustType -ne "Hybrid Azure AD joined" -and $_.isCompliant -ne $true}  | `
+        select * -first 15000 | export-csv ".\Always require MFA or Trusted Device or Compliant Device from untrusted networks.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Always require MFA or Trusted Device or Compliant Device from untrusted networks"
+
+#Always require MFA or Trusted Device or Compliant Device
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
+fromSigninLogs -uri $uri | select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
+    @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
+    @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} | where {$_.trustType -ne "Hybrid Azure AD joined" -and $_.isCompliant -ne $true}  | `
+        select * -first 15000 | export-csv ".\Always require MFA or Trusted Device or Compliant Device.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Always require MFA or Trusted Device or Compliant Device"
+
+#Always require MFA from untrusted networks
+$uri = "https://graph.microsoft.com/beta/auditLogs/signins?&`$filter=status/errorCode eq 0 and userType eq 'member' and authenticationRequirement eq 'singleFactorAuthentication' and createdDateTime ge $startDate"
+fromSigninLogs -uri $uri | where {$_.networkLocationDetails.networktype -ne "trustedNamedLocation"} |  select userPrincipalName, appDisplayName, clientAppUsed, ipAddress, `
+        @{name='trustedNetwork';expression={$_.networkLocationDetails.networktype}}, authenticationRequirement, @{name='trustType';expression={$_.deviceDetail.trustType}}, `
+        @{name='isCompliant';expression={$_.deviceDetail.isCompliant}} -first 15000 | export-csv ".\Always require MFA from untrusted networks.csv" -notypeinformation
+write-host "$(get-date -Format "yyyy.MM.dd HH:mm:ss") Finished: Always require MFA from untrusted networks"
+
+#Always require MFA
+
+#Block Service Principal from Non Trusted Networks
+#Service Principal Risk Block All Cloud Apps
+
 
 #endregion
