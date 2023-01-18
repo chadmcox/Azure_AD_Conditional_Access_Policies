@@ -3,8 +3,8 @@ Tools to help implement Conditional Access Policies in Azure AD
 ## Identity Protection Risk Policies
 | Policy | Link to (MS) Policy | Link to My Wiki | Link to KQL |
 | --------------- | --------------- | --------------- | --------------- |
-| All Devices - Block Exchange ActiveSync |  |  |  |
-| All Devices - Require Compliant Device for Office 365 |  |  |  |
+| All Devices - Block Exchange ActiveSync | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy) |  |  |
+| All Devices - Require Compliant Device for Office 365 | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy) |  |  |
 | All Internal Users - User Risk Block All Cloud Apps (high) |  |  |  |
 | All Internal Users - Require MFA for All Cloud Apps |  |  |  |
 | All Internal Users - Require MFA for All Cloud Apps from Untrusted Networks |  |  |  |
