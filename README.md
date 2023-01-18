@@ -27,13 +27,13 @@ Tools to help implement Conditional Access Policies in Azure AD
 | External Guest - Block Microsoft Azure Management |  |  |  |
 | External Guest - Block VPN |  |  |  |
 | External Guest - Sign-in Risk Block All Cloud Apps (medium,low) |  |  |  |
-| Privileged Role Members - Always require MFA |  |  |  |
+| Privileged Role Members - Always require MFA | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa) |  |  |
 | Privileged Role Members - Always require MFA with Auth Strengths |  |  |  |
-| Privileged Role Members - Block Legacy Authentication |  |  |  |
+| Privileged Role Members - Block Legacy Authentication | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy) |  |  |
 | Privileged Role Members - Require Compliant Devices | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin) |  |  |
 | Privileged Role Members - Sign-in Risk Block All Cloud Apps (low,medium,high) |  |  |  |
 | Privileged Role Members - User Risk Block All Cloud Apps (low,medium,high) |  |  |  |
-| Unmanaged Devices - No Persistent Browser Session |  |  |  |
+| Unmanaged Devices - No Persistent Browser Session | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-policy-persistent-browser-session) |  |  |
 | Workload Identities - Block Non Trusted Networks |  |  |  |
 | Workload Identities - Service Principal Risk Block All Cloud Apps |  |  |  |
 
