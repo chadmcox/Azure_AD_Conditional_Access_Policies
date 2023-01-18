@@ -1,4 +1,4 @@
-# Conditional Access Policy Help
+# Azure AD Conditional Access Policy Help
 Tools to help implement Conditional Access Policies in Azure AD
 ## Azure AD Policies
 | Policy | Link to (MS) Policy | Link to My Wiki | Link to KQL |
