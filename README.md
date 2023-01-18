@@ -4,7 +4,7 @@ Tools to help implement Conditional Access Policies in Azure AD
 | Policy | Link to (MS) Policy | Link to My Wiki | Link to KQL |
 | --------------- | --------------- | --------------- | --------------- |
 | All Devices - Block Exchange ActiveSync | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy) |  |  |
-| All Devices - Require Compliant Device for Office 365 | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin) |  |  |
+| All Devices - Require Compliant Device for Office 365 |  |  |  |
 | All Internal Users - User Risk Block All Cloud Apps (high) |  |  |  |
 | All Internal Users - Require MFA for All Cloud Apps | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa) |  |  |
 | All Internal Users - Require MFA for All Cloud Apps from Untrusted Networks |  |  |  |
@@ -30,7 +30,7 @@ Tools to help implement Conditional Access Policies in Azure AD
 | Privileged Role Members - Always require MFA |  |  |  |
 | Privileged Role Members - Always require MFA with Auth Strengths |  |  |  |
 | Privileged Role Members - Block Legacy Authentication |  |  |  |
-| Privileged Role Members - Require Compliant Devices |  |  |  |
+| Privileged Role Members - Require Compliant Devices | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin) |  |  |
 | Privileged Role Members - Sign-in Risk Block All Cloud Apps (low,medium,high) |  |  |  |
 | Privileged Role Members - User Risk Block All Cloud Apps (low,medium,high) |  |  |  |
 | Unmanaged Devices - No Persistent Browser Session |  |  |  |
