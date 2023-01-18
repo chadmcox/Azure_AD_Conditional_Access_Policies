@@ -37,3 +37,6 @@ Tools to help implement Conditional Access Policies in Azure AD
 | Workload Identities - Block Non Trusted Networks |  |  |  |
 | Workload Identities - Service Principal Risk Block All Cloud Apps |  |  |  |
 
+[Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy
+![image](https://user-images.githubusercontent.com/32845448/213304856-f054de6a-1d39-46b3-9ac6-9c9cf0bb0748.png)
+)
