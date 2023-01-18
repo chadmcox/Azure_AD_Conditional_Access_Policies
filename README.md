@@ -1,12 +1,12 @@
 # Conditional Access Policy Help
 Tools to help implement Conditional Access Policies in Azure AD
-## Identity Protection Risk Policies
+## Azure AD Policies
 | Policy | Link to (MS) Policy | Link to My Wiki | Link to KQL |
 | --------------- | --------------- | --------------- | --------------- |
 | All Devices - Block Exchange ActiveSync | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy) |  |  |
-| All Devices - Require Compliant Device for Office 365 | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy) |  |  |
+| All Devices - Require Compliant Device for Office 365 | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin) |  |  |
 | All Internal Users - User Risk Block All Cloud Apps (high) |  |  |  |
-| All Internal Users - Require MFA for All Cloud Apps |  |  |  |
+| All Internal Users - Require MFA for All Cloud Apps | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa) |  |  |
 | All Internal Users - Require MFA for All Cloud Apps from Untrusted Networks |  |  |  |
 | All Internal Users - Require MFA or Compliant Device or Trusted Device for All Cloud Apps |  |  |  |
 | All Internal Users - Require MFA or Compliant Device or Trusted Device for All Cloud Apps from Untrusted Networks |  |  |  |
@@ -14,7 +14,7 @@ Tools to help implement Conditional Access Policies in Azure AD
 | All Internal Users - Sign-in Risk Require MFA for All Cloud Apps (Low,Medium,High) |  |  |  |
 | All Users - Block Legacy Authentication |  |  |  |
 | All Users - Require MFA for HR APPS |  |  |  |
-| All Users - Require MFA for Microsoft Azure Management |  |  |  |
+| All Users - Require MFA for Microsoft Azure Management | [Link](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management) |  |  |
 | All Users - Require MFA for Microsoft Graph PowerShell and Explorer |  |  |  |
 | All Users - Require MFA for VPN |  |  |  |
 | All Users - Sign-in Risk Block HR APPS (Low,Medium,High) |  |  |  |
