@@ -1,0 +1,50 @@
+<#PSScriptInfo
+.VERSION 2023.1.18
+.GUID 1be4febf-db79-4b83-9e81-ab88b4dda0c8
+.AUTHOR Chad.Cox@microsoft.com
+    https://blogs.technet.microsoft.com/chadcox/
+    https://github.com/chadmcox
+.COMPANYNAME 
+.COPYRIGHT This Sample Code is provided for the purpose of illustration only and is not
+intended to be used in a production environment.  THIS SAMPLE CODE AND ANY
+RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  We grant You a
+nonexclusive, royalty-free right to use and modify the Sample Code and to
+reproduce and distribute the object code form of the Sample Code, provided
+that You agree: (i) to not use Our name, logo, or trademarks to market Your
+software product in which the Sample Code is embedded; (ii) to include a valid
+copyright notice on Your software product in which the Sample Code is embedded;
+and (iii) to indemnify, hold harmless, and defend Us and Our suppliers from and
+against any claims or lawsuits, including attorneys` fees, that arise or result
+from the use or distribution of the Sample Code..
+.TAGS 
+.DESCRIPTION 
+ 
+#>
+param()
+#Connect to mg graph
+Connect-MgGraph -Scopes "Policy.Read.All","Reports.Read.All","AuditLog.Read.All","Directory.Read.All","Directory.Read.All","User.Read.All","AuditLog.Read.All"
+#beta is required for some of the scripts this will be running
+Select-MgProfile -Name "beta"
+function fromSigninLogs{
+    [cmdletbinding()] 
+    param($uri)
+    
+    do{$results = $null
+        for($i=0; $i -le 3; $i++){
+            try{
+                $results = Invoke-MgGraphRequest -Uri $uri -Method GET -OutputType PSObject
+                break
+            }catch{#if this fails it is going to try to authenticate again and rerun query
+                if(($_.Exception.response.statuscode -eq "TooManyRequests") -or ($_.Exception.Response.StatusCode.value__ -eq 429)){
+                    #if this hits up against to many request response throwing in the timer to wait the number of seconds recommended in the response.
+                    write-host "Error: $($_.Exception.response.statuscode), trying again $i of 3"
+                    Start-Sleep -Seconds $_.Exception.response.headers.RetryAfter.Delta.seconds
+                }
+            }
+        }
+        $results.value | where {$_.appDisplayName -notin "Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2"}
+        $uri=$null;$uri = $Results.'@odata.nextlink'
+    }until ($uri -eq $null)
+}
