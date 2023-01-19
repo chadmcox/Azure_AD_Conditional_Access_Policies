@@ -1,5 +1,5 @@
-# Title
-* Link to Microsoft Documentation: [Link to Microsoft Documentation]()
+# Conditional Access Policy: Always require MFA or Trusted Device or Compliant Device
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
 * Policy Prereqs: Azure AD Premium 1 License.
 
 ## Conditional Access Policy Settings
