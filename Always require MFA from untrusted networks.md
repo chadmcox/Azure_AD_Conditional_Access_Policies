@@ -1,5 +1,5 @@
 # Conditional Access Policy: Always Require MFA from Untrusted Networks
-* Link to Microsoft Documentation: [Link to Microsoft Documentation]()
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
 * Policy Prereqs: Azure AD Premium 1 License.
 
 ## Conditional Access Policy Settings
@@ -18,8 +18,16 @@ Instructions:
  * Copy and Paste the kql from below into the search window
  * Then run it.
 ```
-//
-
+//this query will show users that login from untrusted networks and only provide singlefactor authentication
+AADNonInteractiveUserSignInLogs 
+| union SigninLogs 
+| where TimeGenerated > ago(14d) 
+| where NetworkLocationDetails !contains "trustedNamedLocation" and UserType <> "Guest" 
+| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, Category 
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, Category
 ```
 
 ### PowerShell Script
