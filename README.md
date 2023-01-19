@@ -1,4 +1,4 @@
-# Azure AD Conditional Access Policy Help
+# Azure AD Conditional Access Policies
 Tools to help implement Conditional Access Policies in Azure AD
 ## Require MFA or Block Access Policies 
 ### All Internal User Policies
