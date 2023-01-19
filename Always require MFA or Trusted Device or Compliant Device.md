@@ -17,32 +17,35 @@ Instructions:
  * Navigate to Log Analytics
  * Copy and Paste the kql from below into the search window
  * Then run it.  
-KQL for Interactive Logs:
+
 ```
-//
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
-| extend trustType = tostring(DeviceDetail.trustType) 
-| extend isCompliant = tostring(DeviceDetail.isCompliant) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant, Category
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant, Category
-```
-KQL for Non Interactive Logs:
-```
-//
-AADNonInteractiveUserSignInLogs
+let guests = SigninLogs
+| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2'
+| distinct UserPrincipalName;
+let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
-| where HomeTenantId == ResourceTenantId
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' and AppDisplayName <> 'Microsoft Intune Company Portal' and AppDisplayName <> 'Microsoft Mobile Application Management' 
+| where HomeTenantId == ResourceTenantId and NetworkLocationDetails !contains "trustedNamedLocation" and UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
 | where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant, Category
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant, Category
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category;
+let AAD = SigninLogs 
+| where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
+| where NetworkLocationDetails !contains "trustedNamedLocation"
+| extend trustType = tostring(DeviceDetail.trustType) 
+| extend isCompliant = tostring(DeviceDetail.isCompliant) 
+| extend os = tostring(DeviceDetail.operatingSystem) 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os,Category;
+AADNon
+| union AAD
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os, Category
 
 ```
 ### PowerShell Script
