@@ -1,5 +1,5 @@
-# Conditional Access Policy: Title
-* Link to Microsoft Documentation: [Link to Microsoft Documentation]()
+# Conditional Access Policy: Require MFA for Microsoft Azure Management
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)
 * Policy Prereqs: Azure AD Premium 1 License.
 
 ## Conditional Access Policy Settings
