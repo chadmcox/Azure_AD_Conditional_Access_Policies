@@ -30,7 +30,7 @@ let guests = SigninLogs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
-| where HomeTenantId == ResourceTenantId and NetworkLocationDetails !contains "trustedNamedLocation" and UserPrincipalName !in (guests)
+| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
@@ -41,7 +41,6 @@ let AADNon = AADNonInteractiveUserSignInLogs
 let AAD = SigninLogs 
 | where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps) 
-| where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend trustType = tostring(DeviceDetail.trustType) 
 | extend isCompliant = tostring(DeviceDetail.isCompliant) 
 | extend os = tostring(DeviceDetail.operatingSystem) 
