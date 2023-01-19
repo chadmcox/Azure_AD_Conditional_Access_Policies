@@ -12,6 +12,8 @@
   * Include: All Cloud Apps
   * Exclude: None
 * Conditions
+  * Include: Any Location
+  * Exclude: All trusted locations
 * Grant
   * Grant Access
   * Require Require multifactor authentication, Require device to be marked as compliant, and Require hybrid Azure AD joined device
