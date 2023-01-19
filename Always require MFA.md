@@ -1,4 +1,4 @@
-# Always require MFA
+# Conditionl Access Policy: Always require MFA
 * Link to Microsoft Documentation: [Link to Microsoft Documentation]()
 * Policy Prereqs: Azure AD Premium 1 License.
 
