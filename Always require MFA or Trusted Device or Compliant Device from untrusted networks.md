@@ -19,14 +19,17 @@ Instructions:
  * Copy and Paste the kql from below into the search window
  * Then run it.
 ```
-//
+//list of exclusion applications that seem to always have mfa
+let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
+//get an array of guest accounts to exclude from the non interactive logs
 let guests = SigninLogs
-| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2'
+| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
+| where AppDisplayName  !in (excludeapps)
 | distinct UserPrincipalName;
+//query the non interactive logs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' and AppDisplayName <> 'Microsoft Intune Company Portal' and AppDisplayName <> 'Microsoft Mobile Application Management' 
+| where AppDisplayName  !in (excludeapps)
 | where HomeTenantId == ResourceTenantId and NetworkLocationDetails !contains "trustedNamedLocation" and UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
@@ -34,9 +37,10 @@ let AADNon = AADNonInteractiveUserSignInLogs
 | extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
 | where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category;
+//query the interactive logs
 let AAD = SigninLogs 
 | where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
+| where AppDisplayName  !in (excludeapps) 
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend trustType = tostring(DeviceDetail.trustType) 
 | extend isCompliant = tostring(DeviceDetail.isCompliant) 
@@ -44,9 +48,10 @@ let AAD = SigninLogs
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
 | where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os,Category;
+//combine the results
 AADNon
 | union AAD
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os, Category
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os
 ```
 
 ### PowerShell Script
