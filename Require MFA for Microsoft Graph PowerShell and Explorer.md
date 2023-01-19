@@ -18,8 +18,15 @@ Instructions:
  * Copy and Paste the kql from below into the search window
  * Then run it.
 ```
-//
-
+//list of exclusion applications that seem to always have mfa
+let includeapps = pack_array("Graph Explorer","Microsoft Graph PowerShell");
+AADNonInteractiveUserSignInLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
+| where AppDisplayName in (includeapps) 
+| union SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName in (includeapps)
+| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
 ### PowerShell Script
