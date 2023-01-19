@@ -16,7 +16,7 @@ Instructions:
  * Open the Azure AD Portal
  * Navigate to Log Analytics
  * Copy and Paste the kql from below into the search window
- * Then run it.
+ * Then run it.  
 KQL for Interactive Logs:
 ```
 //
