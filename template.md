@@ -5,6 +5,7 @@
 ## Conditional Access Policy Settings
 
 ## Find Possible Impact
+* Using Log analytics to query the sign in logs is the fastest and easiest way to determine impact.  Not everyone uses log analytics so I have provided PowerShell Scripts that can be used that query the graph api instead.
 * Review the results from the Log Analytics KQL Query or PowerShell Script
 * Look for accounts that could be impacted by the policy and consider remediating or excluding the account from receiving the policy.
 
