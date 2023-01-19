@@ -1,6 +1,6 @@
 # Title
 * Link to Microsoft Documentation: [Link to Microsoft Documentation]()
-* Policy Prereqs:
+* Policy Prereqs: Azure AD Premium 1 License.
 
 ## Conditional Access Policy Settings
 
