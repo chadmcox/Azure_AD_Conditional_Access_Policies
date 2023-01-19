@@ -30,7 +30,6 @@ Instructions:
  * Copy and Paste the kql from below into the search window
  * Then run it.
 ```
-//
 //This query will show all users signing in that only provide singlefactor authentication
 AADNonInteractiveUserSignInLogs 
 | union SigninLogs 
