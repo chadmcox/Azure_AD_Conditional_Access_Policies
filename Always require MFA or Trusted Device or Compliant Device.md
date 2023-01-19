@@ -17,22 +17,34 @@ Instructions:
  * Navigate to Log Analytics
  * Copy and Paste the kql from below into the search window
  * Then run it.
+KQL for Interactive Logs:
 ```
 //
-AADNonInteractiveUserSignInLogs 
-| union SigninLogs 
-| where TimeGenerated > ago(14d) 
-| where NetworkLocationDetails !contains "trustedNamedLocation" and UserType <> "Guest" 
-| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
-| extend trustType = tostring(DeviceDetail_dynamic.trustType) 
-| extend isCompliant = tostring(DeviceDetail_dynamic.isCompliant) 
+| extend trustType = tostring(DeviceDetail.trustType) 
+| extend isCompliant = tostring(DeviceDetail.isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
 | where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant, Category
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant, Category
 ```
+KQL for Non Interactive Logs:
+```
+//
+AADNonInteractiveUserSignInLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
+| where HomeTenantId == ResourceTenantId
+| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
+| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant, Category
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant, Category
 
+```
 ### PowerShell Script
 [Link to script]()
 
