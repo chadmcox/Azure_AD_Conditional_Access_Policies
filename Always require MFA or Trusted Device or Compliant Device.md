@@ -19,7 +19,18 @@ Instructions:
  * Then run it.
 ```
 //
-
+AADNonInteractiveUserSignInLogs 
+| union SigninLogs 
+| where TimeGenerated > ago(14d) 
+| where NetworkLocationDetails !contains "trustedNamedLocation" and UserType <> "Guest" 
+| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
+| extend trustType = tostring(DeviceDetail_dynamic.trustType) 
+| extend isCompliant = tostring(DeviceDetail_dynamic.isCompliant) 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant, Category
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant, Category
 ```
 
 ### PowerShell Script
