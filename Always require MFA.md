@@ -1,5 +1,5 @@
 # Conditionl Access Policy: Always require MFA
-* Link to Microsoft Documentation: [Link to Microsoft Documentation]()
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
 * Policy Prereqs: Azure AD Premium 1 License.
 
 ## Conditional Access Policy Settings
