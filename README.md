@@ -1,5 +1,6 @@
 # Azure AD Conditional Access Policies
-Tools to help implement Conditional Access Policies in Azure AD
+* Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
+* Each link contains information about each policies with tools to help evaluate policies.
 ## Require MFA or Block Access Policies 
 ### All Internal User Policies
  * [Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Always%20require%20MFA.md)
