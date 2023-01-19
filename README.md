@@ -31,7 +31,7 @@ Tools to help implement Conditional Access Policies in Azure AD
 * [Block when privileged user sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Block%20when%20privileged%20user%20sign%20in%20risk%20is%20low%20medium%20high.md)
 * [Block when Directory Sync Account sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Block%20when%20Directory%20Sync%20Account%20sign%20in%20risk%20is%20low%20medium%20high.md)
 ### External Guest (B2B) User Risk Policies
- * [Require guest to MFA for Low and Medium Sign-in Risk]()
+ * [Require guest to MFA for Low and Medium Sign-in Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Require%20guest%20to%20MFA%20for%20Low%20and%20Medium%20Sign-in%20Risk.md)
 ## Workload Identities / Service Principals
  * [Block Service Principal from Non Trusted Networks]()
- * [Block Service Principal with High Medium Low Risk]()
+ * [Block Service Principal with High Medium Low Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Block%20Service%20Principal%20with%20High%20Medium%20Low%20Risk.md)
