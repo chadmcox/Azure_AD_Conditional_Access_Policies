@@ -1,5 +1,5 @@
 # Conditional Access Policy: Title
-* Link to Microsoft Documentation: [Link to Microsoft Documentation]()
+* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)
 * Policy Prereqs: Azure AD Premium 1 License.
 
 ## Conditional Access Policy Settings
@@ -18,7 +18,14 @@ Instructions:
  * Copy and Paste the kql from below into the search window
  * Then run it.
 ```
-//
+
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0
+| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
+| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
+| where isLegacyAuth == "Yes"
+| distinct UserDisplayName, UserPrincipalName, AppDisplayName, ClientAppUsed, isLegacyAuth, UserAgent, Category
 
 ```
 
