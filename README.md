@@ -4,11 +4,11 @@
 
 ## Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
- * Instructions on how to set up: [Integrate Azure AD logs with Azure Monitor logs](https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/howto-integrate-activity-logs-with-log-analytics)
+  * Instructions on how to set up: [Integrate Azure AD logs with Azure Monitor logs](https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/howto-integrate-activity-logs-with-log-analytics)
 * Azure AD Premium 1 License are required for:
- * Conditional Access Policies
- * Sign in Logs to be sent to Log Analytics
- * Ability to query Sign in logs via microsoft graph
+  * Conditional Access Policies
+  * Sign in Logs to be sent to Log Analytics
+  * Ability to query Sign in logs via microsoft graph
 
 ## Require MFA or Block Access Policies 
 ### All Internal User Policies
