@@ -13,10 +13,10 @@
 
 ## Require MFA or Block Access Policies 
 ### All Internal User Policies
- * [Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Always%20require%20MFA.md)
- * [Always require MFA from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Always%20require%20MFA%20from%20untrusted%20networks.md)
- * [Always require MFA or Trusted Device or Compliant Device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Always%20require%20MFA%20or%20Trusted%20Device%20or%20Compliant%20Device.md)
- * [Always require MFA or Trusted Device or Compliant Device from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Always%20require%20MFA%20or%20Trusted%20Device%20or%20Compliant%20Device%20from%20untrusted%20networks.md)
+ * [Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#always-require-mfa)
+ * [Always require MFA from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#always-require-mfa-from-untrusted-networks)
+ * [Always require MFA or Trusted Device or Compliant Device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#always-require-mfa-or-trusted-device-or-compliant-device)
+ * [Always require MFA or Trusted Device or Compliant Device from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#always-require-mfa-or-trusted-device-or-compliant-device-from-untrusted-networks)
  * [Require MFA for Microsoft Graph PowerShell and Explorer](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Require%20MFA%20for%20Microsoft%20Graph%20PowerShell%20and%20Explorer.md)
  * [Require MFA for Microsoft Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Require%20MFA%20for%20Microsoft%20Azure%20Management.md)
  * [Block Legacy Authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/Block%20Legacy%20Authentication.md)
