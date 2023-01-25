@@ -12,7 +12,7 @@ _Updated: January 2023_
 **Table of Content**
 - [Requirements](#Requirements)
 - [Introduction](#Introduction)
-- [Always require MFA](#Always require MFA)
+- [Introduction](#Introduction)
 
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
