@@ -1,7 +1,7 @@
 # Azure AD Conditional Access Policies
-_Author: Chad Cox_
-_Created: January 2023_
-_Updated: January 2023_
+_Author: Chad Cox_  
+_Created: January 2023_  
+_Updated: January 2023_  
 
 * Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
 * Each link contains information about each policies with ways to help evaluate policies.
