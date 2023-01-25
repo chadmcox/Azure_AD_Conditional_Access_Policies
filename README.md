@@ -131,8 +131,40 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+//this query will show users that login from untrusted networks and only provide singlefactor authentication
+//list of exclusion applications that seem to always have mfa
+let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
+//get an array of guest accounts to exclude from the non interactive logs
+let guests = SigninLogs
+| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
+| where AppDisplayName  !in (excludeapps)
+| distinct UserPrincipalName;
+AADNonInteractiveUserSignInLogs 
+| where TimeGenerated > ago(14d)
+| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)
+| where NetworkLocationDetails !contains "trustedNamedLocation"
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
+| union SigninLogs 
+| where TimeGenerated > ago(14d) 
+| where UserType <> "Guest" 
+| where NetworkLocationDetails !contains "trustedNamedLocation"
+| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
+| where AppDisplayName  !in (excludeapps)
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation
 ```
+
+**Comment**  
+This policy is not required if you were able to implement: Always require MFA
+Also this policy has a network based filter which means if someone was able to "trick" the ip they would bypass important protections. 
+This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded such as faceless user objects or "service accounts".  
+
+Expect to see most of the users in a org in this list.  The goal is to find the users and applications that need to be excluded because it would cause impact. Also note if users are in this list that never access outside of the org then there is a good chance the IP that user is coming from is not trusted.
+
+Looking at the image below.  I would make sure to exclude the breakglass account from the policy and I would research the sync account to figure out why its being used outside a trusted network.  
+
+![Untitled](./media/alwaysrequiremfauntrustednetwork.jpg)
 
 ### Always require MFA or Trusted Device or Compliant Device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
