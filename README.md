@@ -72,7 +72,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Always require MFA from untrusted networks
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -80,7 +80,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Always require MFA or Trusted Device or Compliant Device
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -89,7 +89,7 @@ AADNonInteractiveUserSignInLogs
 
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
-* Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)
+* Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -97,7 +97,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
-* Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
+* Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -112,7 +112,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block Legacy Authentication
-* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)
+* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
@@ -140,7 +140,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block Guest from Azure Management
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
