@@ -12,7 +12,10 @@ _Updated: January 2023_
 **Table of Content**
 - [Requirements](#Requirements)
 - [Introduction](#Introduction)
-- [Introduction](#Introduction)
+- [Always require MFA](#Always require MFA)
+- [Always require MFA from untrusted networks](#Always require MFA from untrusted networks)
+- [Always require MFA or Trusted Device or Compliant Device](#Always require MFA or Trusted Device or Compliant Device)
+- [Always require MFA or Trusted Device or Compliant Device from untrusted networks](#Always require MFA or Trusted Device or Compliant Device from untrusted networks)
 
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
@@ -25,9 +28,32 @@ _Updated: January 2023_
 ### Introduction
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
+
+```
+
+```
+
 ### Always require MFA from untrusted networks
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
+
+```
+
+```
+
 ### Always require MFA or Trusted Device or Compliant Device
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
+```
+
+```
+
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
+* Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)
+
+```
+
+```
+
 ### Require MFA for Microsoft Graph PowerShell and Explorer
 ### Require MFA for Microsoft Azure Management
 ### Block Legacy Authentication
