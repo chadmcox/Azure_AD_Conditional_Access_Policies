@@ -94,6 +94,8 @@ AADNonInteractiveUserSignInLogs
 **Comment**  
 This policy is a harder policy to implement.  This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded such as faceless user objects or "service accounts".  
 
+Expect to see most of the users in a org in this list.  
+
 Looking at the image below.  I would make sure to exclude the breakglass account and the sync account as those are accounts that should not have this policy applied to it.  
 
 ![Untitled](./media/alwaysrequiremfa.jpg)
