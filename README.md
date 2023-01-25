@@ -8,6 +8,8 @@ _Updated: January 2023_
 * Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD
 
 **Table of Content**
+* [Requirements](#Requirements)
+* [Introduction](#Introduction)
 * [Always require MFA]()
 * [Always require MFA from untrusted networks]()
 * [Always require MFA or Trusted Device or Compliant Device]()
