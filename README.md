@@ -72,7 +72,7 @@ _Updated: January 2023_
 _Note: this policy will more than likely break on premise sync accounts, make sure the Directory Sync Accounts Role is in the exclusion group._  
 
 **Comment**  
-This policy is a harder policy to implament.  This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded faceless user objects or "service accounts".  
+This policy is a harder policy to implement.  This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded such as faceless user objects or "service accounts".
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
