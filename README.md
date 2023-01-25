@@ -57,7 +57,7 @@ _Updated: January 2023_
 
 **Comment**
 
-**Conditional Access Policy Setup
+**Conditional Access Policy Setup**
 * Users
   * Include: All Users
   * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
