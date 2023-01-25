@@ -156,11 +156,11 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
-This policy is not required if you were able to implement: Always require MFA
-Also this policy has a network based filter which means if someone was able to "trick" the ip they would bypass important protections. 
+This policy is not required if you were able to implement: Always require MFA  
+Also this policy has a network based filter which means if someone was able to "trick" the ip they would bypass important protections.  
 This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded such as faceless user objects or "service accounts".  
 
-Expect to see most of the users in a org in this list.  The goal is to find the users and applications that need to be excluded because it would cause impact. Also note if users are in this list that never access outside of the org then there is a good chance the IP that user is coming from is not trusted.
+The goal is to find the users and applications that need to be excluded because it would cause impact. Also note if users are in this list that never access outside of the org then there is a good chance the IP that user is coming from is not trusted.  
 
 Looking at the image below.  I would make sure to exclude the breakglass account from the policy and I would research the sync account to figure out why its being used outside a trusted network.  
 
