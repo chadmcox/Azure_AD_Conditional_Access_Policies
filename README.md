@@ -42,6 +42,7 @@ _Updated: January 2023_
 * Require trusted devices
 * Do not depend on trusted networks / locations
 * Always require multifactor
+* Minimize the use of filters
 
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
@@ -52,9 +53,16 @@ _Updated: January 2023_
   * Ability to query Sign in logs via microsoft graph
 
 ### Introduction
+
+### Applications not being protected by Conditional Access Policies
+
+```
+
+```
+
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
-
+* This policy will require all users logging into any application to MFA.
 **Conditional Access Policy Setup**
 * Users
   * Include: All Users
@@ -102,6 +110,23 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
+* This policy will require all users logging into any application to MFA.
+**Conditional Access Policy Setup**
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: Windows Store
+* Conditions
+  * Locations
+  * Include: Any Location
+  * Exclude: All trusted locations
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication
+  * Require all the selected controls 
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
