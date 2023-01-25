@@ -70,6 +70,7 @@ _Updated: January 2023_
   * Require all the selected controls  
 
 _Note: this policy will more than likely break on premise sync accounts, make sure the Directory Sync Accounts Role is in the exclusion group._  
+
 **Comment**
 This policy is a harder policy to implament.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded like faceless user objects like "service accounts".  
 
