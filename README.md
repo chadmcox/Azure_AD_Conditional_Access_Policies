@@ -21,6 +21,7 @@ _Updated: January 2023_
   * Conditional Access Policies
   * Sign in Logs to be sent to Log Analytics
   * Ability to query Sign in logs via microsoft graph
+
 ### Introduction
 ### Always require MFA
 ### Always require MFA from untrusted networks
