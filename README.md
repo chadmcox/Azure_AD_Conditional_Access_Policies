@@ -69,7 +69,7 @@ _Updated: January 2023_
 * Grant
   * Grant Access
   * Require Multi-Factor Authentication
-  * Require all the selected controls
+  * Require all the selected controls  
 _Note: this policy will more than likely break on premise sync accounts, make sure the Directory Sync Accounts Role is in the exclusion group._  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
