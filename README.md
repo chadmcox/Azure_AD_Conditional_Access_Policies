@@ -7,8 +7,6 @@ _Updated: January 2023_
 * Each link contains information about each policies with ways to help evaluate policies.
 * Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD
 
-
-
 **Table of Content**
 * [Requirements](#Requirements)
 * [Introduction](#Introduction)
@@ -28,6 +26,7 @@ _Updated: January 2023_
 ### Introduction
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
+**Comment**
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
