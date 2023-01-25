@@ -75,6 +75,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
+* Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -89,7 +90,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block Legacy Authentication
-
+* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
@@ -117,6 +118,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block Guest from Azure Management
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
