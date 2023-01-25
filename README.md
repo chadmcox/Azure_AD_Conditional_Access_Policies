@@ -10,12 +10,12 @@ _Updated: January 2023_
 
 
 **Table of Content**
-- [Requirements](#Requirements)  
-- [Introduction](#Introduction)  
-- [Always require MFA](#Always require MFA)  
-- [Always require MFA from untrusted networks](#Always require MFA from untrusted networks)  
-- [Always require MFA or Trusted Device or Compliant Device](#Always require MFA or Trusted Device or Compliant Device)
-- [Always require MFA or Trusted Device or Compliant Device from untrusted networks](#Always require MFA or Trusted Device or Compliant Device from untrusted networks)
+* [Requirements](#Requirements)  
+* [Introduction](#Introduction)  
+* [Always require MFA](#Always require MFA)  
+* [Always require MFA from untrusted networks](#Always require MFA from untrusted networks)  
+* [Always require MFA or Trusted Device or Compliant Device](#Always require MFA or Trusted Device or Compliant Device)
+* [Always require MFA or Trusted Device or Compliant Device from untrusted networks](#Always require MFA or Trusted Device or Compliant Device from untrusted networks)
 
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
@@ -29,6 +29,7 @@ _Updated: January 2023_
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
 
+**Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
 ```
@@ -36,12 +37,15 @@ _Updated: January 2023_
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
 
+**Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
 ```
 
 ### Always require MFA or Trusted Device or Compliant Device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
+
+**Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
 ```
@@ -50,29 +54,162 @@ _Updated: January 2023_
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)
 
+**Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
 ```
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require MFA for Microsoft Azure Management
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block Legacy Authentication
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require privileged user to MFA
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block privileged user from legacy authentication
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block the Directory Sync Account from non trusted locations
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block Guest from Azure Management
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require guest to MFA
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require Compliant Device for Office 365
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block clients that do not support modern authentication
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require privileged user to use compliant device
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block when user risk is high
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block when sign-in risk is high
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require MFA when sign-in risk is low, medium, or high
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block when privileged users user risk is low medium high
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block when privileged user sign in risk is low medium high
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block when Directory Sync Account sign in risk is low medium high
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Require guest to MFA for Low and Medium Sign-in Risk
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Workload Identities / Service Principals
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block Service Principal from Non Trusted Networks
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
 ### Block Service Principal with High Medium Low Risk
+
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+
