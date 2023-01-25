@@ -111,7 +111,8 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
-* This policy will require all users logging into any application to MFA.
+* This policy will require all users logging into any application to MFA when signing in from networks not flagged as trusted.  
+
 **Conditional Access Policy Setup**
 * Users
   * Include: All Users
