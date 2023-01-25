@@ -34,7 +34,6 @@ _Updated: January 2023_
   * [Block when privileged user sign in risk is low medium high]()
   * [Block when Directory Sync Account sign in risk is low medium high]()
   * [Require guest to MFA for Low and Medium Sign-in Risk]()
-  * [Workload Identities / Service Principals]()
   * [Block Service Principal from Non Trusted Networks]()
   * [Block Service Principal with High Medium Low Risk]()
 
@@ -281,13 +280,6 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 ```
 
 ### Require guest to MFA for Low and Medium Sign-in Risk
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-
-```
-
-### Workload Identities / Service Principals
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
