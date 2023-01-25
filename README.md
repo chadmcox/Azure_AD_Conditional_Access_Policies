@@ -37,6 +37,12 @@ _Updated: January 2023_
 * [Block Service Principal from Non Trusted Networks]()
 * [Block Service Principal with High Medium Low Risk]()
 
+### Goals
+* Protect Privileged Credentials
+* Require trusted devices
+* Do not depend on trusted networks / locations
+* Always require multifactor
+
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
   * Instructions on how to set up: [Integrate Azure AD logs with Azure Monitor logs](https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/howto-integrate-activity-logs-with-log-analytics)
@@ -50,6 +56,21 @@ _Updated: January 2023_
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
 
 **Comment**
+
+**Conditional Access Policy Setup
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: Windows Store
+* Conditions
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication
+  * Require all the selected controls
+_Note: this policy will more than likely break on premise sync accounts, make sure the Directory Sync Accounts Role is in the exclusion group._  
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
