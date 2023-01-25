@@ -25,7 +25,7 @@ _Updated: January 2023_
 
 ### Introduction
 ### Always require MFA
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
 **Comment**
 
 **Log Analytics AAD SigninLogs Query (KQL)**
