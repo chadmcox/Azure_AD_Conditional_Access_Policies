@@ -93,7 +93,8 @@ AADNonInteractiveUserSignInLogs
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category 
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category
 ```
-    ![Untitled](./media/alwaysrequiremfa.jpg)
+   
+![Untitled](./media/alwaysrequiremfa.jpg)
 
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
