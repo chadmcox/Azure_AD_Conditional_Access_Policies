@@ -24,6 +24,7 @@ _Updated: January 2023_
 
 ### Introduction
 ### Always require MFA
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)
 ### Always require MFA from untrusted networks
 ### Always require MFA or Trusted Device or Compliant Device
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
