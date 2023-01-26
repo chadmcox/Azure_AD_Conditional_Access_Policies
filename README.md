@@ -11,7 +11,7 @@ _Updated: January 2023_
 **Table of Content**
 * [Requirements](#Requirements)
 * [Introduction](#Introduction)
-* [Applications not being protected by Conditional Access Policies](#Applications not being protected by Conditional Access Policies)
+* [Applications not being protected by Conditional Access Policies]()
 * [Conditional Access Policies](#Introduction)
   * [Always require MFA]()
   * [Always require MFA from untrusted networks]()
