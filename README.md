@@ -265,7 +265,13 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+// URL: https://learn.microsoft.com/en-us/azure/active-directory/external-identities/b2b-tutorial-require-mfa
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserType == "Guest" 
+| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AADTenantId <> HomeTenantId
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category 
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
 ```
 
 ### Require Compliant Device for Office 365
@@ -279,14 +285,28 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+SigninLogs 
+| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> "Guest" 
+| extend trustType = tostring(DeviceDetail.trustType) 
+| extend isCompliant = tostring(DeviceDetail.isCompliant) 
+| extend deviceName = tostring(DeviceDetail.displayName) 
+| extend os = tostring(DeviceDetail.operatingSystem) 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
+| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined" and ClientAppUsed == "Browser" 
+| distinct UserPrincipalName, os, deviceName, trustType, isCompliant, TrustedLocation
 ```
 
 ### Block clients that do not support modern authentication
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0
+| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
+| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
+| where isLegacyAuth == "Yes"
+| distinct UserDisplayName, UserPrincipalName, AppDisplayName, ClientAppUsed, isLegacyAuth, UserAgent, Category
 ```
 
 ### Require privileged user to use compliant device
@@ -300,21 +320,30 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+SigninLogs 
+| where TimeGenerated > ago(14d) 
+| where RiskState == "atRisk" and RiskLevelAggregated == "high"
+| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail,IsRisky, RiskEventTypes_V2, MfaDetail, ConditionalAccessStatus, AuthenticationRequirement, ResultType
 ```
 
 ### Block when sign-in risk is high
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+SigninLogs 
+| where TimeGenerated > ago(14d)
+| where RiskLevelDuringSignIn in ("high") 
+| project ResultType, ResultDescription,AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
 ### Require MFA when sign-in risk is low, medium, or high
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+SigninLogs 
+| where TimeGenerated > ago(14d) and ResultType == 0 
+| where RiskLevelDuringSignIn in ("high","medium","low") 
+| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
 ### Block when privileged users user risk is low medium high
@@ -342,7 +371,11 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
+| where AADTenantId <> HomeTenantId
+| where RiskLevelDuringSignIn in ("high","medium") 
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail 
+| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, RiskLevelDuringSignIn,RiskDetail
 ```
 
 ### Block Service Principal from Non Trusted Networks
