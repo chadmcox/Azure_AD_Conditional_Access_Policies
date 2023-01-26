@@ -3,13 +3,15 @@ _Author: Chad Cox_
 _Created: January 2023_  
 _Updated: January 2023_  
 
+**How to use this guide**
 * Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
-* Each link contains information about each policies with ways to help evaluate policies.
-* Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD
+* Each link contains information about each policies with notes about how to evaluate the impact of the policies.
+* Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD, by proactively leveraging existing signinlogs and filtering to show the users that could be impacted.
 
 **Table of Content**
 * [Requirements](#Requirements)
 * [Introduction](#Introduction)
+* [Applications not being protected by Conditional Access Policies](#Applications not being protected by Conditional Access Policies)
 * [Conditional Access Policies](#Introduction)
   * [Always require MFA]()
   * [Always require MFA from untrusted networks]()
