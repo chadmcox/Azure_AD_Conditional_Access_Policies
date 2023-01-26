@@ -215,14 +215,28 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+let includeapps = pack_array("Graph Explorer","Microsoft Graph PowerShell");
+AADNonInteractiveUserSignInLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
+| where AppDisplayName in (includeapps) 
+| union SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName in (includeapps)
+| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
 ### Require MFA for Microsoft Azure Management
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+//https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management
+//Common Conditional Access policy: Require MFA for Azure management
+let includeapps = pack_array("Windows Azure Service Management API");
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where  ResourceDisplayName in (includeapps)
+| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
 ```
 
 ### Block Legacy Authentication
