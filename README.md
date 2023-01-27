@@ -467,6 +467,8 @@ SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultTy
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+//nothing has been written yet to look into these logs
+//ServicePrincipalRiskEvents
+//RiskyServicePrincipals
 ```
 
