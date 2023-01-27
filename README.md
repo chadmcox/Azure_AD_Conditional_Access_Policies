@@ -118,6 +118,7 @@ The image below, shows the applications and the logon count of those apps that i
 * This policy will require all users logging into any application to MFA.  
 
 **Conditional Access Policy Setup**
+* Create Conditional Access Policy:
 * Users
   * Include: All Users
   * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
@@ -167,6 +168,7 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 * This policy will require all users logging into any application to MFA when signing in from networks not flagged as trusted.  
 
 **Conditional Access Policy Setup**
+* Create Conditional Access Policy:
 * Users
   * Include: All Users
   * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
@@ -222,6 +224,12 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 ### Always require MFA or Trusted Device or Compliant Device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -264,6 +272,12 @@ AADNon
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -302,7 +316,13 @@ AADNon
 ```
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
-* Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)  
+* Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -317,6 +337,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Require MFA for Microsoft Azure Management
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -332,12 +359,26 @@ AADNonInteractiveUserSignInLogs
 
 ### Block Legacy Authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
+
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
 
 ```
 
 ### Require privileged user to MFA
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -345,6 +386,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block privileged user from legacy authentication
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -352,6 +400,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block the Directory Sync Account from non trusted locations
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -359,7 +414,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block Guest from Azure Management
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)   
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -367,6 +428,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Require guest to MFA
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -380,6 +448,13 @@ SigninLogs
 ```
 
 ### Require Compliant Device for Office 365
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -387,6 +462,13 @@ SigninLogs
 ```
 
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -402,6 +484,13 @@ SigninLogs
 ```
 
 ### Block clients that do not support modern authentication
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -415,6 +504,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Require privileged user to use compliant device
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -422,6 +518,13 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Block when user risk is high
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -432,6 +535,13 @@ SigninLogs
 ```
 
 ### Block when sign-in risk is high
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -442,6 +552,13 @@ SigninLogs
 ```
 
 ### Require MFA when sign-in risk is low, medium, or high
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -452,6 +569,13 @@ SigninLogs
 ```
 
 ### Block when privileged users user risk is low medium high
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -459,6 +583,13 @@ SigninLogs
 ```
 
 ### Block when privileged user sign in risk is low medium high
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -466,6 +597,23 @@ SigninLogs
 ```
 
 ### Block when Directory Sync Account sign in risk is low medium high
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+* Users
+  * Include: Directory Roles (Directory Sync Account)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Sign-in risk: High, Medium, Low
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -473,6 +621,24 @@ SigninLogs
 ```
 
 ### Require guest to MFA for Low and Medium Sign-in Risk
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+* Ideally use a block over MFA
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+* Users
+  * Include: All guest and external users
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Sign-in risk: High, Medium, Low
+* Grant
+  * Block Access
+_Ideally use a block over MFA, but MFA can be used if non spammable MFA is used_
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -484,6 +650,24 @@ SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultTy
 ```
 
 ### Block Service Principal from Non Trusted Networks
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+* Users or Workload identities
+  * What does this apply to?  Workload identities
+  * Include: All owned service principals
+  * Exclude: 
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud Apps
+  * Include: All cloud apps
+* Conditions
+  * Locations
+  * Include: Any Location
+  * Exclude: All trusted locations
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -491,6 +675,24 @@ SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultTy
 ```
 
 ### Block Service Principal with High Medium Low Risk
+* Link to Microsoft Documentation: [change me]()  
+* This policy will require 
+
+**Conditional Access Policy Setup**
+* Create Conditional Access Policy:
+* Create Conditional Access Policy:
+* Users or Workload identities
+  * What does this apply to?  Workload identities
+  * Include: All owned service principals
+  * Exclude: 
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud Apps
+  * Include: All cloud apps
+* Conditions
+  * Service principal risk
+  * Include: High, Medium, Low
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
