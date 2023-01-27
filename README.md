@@ -613,7 +613,7 @@ SigninLogs
 | project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
-### Block when privileged users user risk is low medium high
+### Block when privileged role member user risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
 * Ideally use a block over MFA
