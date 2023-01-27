@@ -510,7 +510,19 @@ AADNonInteractiveUserSignInLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+* Grant
+  * Grant Access
+  * Require device to be marked as compliant
+  * Require Hybrid Azure AD joined device
+  * Require one of the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -524,7 +536,17 @@ AADNonInteractiveUserSignInLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Guests, Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * User risk: High
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -541,7 +563,17 @@ SigninLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Guest, Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Sign-in risk: High
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -558,7 +590,17 @@ SigninLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Guest, Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Sign-in risk: High, Medium, Low
+* Grant
+  * Require MFA
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -575,7 +617,17 @@ SigninLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Directory Roles (Privileged Roles)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * User risk: High, Medium, Low
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -589,7 +641,17 @@ SigninLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Directory Roles (Privileged Roles)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Sign-in risk: High, Medium, Low
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
