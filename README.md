@@ -11,6 +11,7 @@ _Updated: January 2023_
 **Table of Content**
 * [Requirements](#Requirements)
 * [Introduction](#Introduction)
+* [Find IPAddress not defined as trusted]()
 * [Applications not being protected by Conditional Access Policies]()
 * [Conditional Access Policies](#Introduction)
   * [Always require MFA]()
@@ -55,6 +56,32 @@ _Updated: January 2023_
   * Ability to query Sign in logs via microsoft graph
 
 ### Introduction
+
+
+## Find IPAddress not defined as trusted
+
+```
+SigninLogs
+| where TimeGenerated > ago(30d)
+| where ResultType == "0"
+| where HomeTenantId == ResourceTenantId
+| where NetworkLocationDetails !contains "trustedNamedLocation"
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| extend isIPv6 = tostring(iff(IPAddress matches regex @"(([\d|\w]{1,4}\:){7}[\d|\w]{1,4})",'Yes','No'))
+| distinct IPAddress, TrustedLocation, UserPrincipalName, isIPv6
+| summarize uniqueusercountbyip = count() by IPAddress, TrustedLocation, isIPv6
+| where uniqueusercountbyip >= 4
+| sort by uniqueusercountbyip desc 
+```
+
+**Comment**  
+
+This query returns IP addresses where 4 or more unique users have authenticated against Azure AD.  You will want to research each IP and determine if they are owned by the organization or if they belong to something like a public proxy cloud solution like zscaler or umbrella.  Legit ones will need to be defined as a trusted network in Azure AD to make sure any location filtered policy works correctly and to help remediate false positives in Azure Identity Protection
+
+The field uniqueusercountbyip is count of unique list of users.
+It is possible to see ipv6 addresses which usually comes from Azure Networks and will be normal in the near future from the internet.
+
+![Untitled](./media/networkip.jpg)
 
 ### Applications not being protected by Conditional Access Policies
 
