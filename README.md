@@ -56,7 +56,10 @@ _Updated: January 2023_
   * Ability to query Sign in logs via microsoft graph
 
 ### Introduction
+A few months back I was going through some documents and noticed several important conditional access policies that are usually missed.  (link to the document
+[Zero Trust identity and device access configurations](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/microsoft-365-policies-configurations)).  
 
+In order to help Organizatons to implament these policies I have thrown together PowerShell Scripts and Log Analytics Scripts that will identifies potential impact when a particular policy is applied.  
 
 ### Find IPAddress not defined as trusted
 
