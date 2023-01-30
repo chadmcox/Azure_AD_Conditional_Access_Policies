@@ -748,7 +748,13 @@ AADServicePrincipalSignInLogs
 ```
 
 **Comment**  
-In order to get the current list of trusted location, I had to pull in a unique list of IP;s from the user Signinlogs. Then compare them to the list returned from the serviceprincipal logs.  The results do very and some of the ip not showing as trusted could actually be trusted so you will want to research and confirm.
+the AADServicePrincipalSignInLogs only have a subset of the useful properties provided in the user signinlogs.
+
+In order to get the current list of trusted location, Had to pull in a unique list of IP's from the user Signinlogs. Then compare them to the list returned from the serviceprincipal logs.  The results do very and some of the ip not showing as trusted could actually be trusted so you will want to research and confirm.
+
+The goal is to look at the ones that are showing that they are coming from outside the trusted network and determine impact if they where blocked.
+
+If trustedlocation column is empty that means the query was unable to find a matching ip from the user signin logs that were marked as trusted. 
 
 ![Untitled](./media/splocation.jpg)
 
