@@ -663,8 +663,7 @@ SigninLogs
 
 ### Block when Directory Sync Account sign in risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
+* This policy will require P2 License
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -687,7 +686,7 @@ SigninLogs
 
 ### Require guest to MFA for Low and Medium Sign-in Risk
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
+* This policy will require P2 License
 * Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
@@ -736,15 +735,28 @@ SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultTy
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+let trustedNamedLocations = SigninLogs | where TimeGenerated > ago(30d) | where ResultType == "0" | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) | where TrustedLocation == "trustedNamedLocation" | distinct IPAddress;
+AADServicePrincipalSignInLogs  
+| where TimeGenerated > ago(30d)
+| where ResultType == 0
+| extend TrustedLocation = tostring(iff(IPAddress in (trustedNamedLocations), 'trustedNamedLocation',''))
+| extend City = tostring(parse_json(LocationDetails).city)
+| extend State = tostring(parse_json(LocationDetails).state)
+| extend Country = tostring(parse_json(LocationDetails).countryOrRegion)
+| distinct IPAddress, ServicePrincipalName, City, State, Country, TrustedLocation
+| summarize spcountbyip = count() by IPAddress, City, State, Country, TrustedLocation
 ```
 
+**Comment**  
+In order to get the current list of trusted location, I had to pull in a unique list of IP;s from the user Signinlogs. Then compare them to the list returned from the serviceprincipal logs.  The results do very and some of the ip not showing as trusted could actually be trusted so you will want to research and confirm.
+
+![Untitled](./media/splocation.jpg)
+
 ### Block Service Principal with High Medium Low Risk
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require 
+* Link to Microsoft Documentation: [Conditional Access for workload identities](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/workload-identity)  
+* This policy will require Workload Identities Premium licenses
 
 **Conditional Access Policy Setup**
-* Create Conditional Access Policy:
 * Create Conditional Access Policy:
 * Users or Workload identities
   * What does this apply to?  Workload identities
