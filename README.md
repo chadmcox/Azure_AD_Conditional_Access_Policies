@@ -54,6 +54,8 @@ _Updated: January 2023_
   * Conditional Access Policies
   * Sign in Logs to be sent to Log Analytics
   * Ability to query Sign in logs via microsoft graph
+* **If a third party IDP is used, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** here is more info about the other settings that needs to be done [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp)
+* Risk Policies require P2 License.
 
 ### Introduction
 A few months back I was going through some documents and noticed several important conditional access policies that are usually missed.  (link to the document
