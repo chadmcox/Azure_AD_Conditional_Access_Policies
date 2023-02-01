@@ -285,6 +285,12 @@ AADNon
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os
 ```
 
+**Comment**  
+This policy is not required if you were able to implement: Always require MFA  
+ 
+
+![Untitled](./media/mfacomptrust.jpg)  
+
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)  
@@ -344,6 +350,12 @@ AADNon
 | union AAD
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os
 ```
+
+**Comment**  
+This policy is not required if you were able to implement: Always require MFA  
+ 
+
+![Untitled](./media/mfacomptrust.jpg)  
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
 * Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
