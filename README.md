@@ -653,7 +653,7 @@ SigninLogs
 **Comment**  
 
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require reauthentication and disable browser persistence](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-policy-persistent-browser-session)  
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -687,7 +687,7 @@ SigninLogs
 **Comment**  
 
 ### Block clients that do not support modern authentication
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -716,9 +716,8 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ### Require privileged user to use compliant device
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require compliant or hybrid Azure AD joined device for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin)  
+* This policy will require Intune
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -752,9 +751,9 @@ AADNonInteractiveUserSignInLogs
 **Comment**  
 
 ### Block when user risk is high
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: User risk-based password change](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk-user)  
 * This policy will require 
-* Ideally use a block over MFA
+* Ideally use a block over Change Password
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -781,7 +780,7 @@ SigninLogs
 **Comment**  
 
 ### Block when sign-in risk is high
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Sign-in risk-based multifactor authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk)  
 * This policy will require 
 * Ideally use a block over MFA
 
@@ -812,7 +811,7 @@ SigninLogs
 ### Require MFA when sign-in risk is low, medium, or high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
-* Ideally use a block over MFA
+* Ideally use a block over Change Password.
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -970,8 +969,7 @@ The results below show a guest account trying to sign into the Azure Portal with
 ![Untitled](./media/riskygust.jpg)  
 
 ### Block Service Principal from Non Trusted Networks
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require 
+* Link to Microsoft Documentation: NA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
