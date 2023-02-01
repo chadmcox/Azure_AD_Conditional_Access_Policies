@@ -765,13 +765,13 @@ SigninLogs
 
 ### Block when privileged user sign in risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
+* This policy will require Premium License 2
 * Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
 * Users
-  * Include: Directory Roles (Privileged Roles)
+  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
   * Exclude: Breakglass, _Exclusion Group_
 * Cloud Apps or Actions
   * Select what this policy applies to: Cloud apps
