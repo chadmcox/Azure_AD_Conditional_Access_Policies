@@ -507,6 +507,10 @@ No example image to show what these results look like.  Review the results from 
 ```
 
 ```
+**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
+```
+
+```
 **Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
 
@@ -534,6 +538,14 @@ No example image to show what these results look like.  Review the results from 
   * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
+```
+
+```
+**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
 
 ```
@@ -726,6 +738,14 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ```
+**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
+```
+
+```
+**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
+```
+
+```
 
 **Comment**  
 
@@ -836,6 +856,14 @@ SigninLogs
   * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
+```
+
+```
+**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
 
 ```
