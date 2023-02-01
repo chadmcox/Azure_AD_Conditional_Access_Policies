@@ -893,6 +893,10 @@ SigninLogs
 ```
 
 **Comment**  
+Microsoft documents say to require the user to MFA, But all of Microsoft actual security documents say that this should be a block instead.  From personal experience and the guidance from the lapsus incidents is that this needs be a block action.  Specially if spammable MFA is present and who knows what admins could be easily convinced to accept a mfa prompt for a price.  
+
+No image available, the results to this will be very similiar to the results from the Require MFA when sign-in risk is low, medium, or high query.  The users with a high sign-in risk will be blocked.  The goal will be to have a user adjust how they are logging in to make sure it does not come in as high.  An orgonization should not want to leverage any exclusion on this and I find that most orgs have no issues putting this one in place.
+
 
 ---
 ### Require MFA when sign-in risk is low, medium, or high
