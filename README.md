@@ -853,6 +853,9 @@ SigninLogs
   * User risk: High
 * Grant
   * Block Access
+* Session
+  * Sign-in frequency
+  * Every time
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -886,6 +889,9 @@ Having two conditional access policies one blocking high sign-in risk and one bl
   * Sign-in risk: High
 * Grant
   * Block Access
+* Session
+  * Sign-in frequency
+  * Every time
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -920,6 +926,9 @@ No image available, the results to this will be very similiar to the results fro
   * Sign-in risk: High, Medium, Low
 * Grant
   * Require MFA
+* Session
+  * Sign-in frequency
+  * Every time
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -953,6 +962,9 @@ This policy will require anyone with a risky sign-in to have to provide mfa, The
   * User risk: High, Medium, Low
 * Grant
   * Block Access
+* Session
+  * Sign-in frequency
+  * Every time
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -998,7 +1010,9 @@ SigninLogs
   * Sign-in risk: High, Medium, Low
 * Grant
   * Block Access
-
+* Session
+  * Sign-in frequency
+    * Every time
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -1044,6 +1058,9 @@ SigninLogs
   * Sign-in risk: High, Medium, Low
 * Grant
   * Block Access
+* Session
+  * Sign-in frequency
+    * Every time
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
