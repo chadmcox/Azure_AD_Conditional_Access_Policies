@@ -1,5 +1,5 @@
 # Azure AD Conditional Access Policies
-_Author: Chad Cox_  
+_Author: Chad Cox (Microsoft)_  
 _Created: January 2023_  
 _Updated: January 2023_  
 
@@ -81,10 +81,12 @@ from the use or distribution of the Sample Code.._
 A few months back I was going through some documents and noticed several important conditional access policies that are usually missed.  (link to the document
 [Zero Trust identity and device access configurations](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/microsoft-365-policies-configurations)).  
 
-In order to help Organizations implement these policies I have thrown together PowerShell Scripts and Log Analytics Queries (KQL) that will help identify potential impact when a particular policy is applied.  
+While working with organization to determine impact by using read only and the built-in reporting, I was finding this was taking longer than expected and could be done much easier. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) that will help identify potential impact when a particular policy is applied.  
+
+Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.
 
 ### Find IPAddress not defined as trusted
-
+**Log Analytics AAD SigninLogs Query (KQL)**
 ```
 SigninLogs
 | where TimeGenerated > ago(30d)
@@ -109,7 +111,7 @@ It is possible to see ipv6 addresses which usually comes from Azure Networks and
 ![Untitled](./media/networkip.jpg)
 
 ### Applications not being protected by Conditional Access Policies
-
+**Log Analytics AAD SigninLogs Query (KQL)**
 ```
 //https://github.com/reprise99/Sentinel-Queries/blob/main/Azure%20Active%20Directory/Identity-Top20AppswithnoCA.kql
 //This query shows applications that are not protected by conditional access policies.
