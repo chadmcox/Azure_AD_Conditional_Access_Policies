@@ -810,7 +810,7 @@ SigninLogs
 
 ```
 
-### Block guest for Low and Medium Sign-in Risk
+### Block guest for Low, Medium and High Sign-in Risk
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require P2 License
 * Ideally use a block over MFA
@@ -838,6 +838,13 @@ SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultTy
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail 
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, RiskLevelDuringSignIn,RiskDetail
 ```
+
+**Comment**  
+The results of this query show guest from other tenants that may be impacted by this policy.  The goal is if there is any chance an external guest account is trying to access a resource with any kind of risk that they need to bbe blocked.  The guest user should be able to change how they are logging in or from and try again.  This policy only looks at the risk during signin. This particular sign in risk was due to this guest account using a tor browser.    
+
+The results below show a guest account trying to sign into the Azure Portal with a signin risk of medium. Review the results and determine if this policy is going to cause any problems.  
+
+![Untitled](./media/riskyguest.jpg)  
 
 ### Block Service Principal from Non Trusted Networks
 * Link to Microsoft Documentation: [change me]()  
