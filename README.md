@@ -84,7 +84,7 @@ A few months back I was going through some documents and noticed several importa
 While working with organization to determine impact by using read only and the built-in reporting, I was finding this was taking longer than expected and could be done much easier. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) that will help identify potential impact when a particular policy is applied.  
 
 Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.
-
+---
 ### Find IPAddress not defined as trusted
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -109,7 +109,7 @@ The field uniqueusercountbyip is count of unique list of users.
 It is possible to see ipv6 addresses which usually comes from Azure Networks and will be normal in the near future from the internet.
 
 ![Untitled](./media/networkip.jpg)
-
+---
 ### Applications not being protected by Conditional Access Policies
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -139,7 +139,7 @@ SigninLogs
 The image below, shows the applications and the logon count of those apps that is not being protected by some sort of Conditional Access Policy. Ideally every application will have a mfa requirement or a trusted/compliant policy requirement.  
 
 ![Untitled](./media/applicaationsnotprotectedbyca.jpg)
-
+---
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
 * This policy will require all users logging into any application to MFA.  
@@ -189,7 +189,7 @@ Expect to see most of the users in a org in this list.  The goal is to find the 
 Looking at the image below.  I would make sure to exclude the breakglass account and the sync account as those are accounts that should not have this policy applied to it.  
 
 ![Untitled](./media/alwaysrequiremfa.jpg)
-
+---
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
 * This policy will require all users logging into any application to MFA when signing in from networks not flagged as trusted.  
@@ -248,7 +248,7 @@ The goal is to find the users and applications that need to be excluded because 
 Looking at the image below.  I would make sure to exclude the breakglass account from the policy and I would research the sync account to figure out why its being used outside a trusted network.  
 
 ![Untitled](./media/alwaysrequiremfauntrustednetwork.jpg)
-
+---
 ### Always require MFA or Trusted Device or Compliant Device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
 
@@ -310,7 +310,7 @@ This policy is not required if you were able to implement: Always require MFA
  
 
 ![Untitled](./media/mfacomptrust.jpg)  
-
+---
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)  
@@ -375,7 +375,7 @@ This policy is not required if you were able to implement: Always require MFA
  
 
 ![Untitled](./media/mfacomptrust.jpg)  
-
+---
 ### Require MFA for Microsoft Graph PowerShell and Explorer
 * Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
 * May not be available for China or Gov Cloud
@@ -412,7 +412,7 @@ This policy is great for organizations that have trusted network based filters o
 Revew the list of users in the results. in the example image below, the breakglass account is the only account being used to signin to those end points.  That particular account should be excluded from the policy.  But also shouldnt be used.  Any other account such as possible service accounts used for azure ad automation will need to be excluded from the policy and should eventually transition to using a service principal instead.  
 
 ![Untitled](./media/graph.jpg)  
-
+---
 ### Require MFA for Microsoft Azure Management
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management) 
 * This may not be available for Gov or China Tenant
@@ -449,7 +449,7 @@ This policy is great for organizations that have trusted network based filters o
 Revew the list of users in the results. in the example image below, the breakglass account is the only account being used to signin to those end points.  That particular account should be excluded from the policy.  But also shouldnt be used.  Any other account such as possible service accounts used for azure automation will need to be excluded from the policy and should eventually transition to using a service principal instead.
  
 ![Untitled](./media/azureman.jpg)  
-
+---
 ### Block Legacy Authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 * This policy will require 
@@ -484,7 +484,7 @@ AADNonInteractiveUserSignInLogs
 **Comment**  
 No example image to show what these results look like.  Review the results from the query which pulls from both the interactive and non interactive logs.  work with the users to remove the dependancy. The sooner this policy is in place the better.
  
-
+---
 ### Require privileged user to MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa)  
 
@@ -529,7 +529,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block privileged user from legacy authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 
@@ -575,7 +575,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block the Directory Sync Account from non trusted locations
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations) 
 * Requires Named Locations to be created and trusted
@@ -602,7 +602,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block Guest from Azure Management
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)   
 * Link to Microsoft Documentation: [Conditional Access: Block access](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-access)  
@@ -626,7 +626,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Require guest to MFA
 * Link to Microsoft Documentation: [change me]()  
 
@@ -657,7 +657,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Require Compliant Device for Office 365
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -673,7 +673,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require reauthentication and disable browser persistence](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-policy-persistent-browser-session)  
 
@@ -707,7 +707,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block clients that do not support modern authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 
@@ -740,7 +740,7 @@ AADNonInteractiveUserSignInLogs
 ### Require privileged user to use compliant device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require compliant or hybrid Azure AD joined device for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin)  
 * This policy will require Intune
-
+---
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
 * Users
@@ -785,7 +785,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block when user risk is high
 * Link to Microsoft Documentation: [Common Conditional Access policy: User risk-based password change](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk-user)  
 * This policy will require 
@@ -814,7 +814,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block when sign-in risk is high
 * Link to Microsoft Documentation: [Common Conditional Access policy: Sign-in risk-based multifactor authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk)  
 * This policy will require 
@@ -843,7 +843,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Require MFA when sign-in risk is low, medium, or high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -872,7 +872,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block when privileged role member user risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -917,7 +917,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block when privileged role member sign in risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require Premium License 2
@@ -963,7 +963,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+---
 ### Block when Directory Sync Account sign in risk is low medium high
 * Link to Microsoft Documentation: NA  
 * This policy will require P2 License
@@ -998,7 +998,7 @@ AADNonInteractiveUserSignInLogs
 **Comment**  
 This query looks in the logs to see if the Azure AD Connect Sync Account is experiencing any sign in risk.  Hopefully it is not.  
 No example to show with this one.  
-
+---
 ### Block guest for Low, Medium and High Sign-in Risk
 * Link to Microsoft Documentation: NA 
 * This policy will require P2 License
@@ -1034,7 +1034,7 @@ The results of this query show guest from other tenants that may be impacted by 
 The results below show a guest account trying to sign into the Azure Portal with a signin risk of medium. Review the results and determine if this policy is going to cause any problems.  
 
 ![Untitled](./media/riskygust.jpg)  
-
+---
 ### Block Service Principal from Non Trusted Networks
 * Link to Microsoft Documentation: NA
 
@@ -1078,7 +1078,7 @@ The goal is to look at the ones that are showing that they are coming from outsi
 If trustedlocation column is empty that means the query was unable to find a matching ip from the user signin logs that were marked as trusted. 
 
 ![Untitled](./media/splocation.jpg)
-
+---
 ### Block Service Principal with High Medium Low Risk
 * Link to Microsoft Documentation: [Conditional Access for workload identities](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/workload-identity)  
 * This policy will require Workload Identities Premium licenses
@@ -1104,7 +1104,7 @@ If trustedlocation column is empty that means the query was unable to find a mat
 //ServicePrincipalRiskEvents
 //RiskyServicePrincipals
 ```
-
+---
 ### References
 * [CISA - Microsoft Azure Active Directory M365 Minimum Viable Secure Configuration Baseline](https://www.cisa.gov/sites/default/files/publications/Microsoft%20Azure%20Active%20Directory%20M365%20Minimum%20Viable%20SCB%20Draft%20v0.1.pdf)  
 * [CISA SECURE CLOUD BUSINESS APPLICATIONS (SCUBA)](https://www.cisa.gov/scuba)
