@@ -89,6 +89,15 @@ While working with organization to determine impact by using read only and the b
 Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.   
 
 ---
+### How to run a Log Analytics Query
+
+
+---
+### How to create a Conditional Access Policy in Azure AD
+
+
+---
+
 ### Find IPAddress not defined as trusted
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
