@@ -844,7 +844,7 @@ The results of this query show guest from other tenants that may be impacted by 
 
 The results below show a guest account trying to sign into the Azure Portal with a signin risk of medium. Review the results and determine if this policy is going to cause any problems.  
 
-![Untitled](./media/riskyguest.jpg)  
+![Untitled](./media/riskygust.jpg)  
 
 ### Block Service Principal from Non Trusted Networks
 * Link to Microsoft Documentation: [change me]()  
