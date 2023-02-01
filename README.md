@@ -36,7 +36,7 @@ _Updated: January 2023_
   * [Block when privileged users user risk is low medium high]()
   * [Block when privileged user sign in risk is low medium high]()
   * [Block when Directory Sync Account sign in risk is low medium high]()
-  * [Require guest to MFA for Low and Medium Sign-in Risk]()
+  * [Block Guest for Low, Medium and High Sign-in Risk]()
   * [Block Service Principal from Non Trusted Networks]()
   * [Block Service Principal with High Medium Low Risk]()
 
@@ -747,7 +747,7 @@ SigninLogs
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
 * Users
-  * Include: Directory Roles (Privileged Roles)
+  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
   * Exclude: Breakglass, _Exclusion Group_
 * Cloud Apps or Actions
   * Select what this policy applies to: Cloud apps
