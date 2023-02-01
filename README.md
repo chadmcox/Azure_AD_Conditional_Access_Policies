@@ -444,7 +444,7 @@ Revew the list of users in the results. in the example image below, the breakgla
   * Exclude: Breakglass, _Exclusion Group_
 * Cloud Apps or Actions
   * Select what this policy applies to: Cloud Apps
-  * Include: Microsoft Azure Management
+  * Include: Microsoft Azure Management / (Gov Tenant) Azure Government Cloud Management API
 * Conditions
 * Grant
   * Grant Access
@@ -645,7 +645,7 @@ AADNonInteractiveUserSignInLogs
   * Exclude: Breakglass, _Exclusion Group_
 * Cloud Apps or Actions
   * Select what this policy applies to: Cloud apps
-  * Include: Microsoft Azure Management
+  * Include: Microsoft Azure Management  / (Gov Tenant) Azure Government Cloud Management API
   * Exclude: None
 * Conditions
 * Grant
