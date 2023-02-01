@@ -974,7 +974,7 @@ AADServicePrincipalSignInLogs
 ```
 
 **Comment**  
-the AADServicePrincipalSignInLogs only have a subset of the useful properties provided in the user signinlogs.
+the AADServicePrincipalSignInLogs only have a subset of the useful properties provided unlike the user signinlogs.
 
 In order to get the current list of trusted location, Had to pull in a unique list of IP's from the user Signinlogs. Then compare them to the list returned from the serviceprincipal logs.  The results do very and some of the ip not showing as trusted could actually be trusted so you will want to research and confirm.
 
