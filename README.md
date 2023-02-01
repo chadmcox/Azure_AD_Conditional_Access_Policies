@@ -923,6 +923,9 @@ SigninLogs
 ```
 
 **Comment**  
+This policy will require anyone with a risky sign-in to have to provide mfa, The High will be blocked due to the other policy so the mfa will only occur for low and medium.  The image below is an example of the results, It will more than likely be a lot more users in an actual production tenant.  
+
+![Untitled](./media/risksignin.jpg) 
 
 ---
 ### Block when privileged role member user risk is low medium high
