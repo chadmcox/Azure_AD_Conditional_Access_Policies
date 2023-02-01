@@ -887,7 +887,7 @@ SigninLogs
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
 SigninLogs 
-| where TimeGenerated > ago(14d)
+| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> "Guest"
 | where RiskLevelDuringSignIn in ("high") 
 | project ResultType, ResultDescription,AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
 ```
