@@ -811,7 +811,7 @@ SigninLogs
 ```
 
 ### Block guest for Low, Medium and High Sign-in Risk
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: NA 
 * This policy will require P2 License
 * Ideally use a block over MFA
 
