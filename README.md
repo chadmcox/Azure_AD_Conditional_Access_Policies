@@ -871,7 +871,7 @@ let privusers = AuditLogs
 | where Role in (privroles) 
 | distinct Caller;
 SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
 | project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
 
 ```
@@ -901,7 +901,27 @@ SigninLogs
 * Grant
   * Block Access
 
+
 **Log Analytics AAD SigninLogs Query (KQL)**
+```
+
+```
+**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
+```
+//https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy%20Impact%20KQL/Possible%20impact%20of%20Block%20privileged%20user%20if%20sign-in%20risk%20is%20low%20medium%20or%20high.kql
+let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
+let privusers = AuditLogs 
+| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
+| extend Caller = tostring(InitiatedBy.user.userPrincipalName) 
+| extend Role = tostring(TargetResources[0].displayName) 
+| where Role in (privroles) 
+| distinct Caller;
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
+| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
+
+```
+**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
 
 ```
