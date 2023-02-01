@@ -863,6 +863,9 @@ SigninLogs
 ```
 
 **Comment**  
+Having two conditional access policies one blocking high sign-in risk and one blocking high user risk is really important.  The image below shows the importance of this.  I took a user and logged into a tenant with a tor browser, This action alone only had a sign in risk of medium.  Next I went to add a MFA into my profile and immediately the user risk went up to high and would have instantly blocked me if the policy was enabled.
+
+![Untitled](./media/userriskhigh.jpg) 
 
 ---
 ### Block when sign-in risk is high
