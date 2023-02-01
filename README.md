@@ -611,7 +611,12 @@ SigninLogs
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+AADNonInteractiveUserSignInLogs 
+| union SigninLogs 
+| where TimeGenerated > ago(14d) 
+| where UserPrincipalName startswith "Sync_" 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
+| distinct IPAddress, TrustedLocation, UserPrincipalName
 ```
 
 **Comment**  
@@ -637,7 +642,12 @@ SigninLogs
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+let includeapps = pack_array("Windows Azure Service Management API");
+SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where  ResourceDisplayName in (includeapps)
+| where AADTenantId <> HomeTenantId
+| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
 ```
 
 **Comment**  
