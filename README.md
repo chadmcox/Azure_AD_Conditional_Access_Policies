@@ -807,7 +807,15 @@ SigninLogs
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+//if something is used other than the default update the syncaccount variable 
+//Other account name instead of sync_
+let syncaccount = "sync_";
+AADNonInteractiveUserSignInLogs 
+| union SigninLogs
+| where TimeGenerated > ago(14d) 
+| where UserPrincipalName startswith syncaccount
+| where RiskLevelDuringSignIn in ("high","medium","low") 
+| project AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail 
 ```
 
 ### Block guest for Low, Medium and High Sign-in Risk
