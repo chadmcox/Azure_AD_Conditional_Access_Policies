@@ -65,7 +65,7 @@ from the use or distribution of the Sample Code.._
 * Always require multifactor
 * Minimize the use of filters
 * Know the potential impact of a policy.
-
+---
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
   * Instructions on how to set up: [Integrate Azure AD logs with Azure Monitor logs](https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/howto-integrate-activity-logs-with-log-analytics)
@@ -76,7 +76,7 @@ from the use or distribution of the Sample Code.._
 * **If a third party IDP or ADFS is used to federate the tenant, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value.
 * Risk Policies require P2 License.
 * Workload Identity License is required to view those risk.
-
+---
 ### Introduction
 A few months back I was going through some documents and noticed several important conditional access policies that are usually missed.  (link to the document
 [Zero Trust identity and device access configurations](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/microsoft-365-policies-configurations)).  
