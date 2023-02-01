@@ -75,7 +75,8 @@ from the use or distribution of the Sample Code.._
   * Ability to query Sign in logs via microsoft graph
 * **If a third party IDP or ADFS is used to federate the tenant, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value.
 * Risk Policies require P2 License.
-* Workload Identity License is required to view those risk.
+* Workload Identity License is required to view those risk.   
+
 ---
 ### Introduction
 A few months back I was going through some documents and noticed several important conditional access policies that are usually missed.  (link to the document
@@ -83,7 +84,8 @@ A few months back I was going through some documents and noticed several importa
 
 While working with organization to determine impact by using read only and the built-in reporting, I was finding this was taking longer than expected and could be done much easier. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) that will help identify potential impact when a particular policy is applied.  
 
-Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.
+Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.   
+
 ---
 ### Find IPAddress not defined as trusted
 **Log Analytics AAD SigninLogs Query (KQL)**
@@ -108,7 +110,8 @@ This query returns IP addresses where 4 or more unique users have authenticated 
 The field uniqueusercountbyip is count of unique list of users.
 It is possible to see ipv6 addresses which usually comes from Azure Networks and will be normal in the near future from the internet.
 
-![Untitled](./media/networkip.jpg)
+![Untitled](./media/networkip.jpg)   
+
 ---
 ### Applications not being protected by Conditional Access Policies
 **Log Analytics AAD SigninLogs Query (KQL)**
@@ -138,7 +141,8 @@ SigninLogs
 **Comment**  
 The image below, shows the applications and the logon count of those apps that is not being protected by some sort of Conditional Access Policy. Ideally every application will have a mfa requirement or a trusted/compliant policy requirement.  
 
-![Untitled](./media/applicaationsnotprotectedbyca.jpg)
+![Untitled](./media/applicaationsnotprotectedbyca.jpg)   
+
 ---
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
@@ -188,7 +192,8 @@ Expect to see most of the users in a org in this list.  The goal is to find the 
 
 Looking at the image below.  I would make sure to exclude the breakglass account and the sync account as those are accounts that should not have this policy applied to it.  
 
-![Untitled](./media/alwaysrequiremfa.jpg)
+![Untitled](./media/alwaysrequiremfa.jpg)   
+
 ---
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
