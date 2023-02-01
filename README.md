@@ -3,6 +3,21 @@ _Author: Chad Cox_
 _Created: January 2023_  
 _Updated: January 2023_  
 
+**Disclaimer**
+_This Sample Code is provided for the purpose of illustration only and is not
+intended to be used in a production environment.  THIS SAMPLE CODE AND ANY
+RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  We grant You a
+nonexclusive, royalty-free right to use and modify the Sample Code and to
+reproduce and distribute the object code form of the Sample Code, provided
+that You agree: (i) to not use Our name, logo, or trademarks to market Your
+software product in which the Sample Code is embedded; (ii) to include a valid
+copyright notice on Your software product in which the Sample Code is embedded;
+and (iii) to indemnify, hold harmless, and defend Us and Our suppliers from and
+against any claims or lawsuits, including attorneys` fees, that arise or result
+from the use or distribution of the Sample Code.._
+
 **How to use this guide**
 * Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
 * Each link contains information about each policy with notes about how to evaluate the impact of the policy.
@@ -47,6 +62,7 @@ _Updated: January 2023_
 * Do not depend on trusted networks / locations
 * Always require multifactor
 * Minimize the use of filters
+* Know the potential impact of a policy.
 
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
@@ -55,14 +71,15 @@ _Updated: January 2023_
   * Conditional Access Policies
   * Sign in Logs to be sent to Log Analytics
   * Ability to query Sign in logs via microsoft graph
-* **If a third party IDP is used, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** here is more info about the other settings that needs to be done [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp)
+* **If a third party IDP is used, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp)
 * Risk Policies require P2 License.
+* Workload Identity License is required to view those risk.
 
 ### Introduction
 A few months back I was going through some documents and noticed several important conditional access policies that are usually missed.  (link to the document
 [Zero Trust identity and device access configurations](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/microsoft-365-policies-configurations)).  
 
-In order to help Organizations to implement these policies I have thrown together PowerShell Scripts and Log Analytics Scripts that will identifies potential impact when a particular policy is applied.  
+In order to help Organizations implement these policies I have thrown together PowerShell Scripts and Log Analytics Queries (KQL) that will help identify potential impact when a particular policy is applied.  
 
 ### Find IPAddress not defined as trusted
 
