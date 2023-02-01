@@ -788,7 +788,7 @@ SigninLogs
 ```
 
 ### Block when Directory Sync Account sign in risk is low medium high
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: NA  
 * This policy will require P2 License
 
 **Conditional Access Policy Setup**
@@ -817,6 +817,10 @@ AADNonInteractiveUserSignInLogs
 | where RiskLevelDuringSignIn in ("high","medium","low") 
 | project AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail 
 ```
+
+**Comment**  
+This query looks in the logs to see if the Azure AD Connect Sync Account is experiencing any sign in risk.  Hopefully it is not.  
+No example to show with this one.  
 
 ### Block guest for Low, Medium and High Sign-in Risk
 * Link to Microsoft Documentation: NA 
