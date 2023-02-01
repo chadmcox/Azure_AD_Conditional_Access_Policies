@@ -24,37 +24,39 @@ from the use or distribution of the Sample Code.._
 * Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD, by proactively leveraging existing signinlogs and filtering to show the users that could be impacted.
 
 **Table of Content**
-* [Requirements](#Requirements)
-* [Introduction](#Introduction)
-* [Find IPAddress not defined as trusted]()
-* [Applications not being protected by Conditional Access Policies]()
-* [Conditional Access Policies](#Introduction)
+* [Goals](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#goals)
+* [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
+* [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
+* [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#find-ipaddress-not-defined-as-trusted)
+* [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
+* [Conditional Access Policies]()
   * [Default MFA Policy]()
-    * [Option 1: Always require MFA]()
-    * [Option 2: Always require MFA from untrusted networks]()
-    * [Option 3: Always require MFA or Trusted Device or Compliant Device]()
-    * [Option 4: Always require MFA or Trusted Device or Compliant Device from untrusted networks]()
-  * [Require MFA for Microsoft Graph PowerShell and Explorer]()
-  * [Require MFA for Microsoft Azure Management]()
-  * [Require privileged user to MFA]()
-  * [Block Legacy Authentication]()
-    * [Block privileged user from legacy authentication]()
-    * [Block clients that do not support modern authentication]()
-  * [Block the Directory Sync Account from non trusted locations]()
-  * [Block Guest from Azure Management]()
-  * [Require guest to MFA]()
-  * [Require Compliant Device for Office 365]()
-  * [No Persistent Browser and 1 Hour Session for Unmanaged Devices]()
-  * [Require privileged user to use compliant device]()
-  * [Block when user risk is high]()
-  * [Block when sign-in risk is high]()
-  * [Require MFA when sign-in risk is low, medium, or high]()
-  * [Block when privileged users user risk is low medium high]()
-  * [Block when privileged user sign in risk is low medium high]()
-  * [Block when Directory Sync Account sign in risk is low medium high]()
-  * [Block Guest for Low, Medium and High Sign-in Risk]()
-  * [Block Service Principal from Non Trusted Networks]()
-  * [Block Service Principal with High Medium Low Risk]()
+    * [Option 1: Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa)
+    * [Option 2: Always require MFA from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-from-untrusted-networks)
+    * [Option 3: Always require MFA or Trusted Device or Compliant Device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-or-trusted-device-or-compliant-device)
+    * [Option 4: Always require MFA or Trusted Device or Compliant Device from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-or-trusted-device-or-compliant-device-from-untrusted-networks)
+  * [Require MFA for Microsoft Graph PowerShell and Explorer](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-for-microsoft-graph-powershell-and-explorer)
+  * [Require MFA for Microsoft Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-for-microsoft-azure-management)
+  * [Require privileged user to MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-mfa)
+  * [Block Legacy Authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-legacy-authentication)
+    * [Block privileged user from legacy authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-privileged-user-from-legacy-authentication)
+    * [Block clients that do not support modern authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-clients-that-do-not-support-modern-authentication)
+  * [Block the Directory Sync Account from non trusted locations](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-the-directory-sync-account-from-non-trusted-locations)
+  * [Block Guest from Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-from-azure-management)
+  * [Require guest to MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-guest-to-mfa)
+  * [Require Compliant Device for Office 365](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-compliant-device-for-office-365)
+  * [No Persistent Browser and 1 Hour Session for Unmanaged Devices](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#no-persistent-browser-and-1-hour-session-for-unmanaged-devices)
+  * [Require privileged user to use compliant device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-use-compliant-device)
+  * [Block when user risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-user-risk-is-high)
+  * [Block when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high)
+  * [Require MFA when sign-in risk is low, medium, or high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-when-sign-in-risk-is-low-medium-or-high)
+  * [Block when privileged users user risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-user-risk-is-low-medium-high)
+  * [Block when privileged user sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-user-sign-in-risk-is-low-medium-high)
+  * [Block when Directory Sync Account sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-directory-sync-account-sign-in-risk-is-low-medium-high)
+  * [Block Guest for Low, Medium and High Sign-in Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-for-low-medium-and-high-sign-in-risk)
+  * [Block Service Principal from Non Trusted Networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-service-principal-from-non-trusted-networks)
+  * [Block Service Principal with High Medium Low Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-service-principal-with-high-medium-low-risk)
+* [References](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#references)
 
 ### Goals
 * Protect Privileged Credentials
@@ -71,7 +73,7 @@ from the use or distribution of the Sample Code.._
   * Conditional Access Policies
   * Sign in Logs to be sent to Log Analytics
   * Ability to query Sign in logs via microsoft graph
-* **If a third party IDP is used, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp)
+* **If a third party IDP or ADFS is used to federate the tenant, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value.
 * Risk Policies require P2 License.
 * Workload Identity License is required to view those risk.
 
