@@ -376,11 +376,10 @@ This policy is not required if you were able to implement: Always require MFA
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
 * Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
-* 
+* May not be available for China or Gov Cloud
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-* Use the following KQL to query log analytics to get a list of users using (allowed to use) the endpoints [Click Here](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/find-msolusage.kql)
 * Users
   * Include: All Users
   * Exclude: Breakglass, _Exclusion Group_
@@ -406,16 +405,16 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
-This policy is not required if you were able to implement: Always require MFA  
- 
+This policy is great for organizations that have trusted network based filters on the base conditional access policy.  This will make sure users that use tools that can be used to perform queries or changes agaisnt the tenant must require MFA from both trusted and non trusted networks.   
+
+Revew the list of users in the results. in the example image below, the breakglass account is the only account being used to signin to those end points.  That particular account should be excluded from the policy.  But also shouldnt be used.  Any other account such as possible service accounts used for azure ad automation will need to be excluded from the policy and should eventually transition to using a service principal instead.  
 
 ![Untitled](./media/graph.jpg)  
 
 ### Require MFA for Microsoft Azure Management
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)  
 * This policy will require 
 * This may not be available for Gov or China Tenant
-* Not Required if All Users are required MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -444,9 +443,10 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
-This policy is not required if you were able to implement: Always require MFA  
- 
+This policy is great for organizations that have trusted network based filters on the base conditional access policy.  This will make sure users that use tools that can be used to perform queries or changes against Azure subscriptions must require MFA from both trusted and non trusted networks.   
 
+Revew the list of users in the results. in the example image below, the breakglass account is the only account being used to signin to those end points.  That particular account should be excluded from the policy.  But also shouldnt be used.  Any other account such as possible service accounts used for azure automation will need to be excluded from the policy and should eventually transition to using a service principal instead.
+ 
 ![Untitled](./media/azureman.jpg)  
 
 ### Block Legacy Authentication
@@ -471,15 +471,21 @@ This policy is not required if you were able to implement: Always require MFA
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
+| where TimeGenerated > ago(14d) and ResultType == 0
+| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
+| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
+| where isLegacyAuth == "Yes"
+| distinct UserDisplayName, UserPrincipalName, AppDisplayName, ClientAppUsed, isLegacyAuth, UserAgent, Category
 ```
 
 **Comment**  
-This policy is not required if you were able to implement: Always require MFA  
+No example image to show what these results look like.  Review the results from the query which pulls from both the interactive and non interactive logs.  work with the users to remove the dependancy. The sooner this policy is in place the better.
  
 
 ### Require privileged user to MFA
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa)  
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -502,9 +508,15 @@ This policy is not required if you were able to implement: Always require MFA
 ```
 
 ```
+**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
+```
+
+```
+
+**Comment**  
 
 ### Block privileged user from legacy authentication
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -527,8 +539,10 @@ This policy is not required if you were able to implement: Always require MFA
 
 ```
 
+**Comment**  
+
 ### Block the Directory Sync Account from non trusted locations
-* Link to Microsoft Documentation: [change me]()  
+* Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations) 
 * Requires Named Locations to be created and trusted
 
 **Conditional Access Policy Setup**
@@ -552,8 +566,11 @@ This policy is not required if you were able to implement: Always require MFA
 
 ```
 
+**Comment**  
+
 ### Block Guest from Azure Management
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)   
+* Link to Microsoft Documentation: [Conditional Access: Block access](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-access)  
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -572,6 +589,8 @@ This policy is not required if you were able to implement: Always require MFA
 ```
 
 ```
+
+**Comment**  
 
 ### Require guest to MFA
 * Link to Microsoft Documentation: [change me]()  
@@ -602,6 +621,8 @@ SigninLogs
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
 ```
 
+**Comment**  
+
 ### Require Compliant Device for Office 365
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -615,6 +636,8 @@ SigninLogs
 ```
 
 ```
+
+**Comment**  
 
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
 * Link to Microsoft Documentation: [change me]()  
@@ -647,6 +670,8 @@ SigninLogs
 | where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined" and ClientAppUsed == "Browser" 
 | distinct UserPrincipalName, os, deviceName, trustType, isCompliant, TrustedLocation
 ```
+
+**Comment**  
 
 ### Block clients that do not support modern authentication
 * Link to Microsoft Documentation: [change me]()  
@@ -703,6 +728,8 @@ AADNonInteractiveUserSignInLogs
 
 ```
 
+**Comment**  
+
 ### Block when user risk is high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -729,6 +756,8 @@ SigninLogs
 | where RiskState == "atRisk" and RiskLevelAggregated == "high"
 | project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail,IsRisky, RiskEventTypes_V2, MfaDetail, ConditionalAccessStatus, AuthenticationRequirement, ResultType
 ```
+
+**Comment**  
 
 ### Block when sign-in risk is high
 * Link to Microsoft Documentation: [change me]()  
@@ -757,6 +786,8 @@ SigninLogs
 | project ResultType, ResultDescription,AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
+**Comment**  
+
 ### Require MFA when sign-in risk is low, medium, or high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -784,6 +815,8 @@ SigninLogs
 | project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
+**Comment**  
+
 ### Block when privileged role member user risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -808,6 +841,8 @@ SigninLogs
 
 ```
 
+**Comment**  
+
 ### Block when privileged user sign in risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require Premium License 2
@@ -831,6 +866,8 @@ SigninLogs
 ```
 
 ```
+
+**Comment**  
 
 ### Block when Directory Sync Account sign in risk is low medium high
 * Link to Microsoft Documentation: NA  
