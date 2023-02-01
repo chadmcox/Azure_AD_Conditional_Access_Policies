@@ -234,7 +234,18 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: Windows Store
+* Conditions
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication,  Require Hybrid Azure AD joined device, and Require device to be marked as compliant
+  * Require one of the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -282,7 +293,21 @@ AADNon
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: Windows Store
+* Conditions
+  * Locations
+  * Include: Any Location
+  * Exclude: All trusted locations
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication,  Require Hybrid Azure AD joined device, and Require device to be marked as compliant
+  * Require one of the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -322,12 +347,22 @@ AADNon
 
 ### Require MFA for Microsoft Graph PowerShell and Explorer
 * Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
-* This policy will require 
-* Ideally use a block over MFA
+* 
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Use the following KQL to query log analytics to get a list of users using (allowed to use) the endpoints [Click Here](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/find-msolusage.kql)
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud Apps
+  * Include: Microsoft Graph PowerShell, Graph Explorer
+* Conditions
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication
+  * Require all the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -344,11 +379,22 @@ AADNonInteractiveUserSignInLogs
 ### Require MFA for Microsoft Azure Management
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
-* Ideally use a block over MFA
+* This may not be available for Gov or China Tenant
+* Not Required if All Users are required MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud Apps
+  * Include: Microsoft Azure Management
+* Conditions
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication
+  * Require all the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -369,7 +415,18 @@ AADNonInteractiveUserSignInLogs
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud Apps
+  * Include: All Cloud Apps
+* Conditions
+  * Client apps
+  * Exchange ActiveSync clients
+  * Other clients
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -378,12 +435,23 @@ AADNonInteractiveUserSignInLogs
 
 ### Require privileged user to MFA
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication
+  * Require all the selected controls
+* Session
+  * Sign-in frequency 2 Hours
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -392,12 +460,22 @@ AADNonInteractiveUserSignInLogs
 
 ### Block privileged user from legacy authentication
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Client apps
+    * Exchange ActiveSync clients
+    * Other clients
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -406,12 +484,23 @@ AADNonInteractiveUserSignInLogs
 
 ### Block the Directory Sync Account from non trusted locations
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
+* Requires Named Locations to be created and trusted
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Directory Role (Directory Sync Account)
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+  * Locations
+  * Include: Any Location
+  * Exclude: All trusted locations
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -420,12 +509,19 @@ AADNonInteractiveUserSignInLogs
 
 ### Block Guest from Azure Management
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)   
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All guest and external users
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: Microsoft Azure Management
+  * Exclude: None
+* Conditions
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -434,12 +530,21 @@ AADNonInteractiveUserSignInLogs
 
 ### Require guest to MFA
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: Guest
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps
+  * Exclude: None
+* Conditions
+* Grant
+  * Grant Access
+  * Require Multi-Factor Authentication
+  * Require all the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -468,12 +573,22 @@ SigninLogs
 
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_,
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All cloud apps
+  * Exclude: None
+* Conditions
+   * Filter for device
+   * device.isCompliant -ne True -or device.trustType -ne "ServerAD"
+* Session
+  * Sign-in frequency: 1 Hour
+  * Persistent browser session: Never persistent
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
@@ -490,12 +605,21 @@ SigninLogs
 
 ### Block clients that do not support modern authentication
 * Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud Apps
+  * Include: All Cloud Apps
+* Conditions
+  * Client apps
+  * Exchange ActiveSync clients
+  * Other clients
+* Grant
+  * Block Access
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
