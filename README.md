@@ -767,7 +767,7 @@ AADNonInteractiveUserSignInLogs
 ### Require privileged user to use compliant device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require compliant or hybrid Azure AD joined device for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin)  
 * This policy will require Intune
----
+
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
 * Users
