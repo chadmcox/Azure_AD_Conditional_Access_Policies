@@ -229,8 +229,6 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 ### Always require MFA or Trusted Device or Compliant Device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
-* This policy will require 
-* Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -294,8 +292,7 @@ This policy is not required if you were able to implement: Always require MFA
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)  
-* This policy will require 
-* Ideally use a block over MFA
+* This policy will require all trusted networks to be defined.
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
@@ -388,6 +385,12 @@ AADNonInteractiveUserSignInLogs
 | distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement
 ```
 
+**Comment**  
+This policy is not required if you were able to implement: Always require MFA  
+ 
+
+![Untitled](./media/graph.jpg)  
+
 ### Require MFA for Microsoft Azure Management
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require 
@@ -420,6 +423,12 @@ AADNonInteractiveUserSignInLogs
 | distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
 ```
 
+**Comment**  
+This policy is not required if you were able to implement: Always require MFA  
+ 
+
+![Untitled](./media/azureman.jpg)  
+
 ### Block Legacy Authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
 * This policy will require 
@@ -444,6 +453,10 @@ AADNonInteractiveUserSignInLogs
 ```
 
 ```
+
+**Comment**  
+This policy is not required if you were able to implement: Always require MFA  
+ 
 
 ### Require privileged user to MFA
 * Link to Microsoft Documentation: [change me]()  
