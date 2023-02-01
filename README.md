@@ -686,7 +686,7 @@ SigninLogs
 
 ```
 
-### Require guest to MFA for Low and Medium Sign-in Risk
+### Block guest for Low and Medium Sign-in Risk
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require P2 License
 * Ideally use a block over MFA
@@ -703,7 +703,7 @@ SigninLogs
 * Conditions
   * Sign-in risk: High, Medium, Low
 * Grant
-  * Block Access
+  * Block Access   
 _Ideally use a block over MFA, but MFA can be used if non spammable MFA is used_
 
 **Log Analytics AAD SigninLogs Query (KQL)**
