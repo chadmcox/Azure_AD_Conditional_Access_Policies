@@ -555,7 +555,19 @@ SigninLogs
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
-
+let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
+let privusers = AuditLogs 
+| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
+| extend Caller = tostring(InitiatedBy.user.userPrincipalName) 
+| extend Role = tostring(TargetResources[0].displayName) 
+| where Role in (privroles) 
+| distinct Caller;
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
+| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
+| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
+| where isLegacyAuth == "Yes"
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth
 ```
 **Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
@@ -751,7 +763,21 @@ AADNonInteractiveUserSignInLogs
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
-
+let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
+let privusers = AuditLogs 
+| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
+| extend Caller = tostring(InitiatedBy.user.userPrincipalName) 
+| extend Role = tostring(TargetResources[0].displayName) 
+| where Role in (privroles) 
+| distinct Caller;
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
+| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
+| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
+| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category
 ```
 **Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
@@ -892,7 +918,7 @@ SigninLogs
 
 **Comment**  
 
-### Block when privileged user sign in risk is low medium high
+### Block when privileged role member sign in risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
 * This policy will require Premium License 2
 * Ideally use a block over MFA
