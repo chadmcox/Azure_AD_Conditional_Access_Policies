@@ -412,8 +412,7 @@ Revew the list of users in the results. in the example image below, the breakgla
 ![Untitled](./media/graph.jpg)  
 
 ### Require MFA for Microsoft Azure Management
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)  
-* This policy will require 
+* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management) 
 * This may not be available for Gov or China Tenant
 
 **Conditional Access Policy Setup**
