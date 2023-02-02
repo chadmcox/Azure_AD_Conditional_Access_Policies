@@ -22,6 +22,7 @@ from the use or distribution of the Sample Code.._
 * Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
 * Each link in the table of content contains information about a policy with notes about how to evaluate the impact of the policy.
 * Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD, by proactively leveraging existing signinlogs and filtering to show the users that could be impacted.
+* Yes it is posible and every organization should still use conditional access policies even if they have a third party IDP.  More information in the requirements section.
 
 **Table of Content**
 * [Goals](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#goals)
@@ -67,6 +68,7 @@ from the use or distribution of the Sample Code.._
 * Always require multifactor
 * Minimize the use of filters
 * Know the potential impact of a policy.
+
 ---
 ### Requirements
 * The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
@@ -75,7 +77,10 @@ from the use or distribution of the Sample Code.._
   * Conditional Access Policies
   * Sign in Logs to be sent to Log Analytics
   * Ability to query Sign in logs via microsoft graph
-* **If a third party IDP or ADFS is used to federate the tenant, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value.
+* **If a third party IDP or ADFS is used to federate the tenant and mfa is being performed there instead of AAD, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs and bypasses MFA.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value and Azure AD will have no idea 
+* Third Party IDP notes for MFA and Conditional Access Policies
+  * [Use Okta MFA for Azure Active Directory](https://help.okta.com/en-us/Content/Topics/Apps/Office365/Use_Okta_MFA_Azure_AD_MFA.htm)
+  * [PingID as on premises MFA for federated Office 365 users](https://support.pingidentity.com/s/article/PingID-as-on-premises-MFA-for-federated-Office-365-users)
 * Risk Policies require P2 License.
 * Workload Identity License is required to view those risk.   
 
