@@ -53,7 +53,7 @@ from the use or distribution of the Sample Code.._
     * [Block when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high)
     * [Require MFA when sign-in risk is low, medium, or high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-when-sign-in-risk-is-low-medium-or-high)
     * [Block when privileged users user risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-user-risk-is-low-medium-high)
-    * [Block when privileged user sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-user-sign-in-risk-is-low-medium-high)
+    * [Block when privileged user sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-sign-in-risk-is-low-medium-high)
     * [Block when Directory Sync Account sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-directory-sync-account-sign-in-risk-is-low-medium-high)
     * [Block Guest for Low, Medium and High Sign-in Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-for-low-medium-and-high-sign-in-risk)
   * [Work Identity Policies]()
