@@ -87,9 +87,7 @@ from the use or distribution of the Sample Code.._
 ---
 ### Introduction
   
-.  
-
-While working with organization to determine impact by using read only and the built-in reporting, I was finding this was taking longer than expected and could be done much easier. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) that will help identify potential impact when a particular policy is applied.  
+While working with organizations to determine impact by using read only and the built-in reporting, I found this was taking longer than needed and could be done easier. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) in addition to notes about each policy that will help identify potential impact before a particular policy is created or applied.  
 
 Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.   
 
