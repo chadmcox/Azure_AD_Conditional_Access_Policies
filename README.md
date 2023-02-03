@@ -16,7 +16,9 @@ software product in which the Sample Code is embedded; (ii) to include a valid
 copyright notice on Your software product in which the Sample Code is embedded;
 and (iii) to indemnify, hold harmless, and defend Us and Our suppliers from and
 against any claims or lawsuits, including attorneys` fees, that arise or result
-from the use or distribution of the Sample Code.._
+from the use or distribution of the Sample Code.._   
+
+---
 
 **How to use this guide**
 * Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
@@ -62,6 +64,7 @@ from the use or distribution of the Sample Code.._
     * [Block Service Principal with High Medium Low Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-service-principal-with-high-medium-low-risk)
 * [References](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#references)
 
+---
 ### Goals
 * Protect Privileged Credentials
 * Require trusted devices
@@ -94,7 +97,13 @@ Not everything here is perfect and is being updated as I learn new things or new
 
 ---
 ### How to run a Log Analytics Query
+* In the Azure AD Portal
+* Navigate to the Log Analytics Tab
+* Copy the example code from the section you want to review the possible impact
+* Replace the existing text in the query window or open a new query tab and paste in the new one.
+* Then select Run and wait for the results.  
 
+![Untitled](./media/law.jpg)   
 
 ---
 ### How to create a Conditional Access Policy in Azure AD
