@@ -91,7 +91,7 @@ from the use or distribution of the Sample Code.._
 ---
 ### Introduction
   
-While working with organizations to determine impact by using read only and the built-in reporting, I found this was taking longer than needed and could be done easier. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) in addition to notes about each policy that will help identify potential impact before a particular policy is created or applied.  
+While working with organizations to determine impact using read only and the built-in reporting, I found this was taking longer than needed and could be done another way. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) in addition to notes about each policy that will help identify potential impact before a particular policy is created or applied.  The idea is to use the results to determine impact of a policy and put in the exclusions or policy adjustments needed to minimize impact and get the desired affect of the policy.
 
 Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.   
 
@@ -202,6 +202,15 @@ SigninLogs
 
 
 **Comment**  
+This query will show the percentage of each of the major things we are looking for.  The idea here is to look and make sure applications actually have the desired protections where it be from a compliant device or MFA.  
+
+This iw what I would expect to see.
+* Every Application is 100% convered by Conditional Access Policies.
+* At minimum the MFAPercentage + TrustedLocationPercentage should equal 100%
+* And in a true zero trust envrionment the CompliantDevicePercentage should be 100%
+* Im most cases if MFAPercentage + TrustedDevicePercentage + CompliantDevicePercentage = 100%, then a Org is doing a decent job.
+
+![Untitled](./media/percent.jpg)   
 
 ---
 
