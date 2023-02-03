@@ -30,6 +30,7 @@ from the use or distribution of the Sample Code.._
 * [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
 * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#find-ipaddress-not-defined-as-trusted)
 * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
+* [Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#percentage-of-mfa--compliant-device--trusted-device--trusted-location--conditional-access-policies-by-applications)
 * [Conditional Access Policies]()
   * [Default or Base MFA Policy]()
     * [Option 1: Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa)
