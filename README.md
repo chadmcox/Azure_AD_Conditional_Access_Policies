@@ -158,6 +158,43 @@ The image below, shows the applications and the logon count of those apps that i
 ![Untitled](./media/applicaationsnotprotectedbyca.jpg)   
 
 ---
+### Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications
+
+**Log Analytics AAD SigninLogs Query (KQL)**  
+```
+SigninLogs
+| where TimeGenerated > ago(30d)
+| where ResultType == 0 and AppDisplayName <> 'Windows Sign In' and UserType <> "Guest"
+| where ResourceTenantId == HomeTenantId and AADTenantId == HomeTenantId
+| extend trustType = tostring(DeviceDetail.trustType)
+| extend isCompliant = tostring(DeviceDetail.isCompliant)
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| summarize
+    ['Total Signin Count']=count(),
+    ['Total MFA Count']=countif(AuthenticationRequirement == "multiFactorAuthentication"),
+    ['Total non MFA Count']=countif(AuthenticationRequirement == "singleFactorAuthentication"),
+    ['Total Trusted device']=countif(trustType == "Hybrid Azure AD joined"),
+    ['Total Compliant device']=countif(isCompliant == 'true'),
+    ['Total Trusted Location']=countif(TrustedLocation == 'trustedNamedLocation'),
+    ['Total CAP Applied']=countif(ConditionalAccessStatus == 'success')
+    by AppDisplayName
+| project
+    AppDisplayName,
+    MFAPercentage=(todouble(['Total MFA Count']) * 100 / todouble(['Total Signin Count'])),
+    TrustedDevicePercentage=(todouble(['Total Trusted device']) * 100 / todouble(['Total Signin Count'])),
+    CompliantDevicePercentage=(todouble(['Total Compliant device']) * 100 / todouble(['Total Signin Count'])),
+    TrustedLocationPercentage=(todouble(['Total Trusted Location']) * 100 / todouble(['Total Signin Count'])),
+    ConditionalPolicyAppliedPercentage=(todouble(['Total CAP Applied']) * 100 / todouble(['Total Signin Count']))
+| where MFAPercentage <> 100
+| sort by MFAPercentage desc  
+```
+
+
+
+**Comment**  
+
+---
+
 ### Always require MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
 * This policy will require all users logging into any application to MFA.  
