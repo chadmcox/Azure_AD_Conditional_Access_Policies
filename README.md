@@ -51,6 +51,7 @@ from the use or distribution of the Sample Code.._
   * [Require Compliant Device for Office 365](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-compliant-device-for-office-365)
   * [No Persistent Browser and 1 Hour Session for Unmanaged Devices](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#no-persistent-browser-and-1-hour-session-for-unmanaged-devices)
   * [Require privileged user to use compliant device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-use-compliant-device)
+  * [Require MFA Device Join/Registration]()
   * [Identity Protection Risk Policies]()
     * [Block when user risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-user-risk-is-high)
     * [Block when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high)
