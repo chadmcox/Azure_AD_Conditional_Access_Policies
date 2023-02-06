@@ -767,14 +767,23 @@ SigninLogs
 
 
 ---
-### Require Compliant Device for Office 365
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
+### Require Compliant Device for Office 365 or All Apps
+* Link to Microsoft Documentation: [Require compliant PCs and mobile devices](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/identity-access-policies?view=o365-worldwide#require-compliant-pcs-and-mobile-devices)  
+* This policy will require Intune
 
 **Conditional Access Policy Setup**
 * Create Conditional Access Policy:
-
+* Users
+  * Include: All Users
+  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
+* Cloud Apps or Actions
+  * Select what this policy applies to: Cloud apps
+  * Include: All Cloud Apps (or at minimum Office 365)
+* Conditions
+* Grant
+  * Grant Access
+  * Require device to be marked as compliant
+  * Require one of the selected controls
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
