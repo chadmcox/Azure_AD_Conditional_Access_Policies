@@ -206,7 +206,7 @@ SigninLogs
 **Comment**  
 My lab has no good data for this.  This query will show the percentage of each of the major things we are looking for.  The idea here is to look and make sure applications actually have the desired protections where it be from a compliant device or MFA.  
 
-This iw what I would expect to see.
+This is what I would expect to see.
 * Every Application is 100% convered by Conditional Access Policies.
 * At minimum the MFAPercentage + TrustedLocationPercentage should equal 100%
 * And in a true zero trust envrionment the CompliantDevicePercentage should be 100%
