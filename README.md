@@ -725,16 +725,18 @@ AADNonInteractiveUserSignInLogs
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-let includeapps = pack_array("Windows Azure Service Management API");
+let includeapps = pack_array("Windows Azure Service Management API","Azure Portal");
 SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where  ResourceDisplayName in (includeapps)
-| where AADTenantId <> HomeTenantId
+| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"  and UserType == "Guest"  
+| where  ResourceDisplayName in (includeapps)  or AppDisplayName in (includeapps)
+| where AADTenantId == ResourceTenantId
 | distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
 ```
 
 **Comment**  
+This policy is designed to stop guest accounts from using management portals.  The idea is guest should be restricted from doing admin type work.
 
+The results from this query are straight forward.  The goal is to provide a list of users that might be affected by applying this policy.  Review the results of this and put in exclusions as needed.
 
 ---
 ### Require guest to MFA
@@ -760,14 +762,14 @@ SigninLogs
 // URL: https://learn.microsoft.com/en-us/azure/active-directory/external-identities/b2b-tutorial-require-mfa
 SigninLogs 
 | where TimeGenerated > ago(14d) and UserType == "Guest" 
-| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AADTenantId <> HomeTenantId
+| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
+| where AADTenantId == ResourceTenantId
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category 
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
 ```
 
 **Comment**  
-
+Guest users should be treated no differently than regular users.  Having a guest register and use mfa adds an additional layer of security as there is no way to know if the guest's email is as secure.  The results from this query show users that did not get prompted for MFA when logging into the tenant, review the list and exclude guest or applications that need to be excluded.  One thing to note is the guest user may need a way outside of self service to reset their MFA.
 
 ---
 ### Require Compliant Device for Office 365 or All Apps
