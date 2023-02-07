@@ -702,6 +702,8 @@ AADNonInteractiveUserSignInLogs
 
 **Comment**  
 
+![Untitled](./media/syncnontrustedlocation.jpg)  
+
 
 ---
 ### Block Guest from Azure Management
