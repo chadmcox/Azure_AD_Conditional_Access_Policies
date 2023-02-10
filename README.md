@@ -31,6 +31,7 @@ from the use or distribution of the Sample Code.._
 * [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
 * [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
 * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#how-to-run-a-log-analytics-query)
+* [Import the policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#how-to-run-a-log-analytics-query)
 * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#find-ipaddress-not-defined-as-trusted)
 * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
 * [Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#percentage-of-mfa--compliant-device--trusted-device--trusted-location--conditional-access-policies-by-applications)
@@ -108,7 +109,22 @@ Not everything here is perfect and is being updated as I learn new things or new
 ![Untitled](./media/law.jpg)   
 
 ---
-### How to create a Conditional Access Policy in Azure AD
+
+### Import the policies from templates
+I have put together a script that will import all of the policies from this github.   
+The scipt can be found here [click here](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/Conditional%20Access%20Policy/Import-AADRecommendedConditionalAccessPolicies.ps1)   
+
+**Instructions**   
+* Copy the contents of the script locally onto a machine.
+* Run the script in PowerShell
+* Select the number of the policy you want to import.
+* Review the results They are always in read-only and have a prefix
+
+_Import menu_   
+![Untitled](./media/importscript.jpg) 
+
+_finished policy_   
+![Untitled](./media/importresult.jpg)   
 
 
 ---
