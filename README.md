@@ -276,7 +276,7 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 * Create Conditional Access Policy:
 * Users
   * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
+  * Exclude: Breakglass, _Exclusion Group_, Guest
 * Cloud Apps or Actions
   * Select what this policy applies to: Cloud apps
   * Include: All Cloud Apps
