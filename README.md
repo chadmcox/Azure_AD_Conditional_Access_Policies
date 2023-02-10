@@ -121,7 +121,7 @@ The scipt can be found here [click here](https://raw.githubusercontent.com/chadm
 * Review the results They are always in read-only and have a prefix
 
 _Import menu_   
-![Untitled](./media/importscript.jpg) 
+![Untitled](./media/importscript1.jpg) 
 
 _finished policy_   
 ![Untitled](./media/importresult.jpg)   
