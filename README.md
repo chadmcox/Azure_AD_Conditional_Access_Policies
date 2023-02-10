@@ -31,7 +31,7 @@ from the use or distribution of the Sample Code.._
 * [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
 * [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
 * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#how-to-run-a-log-analytics-query)
-* [Import the policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#how-to-run-a-log-analytics-query)
+* [Import the policies from templates](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#import-the-policies-from-templates)
 * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#find-ipaddress-not-defined-as-trusted)
 * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
 * [Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#percentage-of-mfa--compliant-device--trusted-device--trusted-location--conditional-access-policies-by-applications)
