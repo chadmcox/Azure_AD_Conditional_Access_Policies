@@ -133,8 +133,9 @@ SigninLogs
 
 This query returns IP addresses where 4 or more unique users have authenticated against Azure AD.  You will want to research each IP and determine if they are owned by the organization or if they belong to something like a public proxy cloud solution like zscaler or umbrella.  Legit ones will need to be defined as a trusted network in Azure AD to make sure any location filtered policy works correctly and to help remediate false positives in Azure Identity Protection
 
-The field uniqueusercountbyip is count of unique list of users.
-It is possible to see ipv6 addresses which usually comes from Azure Networks and will be normal in the near future from the internet.
+Instructions on how to create named locations can be viewed here [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/location-condition#named-locations)   
+
+The field uniqueusercountbyip is count of unique list of users. It is possible to see ipv6 addresses which usually comes from Azure Networks and will be normal in the near future from the internet.
 
 ![Untitled](./media/networkip.jpg)   
 
