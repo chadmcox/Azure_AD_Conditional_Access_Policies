@@ -1100,11 +1100,12 @@ SigninLogs
 ```
 
 **Comment**  
+Privileged Role Members should not be allowed to log in when Identity Protection finds the user to be risky.  These accounts are highly sensitive and there should be no question if they are secure or not.   
+
+The results from thw query finds users that would have triggered this issue.  This is a harder query as every company is not using pim or sentinal.  may need to use the all users query and research which ones are in the roles.  
 
 ---
 ### Block when privileged role member sign in risk is low medium high
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require Premium License 2
 * Ideally use a block over MFA
 
 **Conditional Access Policy Setup**
@@ -1150,6 +1151,9 @@ SigninLogs
 ```
 
 **Comment**  
+Privileged Role Members should not be allowed to log in when Identity Protection finds the sign-in to be risky.  These accounts are highly sensitive and there should be no question if they are secure or not.   
+
+The results from thw query finds users that would have triggered this issue.  This is a harder query as every company is not using pim or sentinal.  may need to use the all users query and research which ones are in the roles.  
 
 ---
 ### Block when Directory Sync Account sign in risk is low medium high
