@@ -221,7 +221,7 @@ SigninLogs
 
 
 **Comment**  
-My lab has no good data for this.  This query will show the percentage of each of the major things we are looking for.  The idea here is to look and make sure applications actually have the desired protections where it be from a compliant device or MFA.  
+My lab has no good data for this.  This query will show the percentage of each of the major things we are looking for.  The idea here is to look and make sure applications actually have the desired protections whether its from a compliant device or MFA.  
 
 This is what I would expect to see.
 * Every Application is 100% convered by Conditional Access Policies.
