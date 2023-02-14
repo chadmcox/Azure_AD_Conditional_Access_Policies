@@ -664,7 +664,8 @@ let privroles = pack_array("Application Administrator","Authentication Administr
 let privusers = AuditLogs 
 | where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
 | extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;
-SigninLogs 
+AADNonInteractiveUserSignInLogs 
+| union SigninLogs 
 | where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
 | extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
 | extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
@@ -675,7 +676,8 @@ SigninLogs
 ```
 let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
 let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN
-SigninLogs 
+AADNonInteractiveUserSignInLogs 
+| union SigninLogs 
 | where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
 | extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
 | extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
