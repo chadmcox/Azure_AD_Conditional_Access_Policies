@@ -130,7 +130,29 @@ _finished policy_
 
 ---
 
-### Create list of privileged users for the kql designed to search for privileged user impact
+### Create list of privileged users for the kql designed to search for privileged user impact  
+
+* Run this in PowerShell
+```
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+* The results of this will be in a file called privuser.txt
+* Open the txt file.  Should look something like this
+```
+8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b
+```
+* Next in the sections titled **Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script** from the section you are reviewing.  Will want to copy the kql statement, and paste in Log Analytics.
+* on line 1 replace the phrase **replace this with the results from the privuser.txt found from the powershell cmdlets** 
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+```
+* to look like
+```
+let privusers = pack_array("8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b");
+```
 
 ---
 
@@ -610,9 +632,21 @@ No example image to show what these results look like.  Review the results from 
 * Session
   * Sign-in frequency 2 Hours
 
-**Log Analytics AAD SigninLogs Query (KQL)**
+**Get list of Privileged Users using PowerShell to use in the kql below**
 ```
-
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
@@ -623,7 +657,8 @@ let privusers = AuditLogs
 | extend Role = tostring(TargetResources[0].displayName) 
 | where Role in (privroles) 
 | distinct Caller;
-SigninLogs 
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
 | where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
@@ -670,7 +705,8 @@ $roles = @("Application Administrator","Authentication Administrator","Cloud App
 **Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
 ```
 let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
-SigninLogs 
+AADNonInteractiveUserSignInLogs
+| union SigninLogs
 | where TimeGenerated > ago(14d) and UserId  in~ (privusers) and ResultType == 0 
 | extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
 | extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
