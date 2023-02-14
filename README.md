@@ -654,9 +654,22 @@ SigninLogs
 * Grant
   * Block Access
 
-**Log Analytics AAD SigninLogs Query (KQL)**
+**Get list of Privileged Users using PowerShell to use in the kql below**
 ```
-
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and ResultType == 0 
+| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
+| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
+| where isLegacyAuth == "Yes"
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
@@ -906,10 +919,24 @@ AADNonInteractiveUserSignInLogs
   * Require device to be marked as compliant
   * Require Hybrid Azure AD joined device
   * Require one of the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
+**Get list of Privileged Users using PowerShell to use in the kql below**
 ```
-
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
+| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
+| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
+| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
+| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
@@ -1074,9 +1101,19 @@ This policy will require anyone with a risky sign-in to have to provide mfa, The
   * Sign-in frequency
   * Every time
 
-**Log Analytics AAD SigninLogs Query (KQL)**
+**Get list of Privileged Users using PowerShell to use in the kql below**
 ```
-
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
+| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
@@ -1127,9 +1164,19 @@ The results from thw query finds users that would have triggered this issue.  Th
   * Sign-in frequency
     * Every time
 
-**Log Analytics AAD SigninLogs Query (KQL)**
+**Get list of Privileged Users using PowerShell to use in the kql below**
 ```
-
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+SigninLogs 
+| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
+| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
 ```
