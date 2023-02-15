@@ -972,7 +972,7 @@ $roles = @("Application Administrator","Authentication Administrator","Cloud App
 ```
 let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
 SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
+| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and ResultType == 0 
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
@@ -1154,7 +1154,7 @@ $roles = @("Application Administrator","Authentication Administrator","Cloud App
 ```
 let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
 SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
+| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
 | project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
@@ -1217,7 +1217,7 @@ $roles = @("Application Administrator","Authentication Administrator","Cloud App
 ```
 let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
 SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
+| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
 | project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
 ```
 **Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
