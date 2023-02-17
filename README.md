@@ -525,6 +525,7 @@ let includeapps = pack_array("Graph Explorer","Microsoft Graph PowerShell");
 AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
 | where AppDisplayName in (includeapps) 
+| where AADTenantId == ResourceTenantId
 | union SigninLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName in (includeapps)
@@ -565,6 +566,7 @@ let includeapps = pack_array("Windows Azure Service Management API","Azure Resou
 AADNonInteractiveUserSignInLogs
 | union SigninLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where AADTenantId == ResourceTenantId
 | where  ResourceDisplayName in (includeapps) or AppDisplayName in (includeapps)
 | distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
 ```
