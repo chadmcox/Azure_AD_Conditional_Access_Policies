@@ -236,7 +236,7 @@ SigninLogs
     ['Total CAP Applied']=countif(ConditionalAccessStatus == 'success')
     by AppDisplayName
 | project
-    AppDisplayName,
+    AppDisplayName,TotalSigninCount = ['Total Signin Count'],
     MFAPercentage=(todouble(['Total MFA Count']) * 100 / todouble(['Total Signin Count'])),
     TrustedDevicePercentage=(todouble(['Total Trusted device']) * 100 / todouble(['Total Signin Count'])),
     CompliantDevicePercentage=(todouble(['Total Compliant device']) * 100 / todouble(['Total Signin Count'])),
