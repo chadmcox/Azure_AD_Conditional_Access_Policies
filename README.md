@@ -561,11 +561,11 @@ Revew the list of users in the results. in the example image below, the breakgla
 ```
 //https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management
 //Common Conditional Access policy: Require MFA for Azure management
-let includeapps = pack_array("Windows Azure Service Management API");
+let includeapps = pack_array("Windows Azure Service Management API","Azure Resource Manager","Azure portal","Azure Data Lake","Application Insights API","Log Analytics API");
 AADNonInteractiveUserSignInLogs
 | union SigninLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where  ResourceDisplayName in (includeapps)
+| where  ResourceDisplayName in (includeapps) or AppDisplayName in (includeapps)
 | distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
 ```
 
