@@ -20,6 +20,8 @@ from the use or distribution of the Sample Code.._
 
 ---
 
+**Deploy the query pack that contains all the queries from this solution**
+
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fchadmcox%2FAzure_AD_Conditional_Access_Policies%2Fmain%2Fconditionalaccesspolicyimpactquerypack.json)
 
 ---
