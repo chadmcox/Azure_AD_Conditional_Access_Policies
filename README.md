@@ -20,6 +20,10 @@ from the use or distribution of the Sample Code.._
 
 ---
 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/chadmcox/Azure_AD_Conditional_Access_Policies/main/conditionalaccesspolicyimpactquerypack.json)
+
+---
+
 **How to use this guide**
 * Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
 * Each link in the table of content contains information about a policy with notes about how to evaluate the impact of the policy.
