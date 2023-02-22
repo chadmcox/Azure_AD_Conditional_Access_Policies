@@ -115,6 +115,17 @@ Not everything here is perfect and is being updated as I learn new things or new
 
 ![Untitled](./media/law.jpg)   
 
+**Or Deploy the query pack that contains all the queries from this solution into the Log Analytics Workspace that contains the Azure AD Audit / Signin logs**
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fchadmcox%2FAzure_AD_Conditional_Access_Policies%2Fmain%2Fconditionalaccesspolicyimpactquerypack.json)
+
+* After the query pack is deployed
+* In the Azure AD Portal
+* Navigate to the Log Analytics Tab
+* Select the Queries and change the group by to Label
+
+![Untitled](./media/querypack.jpg)  
+
 ---
 
 ### Import the policies from templates
