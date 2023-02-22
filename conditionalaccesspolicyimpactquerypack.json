@@ -1,0 +1,608 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "querypacks_Conditional_Access_Policy_Impact_name": {
+            "defaultValue": "Conditional Access Policy Impact",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/querypacks",
+            "apiVersion": "2019-09-01",
+            "name": "[parameters('querypacks_Conditional_Access_Policy_Impact_name')]",
+            "location": "eastus",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/05624fdc-a777-4981-93d6-4d76d38a4ca1')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Always require MFA or Trusted Device or Compliant Device from untrusted networks",
+                "body": "let excludeapps = pack_array(\"Windows Sign In\",\"Microsoft Authentication Broker\",\"Microsoft Account Controls V2\",\"Microsoft Intune Company Portal\",\"Microsoft Mobile Application Management\");\r\n//get an array of guest accounts to exclude from the non interactive logs\r\nlet guests = SigninLogs\r\n| where TimeGenerated > ago(14d) and UserType == \"Guest\" and ResultType == 0 \r\n| where AppDisplayName  !in (excludeapps)\r\n| distinct UserPrincipalName;\r\n//query the non interactive logs\r\nlet AADNon = AADNonInteractiveUserSignInLogs\r\n| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  !in (excludeapps)\r\n| where HomeTenantId == ResourceTenantId and NetworkLocationDetails !contains \"trustedNamedLocation\" and UserPrincipalName !in (guests)\r\n| extend trustType = tostring(parse_json(DeviceDetail).trustType) \r\n| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| extend os = tostring(parse_json(DeviceDetail).operatingSystem) \r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\"  \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category;\r\n//query the interactive logs\r\nlet AAD = SigninLogs \r\n| where TimeGenerated > ago(14d) and UserType <> \"Guest\" and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  !in (excludeapps) \r\n| where NetworkLocationDetails !contains \"trustedNamedLocation\"\r\n| extend trustType = tostring(DeviceDetail.trustType) \r\n| extend isCompliant = tostring(DeviceDetail.isCompliant) \r\n| extend os = tostring(DeviceDetail.operatingSystem) \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\"  \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os,Category;\r\n//combine the results\r\nAADNon\r\n| union AAD\r\n| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/12cda51f-151b-4d6c-9123-d50251cf7a45')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block guest for Low, Medium and High Sign-in Risk",
+                "body": "SigninLogs | where TimeGenerated > ago(14d) and UserType == \"Guest\" and ResultType == 0 \r\n| where AADTenantId <> HomeTenantId\r\n| where RiskLevelDuringSignIn in (\"high\",\"medium\") \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail \r\n| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, RiskLevelDuringSignIn,RiskDetail",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/1913f354-9b95-4c3c-8117-de132bbc3171')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require guest to MFA",
+                "body": "// URL: https://learn.microsoft.com/en-us/azure/active-directory/external-identities/b2b-tutorial-require-mfa\r\nlet excludeapps = pack_array(\"Windows Sign In\",\"Microsoft Authentication Broker\",\"Microsoft Account Controls V2\",\"Microsoft Intune Company Portal\",\"Microsoft Mobile Application Management\");\r\nSigninLogs \r\n| where TimeGenerated > ago(14d) and UserType == \"Guest\" and AppDisplayName !in (excludeapps)\r\n| where ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\"\r\n| where AADTenantId == ResourceTenantId\r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category, UserType\r\n| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category, UserType",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/2115ed58-9dda-415e-9d1e-56475b2dd7d7')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require privileged user to use compliant device from PIM Role Activations",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = AuditLogs \r\n| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == \"RoleManagement\" \r\n| extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;\r\nSigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 \r\n| extend trustType = tostring(parse_json(DeviceDetail).trustType) \r\n| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| extend os = tostring(parse_json(DeviceDetail).operatingSystem) \r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\"  \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/2758cce2-444e-479f-928b-55c185fed29d')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when privileged role member user risk is low medium high using Sentinel IdentityInfo Table",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != \"[]\" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN\r\nSigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in (\"high\",\"medium\",\"low\") \r\n| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/2c3e59c9-cdd9-4341-b1df-22b217d995c0')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when sign-in risk is high",
+                "body": "SigninLogs \r\n| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> \"Guest\"\r\n| where RiskLevelDuringSignIn in (\"high\") \r\n| project ResultType, ResultDescription,AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/2efe323e-4582-4842-b233-1552e9536e77')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Always require MFA from untrusted networks",
+                "body": "let excludeapps = pack_array(\"Windows Sign In\",\"Microsoft Authentication Broker\",\"Microsoft Account Controls V2\",\"Microsoft Intune Company Portal\",\"Microsoft Mobile Application Management\");\r\n//get an array of guest accounts to exclude from the non interactive logs\r\nlet guests = SigninLogs\r\n| where TimeGenerated > ago(14d) and UserType == \"Guest\" and ResultType == 0 \r\n| where AppDisplayName  !in (excludeapps)\r\n| distinct UserPrincipalName;\r\nAADNonInteractiveUserSignInLogs \r\n| where TimeGenerated > ago(14d)\r\n| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)\r\n| where NetworkLocationDetails !contains \"trustedNamedLocation\"\r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) \r\n| union SigninLogs \r\n| where TimeGenerated > ago(14d) \r\n| where UserType <> \"Guest\" \r\n| where NetworkLocationDetails !contains \"trustedNamedLocation\"\r\n| where ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) \r\n| where AppDisplayName  !in (excludeapps)\r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation\r\n| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/3697be86-9a31-4ed1-a748-dae34c9ad3fc')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when privileged role member sign in risk is low medium high using Sentinal IdentityInfo Table",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != \"[]\" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN\r\nSigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in (\"high\",\"medium\",\"low\") \r\n| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/3ad23852-5be2-4397-8b9c-65ddf793a744')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require Compliant Device for Office 365 or All Apps",
+                "body": "let includeapps = pack_array(\"Exchange Online\",\"Microsoft 365 Search Service\",\"Microsoft Forms\",\"Microsoft Planner\",\"Microsoft Stream\",\"Microsoft Teams\",\"Microsoft To-Do\",\"Microsoft Flow\",\"Microsoft Office 365 Portal\",\"Microsoft Office client application\",\"Microsoft Stream\",\"Microsoft To-Do WebApp\",\"Microsoft Whiteboard Services\",\"Office Delve\",\"Office Online\",\"OneDrive\",\"Power Apps\",\"Power Automate\",\"Security & compliance portal\",\"SharePoint Online\",\"Skype for Business Online\",\"Skype and Teams Tenant Admin API\",\"Sway\",\"Yammer\");\r\nAADNonInteractiveUserSignInLogs\r\n| extend trustType = tostring(parse_json(DeviceDetail).trustType) \r\n| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) \r\n| project-away DeviceDetail\r\n| union SigninLogs\r\n| where TimeGenerated > ago(14d) and ResultType == 0\r\n| extend os = tostring(parse_json(DeviceDetail).operatingSystem) \r\n| extend trustType = tostring(parse_json(DeviceDetail).trustType) \r\n| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) \r\n| where AADTenantId == ResourceTenantId\r\n| where  ResourceDisplayName in (includeapps) or AppDisplayName in (includeapps)\r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\"\r\n| extend os = tostring(parse_json(DeviceDetail).operatingSystem) \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, trustType,isCompliant,os,Category;",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/59b2953d-0f62-4bd6-904b-30e163aa4f80')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when privileged role member sign in risk is low medium high   from PIM Role Activations",
+                "body": "//https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy%20Impact%20KQL/Possible%20impact%20of%20Block%20privileged%20user%20if%20sign-in%20risk%20is%20low%20medium%20or%20high.kql\r\nlet privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = AuditLogs \r\n| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == \"RoleManagement\" \r\n| extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;\r\nSigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in (\"high\",\"medium\",\"low\") \r\n| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category\r\n",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/606b2ad1-0f6b-4a73-9512-8781ea61ce6d')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block Legacy Authentication",
+                "body": "AADNonInteractiveUserSignInLogs\r\n| union SigninLogs\r\n| where TimeGenerated > ago(14d) and ResultType == 0\r\n| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, \"Unknown\", ClientAppUsed)  \r\n| extend isLegacyAuth = case(ClientAppUsed contains \"Browser\", \"No\", ClientAppUsed contains \"Mobile Apps and Desktop clients\", \"No\", ClientAppUsed contains \"Exchange ActiveSync\", \"Yes\", ClientAppUsed contains \"Exchange Online PowerShell\",\"Yes\", ClientAppUsed contains \"Unknown\", \"Unknown\", \"Yes\") \r\n| where isLegacyAuth == \"Yes\"\r\n| distinct UserDisplayName, UserPrincipalName, AppDisplayName, ClientAppUsed, isLegacyAuth, UserAgent, Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/63598264-9d74-4eeb-a04a-fa012cf36771')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "No Persistent Browser and 1 Hour Session for Unmanaged Devices",
+                "body": "SigninLogs \r\n| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> \"Guest\" \r\n| extend trustType = tostring(DeviceDetail.trustType) \r\n| extend isCompliant = tostring(DeviceDetail.isCompliant) \r\n| extend deviceName = tostring(DeviceDetail.displayName) \r\n| extend os = tostring(DeviceDetail.operatingSystem) \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) \r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\" and ClientAppUsed == \"Browser\" \r\n| distinct UserPrincipalName, os, deviceName, trustType, isCompliant, TrustedLocation",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/640642ed-25f9-4ee4-b442-a7601b04729b')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when privileged role member user risk is low medium high from PIM Role Activations",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = AuditLogs \r\n| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == \"RoleManagement\" \r\n| extend Caller = tostring(InitiatedBy.user.userPrincipalName) \r\n| extend Role = tostring(TargetResources[0].displayName) \r\n| where Role in (privroles) \r\n| distinct Caller;\r\nSigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in (\"high\",\"medium\",\"low\") \r\n| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category\r\n",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/6d76bab4-6a62-4a53-9468-5b140458fdd5')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block privileged user from legacy authentication using Sentinel IdentityInfo Table",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != \"[]\" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN\r\nAADNonInteractiveUserSignInLogs \r\n| union SigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 \r\n| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, \"Unknown\", ClientAppUsed)  \r\n| extend isLegacyAuth = case(ClientAppUsed contains \"Browser\", \"No\", ClientAppUsed contains \"Mobile Apps and Desktop clients\", \"No\", ClientAppUsed contains \"Exchange ActiveSync\", \"Yes\", ClientAppUsed contains \"Exchange Online PowerShell\",\"Yes\", ClientAppUsed contains \"Unknown\", \"Unknown\", \"Yes\") \r\n| where isLegacyAuth == \"Yes\"\r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/8ee0ea10-4fa8-41aa-ae84-b48dba2b708d')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Always require MFA",
+                "body": "let excludeapps = pack_array(\"Windows Sign In\",\"Microsoft Authentication Broker\",\"Microsoft Account Controls V2\",\"Microsoft Intune Company Portal\",\"Microsoft Mobile Application Management\");\r\n//get an array of guest accounts to exclude from the non interactive logs\r\nlet guests = SigninLogs\r\n| where TimeGenerated > ago(14d) and UserType == \"Guest\" and ResultType == 0 \r\n| where AppDisplayName  !in (excludeapps)\r\n| distinct UserPrincipalName;\r\nAADNonInteractiveUserSignInLogs \r\n| where TimeGenerated > ago(14d)\r\n| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)\r\n| union SigninLogs \r\n| where TimeGenerated > ago(14d) \r\n| where UserType <> \"Guest\" \r\n| where ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  !in (excludeapps)\r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category \r\n| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/98f59160-a487-4734-8279-06b7eb5d6b0d')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require privileged user to MFA using Sentinal IdentityInfo Table",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != \"[]\" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN\r\nAADNonInteractiveUserSignInLogs\r\n| union SigninLogs\r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  <> \"Windows Sign In\" and AppDisplayName <> \"Microsoft Authentication Broker\" and AppDisplayName <> 'Microsoft Account Controls V2' \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/995e2fe7-80fa-4440-a575-020e020949ec')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require MFA for Microsoft Graph PowerShell and Explorer",
+                "body": "let includeapps = pack_array(\"Graph Explorer\",\"Microsoft Graph PowerShell\");\r\nAADNonInteractiveUserSignInLogs\r\n| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\"\r\n| where AppDisplayName in (includeapps) \r\n| union SigninLogs\r\n| where AADTenantId == ResourceTenantId\r\n| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName in (includeapps)\r\n| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/a19333c3-f213-445f-b29f-a34563045612')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Always require MFA or Trusted Device or Compliant Device",
+                "body": "//https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device\r\n//Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users\r\n//list of exclusion applications that seem to always have mfa\r\nlet excludeapps = pack_array(\"Windows Sign In\",\"Microsoft Authentication Broker\",\"Microsoft Account Controls V2\",\"Microsoft Intune Company Portal\",\"Microsoft Mobile Application Management\");\r\n//get an array of guest accounts to exclude from the non interactive logs\r\nlet guests = SigninLogs\r\n| where TimeGenerated > ago(14d) and UserType == \"Guest\" and ResultType == 0 \r\n| where AppDisplayName  !in (excludeapps)\r\n| distinct UserPrincipalName;\r\n//query the non interactive logs\r\nlet AADNon = AADNonInteractiveUserSignInLogs\r\n| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  !in (excludeapps)\r\n| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)\r\n| extend trustType = tostring(parse_json(DeviceDetail).trustType) \r\n| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| extend os = tostring(parse_json(DeviceDetail).operatingSystem) \r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\"  \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category;\r\n//query the interactive logs\r\nlet AAD = SigninLogs \r\n| where TimeGenerated > ago(14d) and UserType <> \"Guest\" and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  !in (excludeapps) \r\n| extend trustType = tostring(DeviceDetail.trustType) \r\n| extend isCompliant = tostring(DeviceDetail.isCompliant) \r\n| extend os = tostring(DeviceDetail.operatingSystem) \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| where isCompliant <> 'true' and trustType <> \"Hybrid Azure AD joined\"  \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os,Category;\r\n//combine the results\r\nAADNon\r\n| union AAD\r\n| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/a6f124ec-21b9-4410-9f67-eec072829810')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Find IP addresses not defined as trusted",
+                "body": "SigninLogs\r\n| where TimeGenerated > ago(30d)\r\n| where ResultType == \"0\"\r\n| where HomeTenantId == ResourceTenantId\r\n| where NetworkLocationDetails !contains \"trustedNamedLocation\"\r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| extend isIPv6 = tostring(iff(IPAddress matches regex @\"(([\\d|\\w]{1,4}\\:){7}[\\d|\\w]{1,4})\",'Yes','No'))\r\n| distinct IPAddress, TrustedLocation, UserPrincipalName, isIPv6\r\n| summarize uniqueusercountbyip = count() by IPAddress, TrustedLocation, isIPv6\r\n| where uniqueusercountbyip >= 4\r\n| sort by uniqueusercountbyip desc \r\n",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/b17b2da1-c0ac-46d0-8f7a-5448947d3b92')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require privileged user to MFA from PIM Role Activations",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = AuditLogs \r\n| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == \"RoleManagement\" \r\n| extend Caller = tostring(InitiatedBy.user.userPrincipalName) \r\n| extend Role = tostring(TargetResources[0].displayName) \r\n| where Role in (privroles) \r\n| distinct Caller;\r\nAADNonInteractiveUserSignInLogs\r\n| union SigninLogs\r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AppDisplayName  <> \"Windows Sign In\" and AppDisplayName <> \"Microsoft Authentication Broker\" and AppDisplayName <> 'Microsoft Account Controls V2' \r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/bc39b867-a938-4fb1-b05d-35b87362f588')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require MFA when sign-in risk is low, medium, or high",
+                "body": "SigninLogs \r\n| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> \"Guest\"\r\n| where RiskLevelDuringSignIn in (\"high\",\"medium\",\"low\") \r\n| distinct AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/c24ddbc3-1e0a-446e-a99c-96492761b379')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when Directory Sync Account sign in risk is low medium high",
+                "body": "//if an account is used other than the default one created by azure ad connect you will need to\r\n//update the syncaccount variable with the other account name instead of sync_\r\nlet syncaccount = \"sync_\";\r\nAADNonInteractiveUserSignInLogs \r\n| union SigninLogs\r\n| where TimeGenerated > ago(14d) \r\n| where UserPrincipalName startswith syncaccount\r\n| where RiskLevelDuringSignIn in (\"high\",\"medium\",\"low\") \r\n| project AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail ",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/d597a2ea-aa6e-4fcf-ad43-c6678f085c87')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block when user risk is high",
+                "body": "SigninLogs \r\n| where TimeGenerated > ago(14d) \r\n| where RiskState == \"atRisk\" and RiskLevelAggregated == \"high\"\r\n| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail,IsRisky, RiskEventTypes_V2, MfaDetail, ConditionalAccessStatus, AuthenticationRequirement, ResultType",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/d5c22108-a252-41dc-bbbb-3b31394922f3')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block privileged user from legacy authentication from PIM Role Activations",
+                "body": "let privroles = pack_array(\"Application Administrator\",\"Authentication Administrator\",\"Cloud Application Administrator\",\"Conditional Access Administrator\",\"Exchange Administrator\",\"Global Administrator\",\"Helpdesk Administrator\",\"Hybrid Identity Administrator\",\"Password Administrator\",\"Privileged Authentication Administrator\",\"Privileged Role Administrator\",\"Security Administrator\",\"SharePoint Administrator\",\"User Administrator\");\r\nlet privusers = AuditLogs \r\n| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == \"RoleManagement\" \r\n| extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;\r\nAADNonInteractiveUserSignInLogs \r\n| union SigninLogs \r\n| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 \r\n| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, \"Unknown\", ClientAppUsed)  \r\n| extend isLegacyAuth = case(ClientAppUsed contains \"Browser\", \"No\", ClientAppUsed contains \"Mobile Apps and Desktop clients\", \"No\", ClientAppUsed contains \"Exchange ActiveSync\", \"Yes\", ClientAppUsed contains \"Exchange Online PowerShell\",\"Yes\", ClientAppUsed contains \"Unknown\", \"Unknown\", \"Yes\") \r\n| where isLegacyAuth == \"Yes\"\r\n| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/dec660a7-7976-4d7a-8e15-3c18dc227363')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Percentage of MFA or Compliant Device or Trusted Device or Trusted Location or Conditional Access Policies by Applications",
+                "body": "SigninLogs\r\n| where TimeGenerated > ago(30d)\r\n| where ResultType == 0 and AppDisplayName <> 'Windows Sign In' and UserType <> \"Guest\"\r\n| where ResourceTenantId == HomeTenantId and AADTenantId == HomeTenantId\r\n| extend trustType = tostring(DeviceDetail.trustType)\r\n| extend isCompliant = tostring(DeviceDetail.isCompliant)\r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))\r\n| summarize\r\n    ['Total Signin Count']=count(),\r\n    ['Total MFA Count']=countif(AuthenticationRequirement == \"multiFactorAuthentication\"),\r\n    ['Total non MFA Count']=countif(AuthenticationRequirement == \"singleFactorAuthentication\"),\r\n    ['Total Trusted device']=countif(trustType == \"Hybrid Azure AD joined\"),\r\n    ['Total Compliant device']=countif(isCompliant == 'true'),\r\n    ['Total Trusted Location']=countif(TrustedLocation == 'trustedNamedLocation'),\r\n    ['Total CAP Applied']=countif(ConditionalAccessStatus == 'success')\r\n    by AppDisplayName\r\n| project\r\n    AppDisplayName,TotalSigninCount = ['Total Signin Count'],\r\n    MFAPercentage=(todouble(['Total MFA Count']) * 100 / todouble(['Total Signin Count'])),\r\n    TrustedDevicePercentage=(todouble(['Total Trusted device']) * 100 / todouble(['Total Signin Count'])),\r\n    CompliantDevicePercentage=(todouble(['Total Compliant device']) * 100 / todouble(['Total Signin Count'])),\r\n    TrustedLocationPercentage=(todouble(['Total Trusted Location']) * 100 / todouble(['Total Signin Count'])),\r\n    ConditionalPolicyAppliedPercentage=(todouble(['Total CAP Applied']) * 100 / todouble(['Total Signin Count']))\r\n| where MFAPercentage <> 100\r\n| sort by MFAPercentage desc  ",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/e61b29e2-39db-4042-a47f-5c5d4c6de876')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Applications not being protected by Conditional Access Policies",
+                "body": "let apps=\r\n    SigninLogs\r\n    | where TimeGenerated > ago (30d)\r\n    | project TimeGenerated, ConditionalAccessPolicies, AppDisplayName\r\n//Exclude native Microsoft apps that you can't enforce policy on or that are covered natively in Office 365\r\n    | where AppDisplayName !in (\"Microsoft Office Web Apps Service\", \"Microsoft App Access Panel\", \"Office Online Core SSO\", \"Microsoft Authentication Broker\", \"Microsoft Account Controls V2\", \"Microsoft 365 Support Service\",\"Office Online Maker SSO\",\"My Apps\",\"My Profile\")\r\n    | mv-expand ConditionalAccessPolicies\r\n    | extend CAResult = tostring(ConditionalAccessPolicies.result)\r\n    | summarize ResultSet=make_set(CAResult) by AppDisplayName\r\n    | where ResultSet !has \"success\" or ResultSet !has \"failure\"\r\n    | project AppDisplayName;\r\nSigninLogs\r\n| where TimeGenerated > ago(30d)\r\n| where ResultType == 0\r\n| where AppDisplayName in (apps)\r\n| summarize Count=count()by AppDisplayName\r\n| top 20 by Count",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/ec33eeed-0233-475e-8e94-b812b002b905')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Require MFA for Microsoft Azure Management",
+                "body": "//https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management\r\n//Common Conditional Access policy: Require MFA for Azure management\r\nlet includeapps = pack_array(\"Windows Azure Service Management API\",\"Azure Resource Manager\",\"Azure portal\",\"Azure Data Lake\",\"Application Insights API\",\"Log Analytics API\");\r\nAADNonInteractiveUserSignInLogs\r\n| union SigninLogs\r\n| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == \"singleFactorAuthentication\" \r\n| where AADTenantId == ResourceTenantId\r\n| where  ResourceDisplayName in (includeapps) or AppDisplayName in (includeapps)\r\n| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/querypacks/queries",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('querypacks_Conditional_Access_Policy_Impact_name'), '/f24218f7-d9e0-45d2-b275-67db2e5afb81')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/querypacks', parameters('querypacks_Conditional_Access_Policy_Impact_name'))]"
+            ],
+            "properties": {
+                "displayName": "Block the Directory Sync Account from non trusted locations",
+                "body": "AADNonInteractiveUserSignInLogs \r\n| union SigninLogs \r\n| where TimeGenerated > ago(14d) \r\n| where UserPrincipalName startswith \"Sync_\" \r\n| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) \r\n| distinct IPAddress, TrustedLocation, UserPrincipalName",
+                "related": {
+                    "categories": [],
+                    "resourceTypes": [
+                        "microsoft.operationalinsights/workspaces"
+                    ]
+                },
+                "tags": {
+                    "labels": []
+                }
+            }
+        }
+    ]
+}
