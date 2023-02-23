@@ -32,6 +32,15 @@ from the use or distribution of the Sample Code.._
 * Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD, by proactively leveraging existing signinlogs and filtering to show the users that could be impacted.
 * Yes it is posible and every organization should still use conditional access policies even if they have a third party IDP.  More information in the requirements section.
 
+---
+**Conditional Access Policy Matrix**
+| Good | * Always require MFA from untrusted networks
+* Always require MFA or Trusted Device or Compliant Device from untrusted networks
+ |
+| Better | Conditional Access Policy |
+| Best | Conditional Access Policy |
+---
+
 **Table of Content**
 * [Goals](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#goals)
 * [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
