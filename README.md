@@ -318,6 +318,7 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 ![Untitled](./media/alwaysrequiremfa.jpg)   
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Always require MFA from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
@@ -379,6 +380,7 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 ![Untitled](./media/alwaysrequiremfauntrustednetwork.jpg)   
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Always require MFA or Trusted Device or Compliant Device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
@@ -443,6 +445,7 @@ This policy is not required if you were able to implement: Always require MFA
 ![Untitled](./media/mfacomptrust.jpg)   
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Always require MFA or Trusted Device or Compliant Device from untrusted networks
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
@@ -510,6 +513,7 @@ This policy is not required if you were able to implement: Always require MFA
 ![Untitled](./media/mfacomptrust.jpg)  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Require MFA for Microsoft Graph PowerShell and Explorer
 * Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
@@ -550,6 +554,7 @@ Revew the list of users in the results. in the example image below, the breakgla
 ![Untitled](./media/graph.jpg)  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Require MFA for Microsoft Azure Management
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management) 
@@ -590,6 +595,7 @@ Revew the list of users in the results. in the example image below, the breakgla
 ![Untitled](./media/azureman.jpg)  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block Legacy Authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
@@ -626,6 +632,7 @@ AADNonInteractiveUserSignInLogs
 No example image to show what these results look like.  Review the results from the query which pulls from both the interactive and non interactive logs.  work with the users to remove the dependancy. The sooner this policy is in place the better.   
  
  [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+ 
 ---
 ### Require privileged user to MFA
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa)  
@@ -692,6 +699,7 @@ AADNonInteractiveUserSignInLogs
 **Comment**  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block privileged user from legacy authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
@@ -761,6 +769,7 @@ AADNonInteractiveUserSignInLogs
 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block the Directory Sync Account from non trusted locations
 * Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations) 
@@ -798,6 +807,7 @@ AADNonInteractiveUserSignInLogs
 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block Guest from Azure Management
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)   
@@ -832,6 +842,7 @@ This policy is designed to stop guest accounts from using management portals.  T
 The results from this query are straight forward.  The goal is to provide a list of users that might be affected by applying this policy.  Review the results of this and put in exclusions as needed.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Require guest to MFA
 * Link to Microsoft Documentation: [change me]()  
@@ -867,6 +878,7 @@ SigninLogs
 Guest users should be treated no differently than regular users.  Having a guest register and use mfa adds an additional layer of security as there is no way to know if the guest's email is as secure.  The results from this query show users that did not get prompted for MFA when logging into the tenant, review the list and exclude guest or applications that need to be excluded.  One thing to note is the guest user may need a way outside of self service to reset their MFA.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Require Compliant Device for Office 365 or All Apps
 * Link to Microsoft Documentation: [Require compliant PCs and mobile devices](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/identity-access-policies?view=o365-worldwide#require-compliant-pcs-and-mobile-devices)  
@@ -908,6 +920,7 @@ AADNonInteractiveUserSignInLogs
 **Comment**  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### No Persistent Browser and 1 Hour Session for Unmanaged Devices
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require reauthentication and disable browser persistence](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-policy-persistent-browser-session)  
@@ -945,6 +958,7 @@ SigninLogs
 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block clients that do not support modern authentication
 * Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
@@ -979,6 +993,7 @@ AADNonInteractiveUserSignInLogs
 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Require privileged user to use compliant device
 * Link to Microsoft Documentation: [Common Conditional Access policy: Require compliant or hybrid Azure AD joined device for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin)  
@@ -1050,6 +1065,7 @@ SigninLogs
 **Comment**  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block when user risk is high
 * Link to Microsoft Documentation: [Common Conditional Access policy: User risk-based password change](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk-user)  
@@ -1087,6 +1103,7 @@ Having two conditional access policies one blocking high sign-in risk and one bl
 ![Untitled](./media/userriskhigh.jpg) 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block when sign-in risk is high
 * Link to Microsoft Documentation: [Common Conditional Access policy: Sign-in risk-based multifactor authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk)  
@@ -1125,6 +1142,7 @@ No image available, the results to this will be very similiar to the results fro
 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Require MFA when sign-in risk is low, medium, or high
 * Link to Microsoft Documentation: [change me]()  
@@ -1162,6 +1180,7 @@ This policy will require anyone with a risky sign-in to have to provide mfa, The
 ![Untitled](./media/risksignin.jpg) 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block when privileged role member user risk is low medium high
 * Link to Microsoft Documentation: [change me]()  
@@ -1228,6 +1247,7 @@ Privileged Role Members should not be allowed to log in when Identity Protection
 The results from thw query finds users that would have triggered this issue.  This is a harder query as every company is not using pim or sentinal.  may need to use the all users query and research which ones are in the roles.  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block when privileged role member sign in risk is low medium high
 * Ideally use a block over MFA
@@ -1290,6 +1310,7 @@ Privileged Role Members should not be allowed to log in when Identity Protection
 The results from thw query finds users that would have triggered this issue.  This is a harder query as every company is not using pim or sentinal.  may need to use the all users query and research which ones are in the roles.  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block when Directory Sync Account sign in risk is low medium high
 * Link to Microsoft Documentation: NA  
@@ -1330,6 +1351,7 @@ This query looks in the logs to see if the Azure AD Connect Sync Account is expe
 No example to show with this one.  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block guest for Low, Medium and High Sign-in Risk
 * Link to Microsoft Documentation: NA 
@@ -1368,6 +1390,7 @@ The results below show a guest account trying to sign into the Azure Portal with
 ![Untitled](./media/riskygust.jpg)  
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Block Service Principal from Non Trusted Networks
 * Link to Microsoft Documentation: NA
