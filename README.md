@@ -38,7 +38,7 @@ from the use or distribution of the Sample Code.._
 |   |  Conditional Access Policy  |
 | ------------- | ------------- |
 | Good | Always require MFA from untrusted networks <br /> Always require MFA or Trusted Device or Compliant Device from untrusted networks |
-| Better | Conditional Access Policy |
+| Better | Always require MFA or Trusted Device or Compliant Device <br /> Require MFA when sign-in risk is high <br /> Require password change when user risk is high <br /> Block privileged user from legacy authentication <br /> Require MFA for Microsoft Graph PowerShell and Explorer <br /> Require MFA for Microsoft Azure Management <br /> Require privileged user to MFA <br /> Require privileged user to use compliant device <br /> Require Compliant Device for Office 365 <br /> Block Guest for Medium and High Sign-in Risk |
 | Best | Conditional Access Policy |
 ---
 
