@@ -34,6 +34,7 @@ from the use or distribution of the Sample Code.._
 
 ---
 
+**Table of Content**
 * [Goals](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#goals)
 * [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
 * [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
