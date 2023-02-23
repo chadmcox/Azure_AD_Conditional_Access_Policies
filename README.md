@@ -828,7 +828,7 @@ AADNonInteractiveUserSignInLogs
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-let includeapps = pack_array("Windows Azure Service Management API","Azure Portal");
+let includeapps = pack_array("Windows Azure Service Management API","Azure Resource Manager","Azure portal","Azure Data Lake","Application Insights API","Log Analytics API");
 SigninLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"  and UserType == "Guest"  
 | where  ResourceDisplayName in (includeapps)  or AppDisplayName in (includeapps)
