@@ -43,7 +43,8 @@ from the use or distribution of the Sample Code.._
 * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
 * [Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#percentage-of-mfa--compliant-device--trusted-device--trusted-location--conditional-access-policies-by-applications)
 * [Create list of privileged users with powershell for the kql statement for findings related to privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
-* [Conditional Access Policy Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
+* [Conditional Access Policy Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)  
+
 ---
 
 ### Conditional Access Policy Matrix
