@@ -217,6 +217,7 @@ The image below, shows the applications and the logon count of those apps that i
 
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 ### Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications
 
@@ -263,6 +264,7 @@ This is what I would expect to see.
 ![Untitled](./media/percent.jpg)   
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
+
 ---
 
 ### Always require MFA
