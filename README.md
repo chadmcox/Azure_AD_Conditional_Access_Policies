@@ -33,10 +33,9 @@ from the use or distribution of the Sample Code.._
 * Yes it is posible and every organization should still use conditional access policies even if they have a third party IDP.  More information in the requirements section.
 
 ---
-**Conditional Access Policy Matrix**
-| Good | * Always require MFA from untrusted networks
-* Always require MFA or Trusted Device or Compliant Device from untrusted networks
- |
+
+**Conditional Access Policy Matrix**   
+| Good | Always require MFA from untrusted networks /n Always require MFA or Trusted Device or Compliant Device from untrusted networks |
 | Better | Conditional Access Policy |
 | Best | Conditional Access Policy |
 ---
