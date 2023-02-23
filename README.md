@@ -34,7 +34,7 @@ from the use or distribution of the Sample Code.._
 
 ---
 
-**Conditional Access Policy Matrix**  
+### Conditional Access Policy Matrix
 |   |  Conditional Access Policy  |
 | ------------- | ------------- |
 | Entry | Always require MFA from untrusted networks <br /> Always require MFA or Trusted Device or Compliant Device from untrusted networks <br /> Block Exchange ActiveSync <br /> Require MFA when sign-in risk is high <br /> Require password change when user risk is high <br /> Require privileged  role member to MFA |
