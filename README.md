@@ -56,47 +56,7 @@ from the use or distribution of the Sample Code.._
 | Mature | Always require MFA with Auth Strengths (Fido2,CBA, Microsoft Authenticator password-less or Windows Hello for Business) <br /> Limit session to 12 Hours <br /> Block Legacy Authentication <br /> Block the Directory Sync Account from non-trusted locations <br /> Require guest to MFA <br /> Require Compliant Device for All Apps <br /> No Persistent Browser and 1 Hour Session for Unmanaged Devices <br /> Block when user risk is high <br /> Block when sign-in risk is high <br /> Require MFA when sign-in risk is low, medium, or high <br /> Block when privileged role member user risk is low medium high <br /> Block when privileged  role member sign in risk is low medium high <br /> Block when Directory Sync Account sign in risk is low medium high <br /> Block Guest for Low, Medium and High Sign-in Risk <br /> Restrict guest to approved apps <br /> Restrict Office 365 service accounts to Office 365 API's <br /> Restrict Azure service accounts to Azure Management API's endpoints  |
 ---
 
-**Table of Content**
-* [Goals](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#goals)
-* [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
-* [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
-* [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#how-to-run-a-log-analytics-query)
-* [Import the policies from templates](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#import-the-policies-from-templates)
-* [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#find-ipaddress-not-defined-as-trusted)
-* [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
-* [Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#percentage-of-mfa--compliant-device--trusted-device--trusted-location--conditional-access-policies-by-applications)
-* [Create list of privileged users with powershell for the kql statement for findings related to privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
-* [Conditional Access Policies]()
-  * [Default or Base MFA Policy]()
-    * [Option 1: Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa)
-    * [Option 2: Always require MFA from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-from-untrusted-networks)
-    * [Option 3: Always require MFA or Trusted Device or Compliant Device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-or-trusted-device-or-compliant-device)
-    * [Option 4: Always require MFA or Trusted Device or Compliant Device from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-or-trusted-device-or-compliant-device-from-untrusted-networks)
-  * [Require MFA for Microsoft Graph PowerShell and Explorer](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-for-microsoft-graph-powershell-and-explorer)
-  * [Require MFA for Microsoft Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-for-microsoft-azure-management)
-  * [Require privileged user to MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-mfa)
-  * [Block Legacy Authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-legacy-authentication)
-    * [Block privileged user from legacy authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-privileged-user-from-legacy-authentication)
-    * [Block clients that do not support modern authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-clients-that-do-not-support-modern-authentication)
-  * [Block the Directory Sync Account from non trusted locations](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-the-directory-sync-account-from-non-trusted-locations)
-  * [Block Guest from Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-from-azure-management)
-  * [Require guest to MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-guest-to-mfa)
-  * [Require Compliant Device for Office 365](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-compliant-device-for-office-365-or-all-apps)
-  * [No Persistent Browser and 1 Hour Session for Unmanaged Devices](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#no-persistent-browser-and-1-hour-session-for-unmanaged-devices)
-  * [Require privileged user to use compliant device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-use-compliant-device)
-  * [Require MFA Device Join/Registration](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-compliant-device-for-office-365-or-all-apps)
-  * [Identity Protection Risk Policies]()
-    * [Block when user risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-user-risk-is-high)
-    * [Block when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high)
-    * [Require MFA when sign-in risk is low, medium, or high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-when-sign-in-risk-is-low-medium-or-high)
-    * [Block when privileged users user risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-user-risk-is-low-medium-high)
-    * [Block when privileged user sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-sign-in-risk-is-low-medium-high)
-    * [Block when Directory Sync Account sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-directory-sync-account-sign-in-risk-is-low-medium-high)
-    * [Block Guest for Low, Medium and High Sign-in Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-for-low-medium-and-high-sign-in-risk)
-  * [Work Identity Policies]()
-    * [Block Service Principal from Non Trusted Networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-service-principal-from-non-trusted-networks)
-    * [Block Service Principal with High Medium Low Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-service-principal-with-high-medium-low-risk)
-* [References](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#references)
+
 
 ---
 ### Goals
