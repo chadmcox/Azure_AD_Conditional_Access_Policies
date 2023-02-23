@@ -37,8 +37,7 @@ from the use or distribution of the Sample Code.._
 **Conditional Access Policy Matrix**  
 |   |  Conditional Access Policy  |
 | ------------- | ------------- |
-| Good | * Always require MFA from untrusted networks
-* Always require MFA or Trusted Device or Compliant Device from untrusted networks |
+| Good | Always require MFA from untrusted networks <br /> Always require MFA or Trusted Device or Compliant Device from untrusted networks |
 | Better | Conditional Access Policy |
 | Best | Conditional Access Policy |
 ---
