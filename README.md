@@ -39,7 +39,7 @@ from the use or distribution of the Sample Code.._
 | ------------- | ------------- |
 | Good | Always require MFA from untrusted networks <br /> Always require MFA or Trusted Device or Compliant Device from untrusted networks |
 | Better | Always require MFA or Trusted Device or Compliant Device <br /> Require MFA when sign-in risk is high <br /> Require password change when user risk is high <br /> Block privileged user from legacy authentication <br /> Require MFA for Microsoft Graph PowerShell and Explorer <br /> Require MFA for Microsoft Azure Management <br /> Require privileged user to MFA <br /> Require privileged user to use compliant device <br /> Require Compliant Device for Office 365 <br /> Block Guest for Medium and High Sign-in Risk |
-| Best | Conditional Access Policy |
+| Best | Always require MFA <br /> Require privileged user to MFA with Auth Strengths (Fido2,CBA, Microsoft Authenticator password-less) <br /> Limit session to 12 Hours <br /> Block Legacy Authentication <br /> Block the Directory Sync Account from non-trusted locations <br /> Require guest to MFA <br /> Require Compliant Device for All Apps <br /> No Persistent Browser and 1 Hour Session for Unmanaged Devices <br /> Block when user risk is high <br /> Block when sign-in risk is high <br /> Require MFA when sign-in risk is low, medium, or high <br /> Block when privileged users user risk is low medium high <br /> Block when privileged user sign in risk is low medium high <br /> Block when Directory Sync Account sign in risk is low medium high <br /> Block Guest for Low, Medium and High Sign-in Risk <br /> Block Guest from Azure Managementt |
 ---
 
 **Table of Content**
