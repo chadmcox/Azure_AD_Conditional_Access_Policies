@@ -697,6 +697,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
+The results of these queries will show privileged users that are not using MFA when signing in.  Review the results and look for for user based service accounts that will be affected by this policy and exclude them.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
 
@@ -766,7 +767,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
-
+The list from the results are privileged users that would be affected by this policy.  I have found it easier for orgs to apply these restrictions to privileged users before applying to all users.  The goal of this policy is to make sure no privileged user is actively using basic authentication.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
 
@@ -802,6 +803,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
+This account if compromised is limited to a particular endpoint, however it is possible to compromise the account.  The goal is to make sure it is limited to trusted networks.  This query will show if any of the accounts are being used from untrusted networks.  the idea is to review the ip address and define it if it is trusted.
 
 ![Untitled](./media/syncnontrustedlocation.jpg)  
 
@@ -918,6 +920,8 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
+These results show users logging in with non compliant devices.  The initial goal is to have it only apply to users using office 365, ultimately requiring it for all applications.  Will want to review these results and determine the impact of this policy.
+
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
 
@@ -955,7 +959,7 @@ SigninLogs
 ```
 
 **Comment**  
-
+This policy is to make sure that token session are limited on non trusted devices.  This is to help prevent tokens from being compromised and replayed.  The results show users that will be affected by this policy.  Do not put this in if the device / compliance journey is still under works as users will be prompted frequently.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
 
@@ -990,7 +994,7 @@ AADNonInteractiveUserSignInLogs
 ```
 
 **Comment**  
-
+These results show users using basic auth.  Find users being called out in this and put them in as an exception while working with the account owners to stop using basic authentication.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
 
@@ -1063,6 +1067,7 @@ SigninLogs
 ```
 
 **Comment**  
+This shows privileged users that are logging in without a compliant devices.  I have found most orgs are not to a point to be able to require this for all users.  the goal is to focus on the privileged accounts to make sure an admin is not logging into random machines where tokens could be exploited.
 
 [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
 
