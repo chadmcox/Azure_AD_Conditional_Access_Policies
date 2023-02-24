@@ -536,7 +536,6 @@ let includeapps = pack_array("Graph Explorer","Microsoft Graph PowerShell");
 AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
 | where AppDisplayName in (includeapps) 
-| where AADTenantId == ResourceTenantId
 | union SigninLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName in (includeapps)
