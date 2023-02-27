@@ -432,7 +432,7 @@ let AAD = SigninLogs
 //combine the results
 AADNon
 | union AAD
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os
+| summarize apps=make_list(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
 ```
 
 **Comment**  
@@ -500,7 +500,7 @@ let AAD = SigninLogs
 //combine the results
 AADNon
 | union AAD
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant,os
+| summarize apps=make_list(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
 ```
 
 **Comment**  
