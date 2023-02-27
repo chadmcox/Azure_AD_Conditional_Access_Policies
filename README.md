@@ -351,12 +351,12 @@ let guests = SigninLogs
 | distinct UserPrincipalName;
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
-| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)
+| where UserPrincipalName !in (guests)
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
 | union SigninLogs 
 | where TimeGenerated > ago(14d) 
-| where UserType <> "Guest" 
+| where UserType <> "Guest" and HomeTenantId == ResourceTenantId
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
@@ -412,7 +412,7 @@ let guests = SigninLogs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
-| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)
+| where UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
@@ -423,6 +423,7 @@ let AADNon = AADNonInteractiveUserSignInLogs
 let AAD = SigninLogs 
 | where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps) 
+| where HomeTenantId == ResourceTenantId
 | extend trustType = tostring(DeviceDetail.trustType) 
 | extend isCompliant = tostring(DeviceDetail.isCompliant) 
 | extend os = tostring(DeviceDetail.operatingSystem) 
