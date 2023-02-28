@@ -301,7 +301,7 @@ AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) 
 | where UserType <> "Guest" 
 | where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  !in (excludeapps)
+| where AppDisplayName  !in (excludeapps) and AppDisplayName <> ''
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category 
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category
 ```
@@ -362,7 +362,7 @@ AADNonInteractiveUserSignInLogs
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
-| where AppDisplayName  !in (excludeapps)
+| where AppDisplayName  !in (excludeapps) and AppDisplayName <> ''
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation
 | summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation
 ```
@@ -436,7 +436,8 @@ let AAD = SigninLogs
 //combine the results
 AADNon
 | union AAD
-| summarize apps=make_list(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
+| where AppDisplayName <> ''
+| summarize apps=make_set(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
 ```
 
 **Comment**  
@@ -506,7 +507,8 @@ let AAD = SigninLogs
 //combine the results
 AADNon
 | union AAD
-| summarize apps=make_list(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
+| where AppDisplayName <> ''
+| summarize apps=make_set(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
 ```
 
 **Comment**  
