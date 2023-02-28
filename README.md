@@ -295,6 +295,7 @@ let guests = SigninLogs
 | distinct UserPrincipalName;
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
+| where Status !contains "MFA requirement satisfied by claim in the token"
 | where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)
 | union SigninLogs 
 | where TimeGenerated > ago(14d) 
@@ -352,6 +353,7 @@ let guests = SigninLogs
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
 | where UserPrincipalName !in (guests)
+| where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
 | union SigninLogs 
@@ -411,6 +413,7 @@ let guests = SigninLogs
 //query the non interactive logs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
+| where Status !contains "MFA requirement satisfied by claim in the token"
 | where AppDisplayName  !in (excludeapps)
 | where UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
@@ -480,6 +483,7 @@ let guests = SigninLogs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
+| where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation" and UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
