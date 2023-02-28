@@ -291,6 +291,7 @@ let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker"
 //get an array of guest accounts to exclude from the non interactive logs
 let guests = SigninLogs
 | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
+| where TenantId == ResourceTenantId
 | where AppDisplayName  !in (excludeapps)
 | distinct UserPrincipalName;
 AADNonInteractiveUserSignInLogs 
@@ -349,6 +350,7 @@ let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker"
 let guests = SigninLogs
 | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
 | where AppDisplayName  !in (excludeapps)
+| where TenantId == ResourceTenantId
 | distinct UserPrincipalName;
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
@@ -414,6 +416,7 @@ let guests = SigninLogs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where Status !contains "MFA requirement satisfied by claim in the token"
+| where TenantId == ResourceTenantId
 | where AppDisplayName  !in (excludeapps)
 | where UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
@@ -484,6 +487,7 @@ let guests = SigninLogs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
+| where TenantId == ResourceTenantId
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation" and UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
