@@ -288,19 +288,14 @@ _Note: this policy will more than likely break on premise sync accounts, make su
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-//get an array of guest accounts to exclude from the non interactive logs
-let guests = SigninLogs
-| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
-| where TenantId == ResourceTenantId
-| where AppDisplayName  !in (excludeapps)
-| distinct UserPrincipalName;
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
 | where Status !contains "MFA requirement satisfied by claim in the token"
-| where HomeTenantId == ResourceTenantId and UserPrincipalName !in (guests)
+| where TenantId == ResourceTenantId
 | union SigninLogs 
 | where TimeGenerated > ago(14d) 
 | where UserType <> "Guest" 
+| where HomeTenantId == ResourceTenantId
 | where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps) and AppDisplayName <> ''
 | distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category 
@@ -346,15 +341,9 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 //this query will show users that login from untrusted networks and only provide singlefactor authentication
 //list of exclusion applications that seem to always have mfa
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-//get an array of guest accounts to exclude from the non interactive logs
-let guests = SigninLogs
-| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
-| where AppDisplayName  !in (excludeapps)
-| where TenantId == ResourceTenantId
-| distinct UserPrincipalName;
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
-| where UserPrincipalName !in (guests)
+| where TenantId == ResourceTenantId
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
@@ -407,18 +396,12 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 //Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users
 //list of exclusion applications that seem to always have mfa
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-//get an array of guest accounts to exclude from the non interactive logs
-let guests = SigninLogs
-| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
-| where AppDisplayName  !in (excludeapps)
-| distinct UserPrincipalName;
 //query the non interactive logs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where TenantId == ResourceTenantId
 | where AppDisplayName  !in (excludeapps)
-| where UserPrincipalName !in (guests)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
@@ -478,18 +461,13 @@ This policy is not required if you were able to implement: Always require MFA
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-//get an array of guest accounts to exclude from the non interactive logs
-let guests = SigninLogs
-| where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
-| where AppDisplayName  !in (excludeapps)
-| distinct UserPrincipalName;
 //query the non interactive logs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
 | where TenantId == ResourceTenantId
 | where Status !contains "MFA requirement satisfied by claim in the token"
-| where NetworkLocationDetails !contains "trustedNamedLocation" and UserPrincipalName !in (guests)
+| where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
