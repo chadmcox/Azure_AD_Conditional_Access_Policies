@@ -674,7 +674,7 @@ AADNonInteractiveUserSignInLogs
 **Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
 ```
 let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN
+let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN;
 AADNonInteractiveUserSignInLogs
 | union SigninLogs
 | where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
