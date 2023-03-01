@@ -287,14 +287,15 @@ _Note: this policy will more than likely break on premise sync accounts, make su
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
+let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
+let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
 | where Status !contains "MFA requirement satisfied by claim in the token"
-| where HomeTenantId == ResourceTenantId
 | union SigninLogs 
 | where TimeGenerated > ago(14d) 
-| where UserType <> "Guest" 
+| where UserType <> "Guest" and UserId !in (guests)
 | where HomeTenantId == ResourceTenantId
 | where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps) and AppDisplayName <> ''
@@ -338,18 +339,18 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-//this query will show users that login from untrusted networks and only provide singlefactor authentication
-//list of exclusion applications that seem to always have mfa
+let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
+let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
-| where HomeTenantId == ResourceTenantId
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
 | union SigninLogs 
 | where TimeGenerated > ago(14d) 
-| where UserType <> "Guest" and HomeTenantId == ResourceTenantId
+| where UserType <> "Guest" and UserId !in (guests)
+| where HomeTenantId == ResourceTenantId
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
@@ -392,15 +393,14 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
-//https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device
-//Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users
-//list of exclusion applications that seem to always have mfa
+let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
+let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
 //query the non interactive logs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where Status !contains "MFA requirement satisfied by claim in the token"
-| where HomeTenantId == ResourceTenantId
+| where UserId !in (guests)
 | where AppDisplayName  !in (excludeapps)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
@@ -412,6 +412,7 @@ let AADNon = AADNonInteractiveUserSignInLogs
 let AAD = SigninLogs 
 | where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps) 
+| where UserType <> "Guest" and UserId !in (guests)
 | where HomeTenantId == ResourceTenantId
 | extend trustType = tostring(DeviceDetail.trustType) 
 | extend isCompliant = tostring(DeviceDetail.isCompliant) 
@@ -460,12 +461,13 @@ This policy is not required if you were able to implement: Always require MFA
 
 **Log Analytics AAD SigninLogs Query (KQL)**
 ```
+let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
+let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-//query the non interactive logs
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
-| where HomeTenantId == ResourceTenantId
+| where UserId !in (guests)
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
@@ -479,6 +481,7 @@ let AAD = SigninLogs
 | where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps) 
 | where NetworkLocationDetails !contains "trustedNamedLocation"
+| where UserType <> "Guest" and UserId !in (guests)
 | where HomeTenantId == ResourceTenantId
 | extend trustType = tostring(DeviceDetail.trustType) 
 | extend isCompliant = tostring(DeviceDetail.isCompliant) 
