@@ -291,7 +291,7 @@ let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker"
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
 | where Status !contains "MFA requirement satisfied by claim in the token"
-| where TenantId == ResourceTenantId
+| where HomeTenantId == ResourceTenantId
 | union SigninLogs 
 | where TimeGenerated > ago(14d) 
 | where UserType <> "Guest" 
@@ -343,7 +343,7 @@ Looking at the image below.  I would make sure to exclude the breakglass account
 let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
 AADNonInteractiveUserSignInLogs 
 | where TimeGenerated > ago(14d)
-| where TenantId == ResourceTenantId
+| where HomeTenantId == ResourceTenantId
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
@@ -400,7 +400,7 @@ let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker"
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where Status !contains "MFA requirement satisfied by claim in the token"
-| where TenantId == ResourceTenantId
+| where HomeTenantId == ResourceTenantId
 | where AppDisplayName  !in (excludeapps)
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
 | extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
@@ -465,7 +465,7 @@ let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker"
 let AADNon = AADNonInteractiveUserSignInLogs
 | where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
 | where AppDisplayName  !in (excludeapps)
-| where TenantId == ResourceTenantId
+| where HomeTenantId == ResourceTenantId
 | where Status !contains "MFA requirement satisfied by claim in the token"
 | where NetworkLocationDetails !contains "trustedNamedLocation"
 | extend trustType = tostring(parse_json(DeviceDetail).trustType) 
