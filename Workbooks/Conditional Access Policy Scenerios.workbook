@@ -87,8 +87,5 @@
       }
     }
   ],
-  "fallbackResourceIds": [
-    "/subscriptions/0292f9d1-2712-4325-98ba-fbc2b5058169/resourcegroups/rg-m365x437870/providers/microsoft.operationalinsights/workspaces/la-m365x437870"
-  ],
   "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
 }
