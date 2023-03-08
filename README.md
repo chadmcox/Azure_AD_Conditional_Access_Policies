@@ -75,7 +75,7 @@ from the use or distribution of the Sample Code.._
   * Ability to query Sign in logs via microsoft graph
 * **If a third party IDP or ADFS is used to federate the tenant and mfa is being performed there instead of AAD, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs and bypasses MFA.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value and Azure AD will have no idea 
 * Third Party IDP notes for MFA and Conditional Access Policies
-  * [Use Okta MFA for Azure Active Directory](https://help.okta.com/en-us/Content/Topics/Apps/Office365/Use_Okta_MFA_Azure_AD_MFA.htm)
+  * [Use Okta MFA for Azure Active Directory](https://help.okta.com/en-us/Content/Topics/Apps/Office365/Use_Okta_MFA_Azure_AD_MFA.htm) - OKTA does have some known issues though.
   * [PingID as on premises MFA for federated Office 365 users](https://support.pingidentity.com/s/article/PingID-as-on-premises-MFA-for-federated-Office-365-users)
 * Risk Policies require P2 License.
 * Workload Identity License is required to view those risk.   
