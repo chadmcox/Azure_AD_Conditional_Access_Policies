@@ -17,6 +17,7 @@
  * Block privileged role members when user risk is low, medium and high
  * Block access to Microsoft Azure Management when sign-in risk is low, medium and high
  * Block access to Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
+ * Block when directory sync account when sign in risk is low, medium and high
 
 ## Data Protection
  * Restrict guest to 2 hour session limit
@@ -33,6 +34,7 @@
  * Block all users access from tor exit nodes
  * Block guest access from country
  * Block privileged role members from countries except US (other acceptable countries)
+ * Block directory sync account from non trusted location
 
 ## Compliance
  * Require TOU for Guest
