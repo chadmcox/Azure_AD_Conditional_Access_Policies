@@ -21,8 +21,8 @@
  * Block when directory sync account when sign in risk is low, medium and high
 
 ## Data Protection
- * Restrict guest to 2 hour session limit
- * Restrict privileged role members to 2 hour session limit
+ * Restrict guest to less than 8 hour session limit
+ * Restrict privileged role members to less than 8 hour session limit
  * Restrict nontrusted or noncompliant device to 1 hour session limit
  * Restrict nontrusted or noncompliant device to no persistent browser session
  * Restrict guest to browser sessions
