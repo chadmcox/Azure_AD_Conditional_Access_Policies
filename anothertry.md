@@ -23,8 +23,8 @@
 ## Data Protection
  * Restrict guest to less than 8 hour session limit
  * Restrict privileged role members to less than 8 hour session limit
- * Restrict nontrusted or noncompliant device to 1 hour session limit
- * Restrict nontrusted or noncompliant device to no persistent browser session
+ * Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
+ * Restrict internal users using nontrusted or noncompliant device to no persistent browser session
  * Restrict guest to browser sessions
 
 ## App Protection
