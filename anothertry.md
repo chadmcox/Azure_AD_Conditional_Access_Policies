@@ -8,6 +8,7 @@
  * Require MFA for privileged role members
  * Require compliant or trusted device for office 365
  * Require MFA from non trusted location
+ * Require privileged role member to use compliant device
 
 ## Identity Protection
  * Block all users when user risk is high
