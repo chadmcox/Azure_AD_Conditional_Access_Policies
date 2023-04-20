@@ -37,6 +37,7 @@
  * Block guest access from country
  * Block privileged role members from countries except US (other acceptable countries)
  * Block directory sync account from non trusted location
+ * Block accounts excluded from require MFA policies from non trusted location
 
 ## Compliance
  * Require TOU for Guest
