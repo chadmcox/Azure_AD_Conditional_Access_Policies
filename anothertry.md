@@ -6,6 +6,8 @@
  * Require MFA to Microsoft Azure Management
  * Require MFA to Microsoft Graph PowerShell and Graph Explorer
  * Require MFA for privileged role members
+ * Require compliant or trusted device for office 365
+ * Require MFA from non trusted location
 
 ## Identity Protection
  * Block all users when user risk is high
@@ -29,6 +31,8 @@
  * Block privileged role members legacy authentication
  * Block privileged role members from unsupported platforms.
  * Block all users access from tor exit nodes
+ * Block guest access from country
+ * Block privileged role members from countries except US (other acceptable countries)
 
 ## Compliance
  * Require TOU for Guest
