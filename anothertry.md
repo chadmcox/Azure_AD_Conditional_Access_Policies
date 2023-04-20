@@ -6,7 +6,7 @@
  * Require MFA to Microsoft Azure Management
  * Require MFA to Microsoft Graph PowerShell and Graph Explorer
  * Require MFA for privileged role members
- * Require internal users compliant or trusted device for office 365
+ * Require internal users to use compliant or trusted device for office 365
  * Require MFA for internal users from non trusted location
  * Require privileged role member to use compliant device
 
