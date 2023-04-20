@@ -25,6 +25,7 @@
  * Restrict privileged role members to 2 hour session limit
  * Restrict nontrusted or noncompliant device to 1 hour session limit
  * Restrict nontrusted or noncompliant device to no persistent browser session
+ * Restrict guest to browser sessions
 
 ## App Protection
 
