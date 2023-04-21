@@ -40,6 +40,7 @@
  * Block all users access to Microsoft Azure Management when sign-in risk is low, medium and high
  * Block all users access to Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
  * Block directory sync account when sign in risk is low, medium and high
+ * Block internal users from register security information when sign in risk is low, medium and high
 
 ## Data Protection
  * Restrict guest to less than 8 hour session limit
