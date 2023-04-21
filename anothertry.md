@@ -4,7 +4,7 @@
  * Internal Users = All Users Exclude Guest
  * Privileged Role Members = Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
  * Directory Sync Account = Directory Role (Directory Sync Account)
- * Break Glass Account = Account that should be excluded from all policies
+ * Break Glass Account = Emergency Account that needs to be excluded from all policies
  * Accounts Excluded = Usually Service accounts or vault accounts that present an issue because MFA cannot be used.
 
 ## Base Protection
