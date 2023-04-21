@@ -1,10 +1,17 @@
+
+## Persona's
+ * All Users = All Users
+ * Internal Users = All Users Exclude Guest
+ * Privileged Role Members = Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
+ * Directory Sync Account = Directory Role (Directory Sync Account)
+ * Break Glass Account = Account that should be excluded from all policies
+ * Accounts Excluded = Usually Service accounts or vault accounts that present an issue because MFA cannot be used.
+
 ## Base Protection
  * Require internal users to use trusted or compliant device for register security information
  * Require MFA for intune enrollment
  * Require MFA for device enrollment
  * Require MFA all guest
- * Require MFA to Microsoft Azure Management
- * Require MFA to Microsoft Graph PowerShell and Graph Explorer
  * Require MFA for privileged role members
  * Require internal users to use compliant or trusted device for office 365
  * Require MFA for internal users from non trusted location
@@ -16,8 +23,8 @@
  * Require MFA for all users when sign-in risk is medium
  * Block privileged role members when sign-in risk is low, medium and high
  * Block privileged role members when user risk is low, medium and high
- * Block access to Microsoft Azure Management when sign-in risk is low, medium and high
- * Block access to Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
+ * Block all users access to Microsoft Azure Management when sign-in risk is low, medium and high
+ * Block all users access to Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
  * Block directory sync account when sign in risk is low, medium and high
 
 ## Data Protection
@@ -28,6 +35,8 @@
  * Restrict guest to browser sessions
 
 ## App Protection
+ * Require MFA to Microsoft Azure Management
+ * Require MFA to Microsoft Graph PowerShell and Graph Explorer
 
 ## Attack Surface Reduction
  * Block all users legacy authentication
