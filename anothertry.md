@@ -1,5 +1,5 @@
 ## Base Protection
- * Require trusted or compliant device for register security information
+ * Require internal users to use trusted or compliant device for register security information
  * Require MFA for intune enrollment
  * Require MFA for device enrollment
  * Require MFA all guest
