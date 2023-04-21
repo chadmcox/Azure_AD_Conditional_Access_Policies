@@ -11,10 +11,11 @@
  * **Directory Sync Account** = Directory Role (Directory Sync Account)
  * **Break Glass Account** = Emergency Account that needs to be excluded from all policies
  * **Accounts Excluded** = Usually Service accounts or vault accounts that present an issue because MFA cannot be used.
+ * **Azure Subscription Owners** = These are actual owners of Azure Subscriptions.
 
 ## Base Protection
  * Require internal users to use trusted or compliant device for register security information
- * Require MFA for intune enrollment
+ * Require MFA for Microsoft Intune enrollment
  * Require MFA for device enrollment
  * Require MFA all guest
  * Require MFA for privileged role members
@@ -22,6 +23,7 @@
  * Require MFA for internal users from non trusted location
  * Require privileged role member to use compliant device
  * Require MFA for Azure Subscription Owners
+ * Require MFA for Microsoft Intune
 
 ## Identity Protection
  * Block all users when user risk is high
