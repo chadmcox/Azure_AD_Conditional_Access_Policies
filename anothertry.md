@@ -21,6 +21,7 @@
  * Require internal users to use compliant or trusted device for office 365
  * Require MFA for internal users from non trusted location
  * Require privileged role member to use compliant device
+ * Require MFA for Azure Subscription Owners
 
 ## Identity Protection
  * Block all users when user risk is high
