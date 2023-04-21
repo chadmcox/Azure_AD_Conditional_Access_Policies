@@ -40,7 +40,7 @@
  * Restrict privileged role members to less than 8 hour session limit
  * Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
  * Restrict internal users using nontrusted or noncompliant device to no persistent browser session
- * Restrict guest to browser sessions
+ * Block guest from using mobile apps and desktop apps
 
 ## App Protection
  * Require MFA to Microsoft Azure Management
