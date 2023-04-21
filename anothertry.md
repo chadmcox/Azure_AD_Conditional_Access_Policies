@@ -28,6 +28,8 @@
  * Require privileged role member to use compliant device
  * Require MFA for Azure Subscription Owners
  * Require MFA for Microsoft Intune
+ * Require MFA to Microsoft Azure Management
+ * Require MFA to Microsoft Graph PowerShell and Graph Explorer
 
 ## Identity Protection
  * Block all users when user risk is high
@@ -45,10 +47,6 @@
  * Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
  * Restrict internal users using nontrusted or noncompliant device to no persistent browser session
  * Block guest from using mobile apps and desktop apps
-
-## App Protection
- * Require MFA to Microsoft Azure Management
- * Require MFA to Microsoft Graph PowerShell and Graph Explorer
 
 ## Attack Surface Reduction
  * Block all users legacy authentication
