@@ -13,6 +13,9 @@
  * **Accounts Excluded** = Usually Service accounts or vault accounts that present an issue because MFA cannot be used.
  * **Azure Subscription Owners** = These are actual owners of Azure Subscriptions.
 
+# Apps
+* If not specified All Cloud Apps is required for the conditional access policies.
+
 ## Base Protection
  * Require internal users to use trusted or compliant device for register security information
  * Require MFA for Microsoft Intune enrollment
