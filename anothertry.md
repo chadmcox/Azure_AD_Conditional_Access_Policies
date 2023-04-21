@@ -1,3 +1,4 @@
+## Recommended Conditional Access Policies
 ## Best Practices
  * Minimize the use of location based policies
  * Most companies do not have compliance around MacOS or Linux, In the event you do not focus those policies on Windows.  Something is better than nothing.
@@ -13,7 +14,7 @@
  * **Accounts Excluded** = Usually Service accounts or vault accounts that present an issue because MFA cannot be used.
  * **Azure Subscription Owners** = These are actual owners of Azure Subscriptions.
 
-# Apps
+## Apps
 * If not specified All Cloud Apps is required for the conditional access policies.
 
 ## Base Protection
