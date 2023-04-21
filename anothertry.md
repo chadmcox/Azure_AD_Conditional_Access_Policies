@@ -27,9 +27,9 @@
  * Require MFA for internal users from non trusted location
  * Require privileged role member to use compliant device
  * Require MFA for Azure Subscription Owners
- * Require MFA for Microsoft Intune
- * Require MFA to Microsoft Azure Management
- * Require MFA to Microsoft Graph PowerShell and Graph Explorer
+ * Require MFA for all users when accessing Microsoft Intune
+ * Require MFA for all users when accessing Microsoft Azure Management
+ * Require MFA for all users when accessing Microsoft Graph PowerShell and Graph Explorer
 
 ## Identity Protection
  * Block all users when user risk is high
