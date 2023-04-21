@@ -1,3 +1,6 @@
+## Best Practices
+ * Minimize the use of location based policies
+ * Most companies do not have compliance around MacOS or Linux, In the event you do not focus those policies on Windows
 
 ## Persona's
  * All Users = All Users
