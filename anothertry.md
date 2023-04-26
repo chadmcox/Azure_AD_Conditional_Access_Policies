@@ -79,9 +79,9 @@
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Networks | Block |  |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Countries | Block |  |
 
-**Prereq:** Countries Locations (Countries) should be defined with countries privileged roles members are located.  
+**Prereq:** Countries Locations should be defined with countries privileged roles members are located.  
 
 **Comment:** 
 
