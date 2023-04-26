@@ -58,7 +58,7 @@
  * Block guest access to non-approved apps
  * Block privileged role members from countries except US (other acceptable countries)
  * Block directory sync account from non trusted location
- * Block accounts excluded from require MFA policies from non trusted location
+ * Block accounts excluded from require MFA policies from non trusted location  
   * Use the following PowerShell script to get a list of these users.  The goal is if they are not required to provide MFA then they should be restricted to trustd networks.  [Link to script](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Conditional%20Access%20Policy/exportConditionalAccessExclusions.ps1)
 
 ## Compliance
