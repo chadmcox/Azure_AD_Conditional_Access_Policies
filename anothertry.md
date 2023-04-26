@@ -56,7 +56,7 @@
  * Block all users access from tor exit nodes
  * Block guest access from unexpected countries
  * Block guest access to non-approved apps
- * Block privileged role members from countries except US (other acceptable countries)  
+**Block privileged role members from countries except US (other acceptable countries)**
 
 
 **Block directory sync account from non trusted location**
@@ -64,6 +64,11 @@
 This Conditional Access Policy is used to make sure if the credentials for the directory sync account is stolen that they cannot be accessed outside of the trusted network.  [Link to KQL Log Analytics Query to determine possible impact](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20Directory%20Sync%20Account%20impact%20if%20blocked%20from%20untrusted%20network.kql)
 
 **Block accounts excluded from require MFA policies from non trusted location**
+
+| Users | Cloud Apps or Actions | Conditions | Grant |
+| ----- | --------------------- | ---------- | ----- |
+| Include: (Group of users) | Include: All Cloud Apps | Include: All Networks | Block |
+| Exclude: BreakGlass | | Exclude: Trusted Networks | |
  
  This Conditional Access Policy is used to make sure accounts excluded from requiring MFA should be required to authenticate from trusted locations. [Link to PowerShell script](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Conditional%20Access%20Policy/exportConditionalAccessExclusions.ps1) can be used to scan all the conditional access policy exclusions and return a list of accounts that should be in this list.
 
