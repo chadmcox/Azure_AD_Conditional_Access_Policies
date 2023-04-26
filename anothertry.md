@@ -60,6 +60,7 @@
 
 
 **Block directory sync account from non trusted location**
+
 This Conditional Access Policy is used to make sure if the credentials for the directory sync account is stolen that they cannot be accessed outside of the trusted network.  [Link to KQL Log Analytics Query](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20Directory%20Sync%20Account%20impact%20if%20blocked%20from%20untrusted%20network.kql)
 
 **Block accounts excluded from require MFA policies from non trusted location**
