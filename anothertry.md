@@ -56,6 +56,7 @@
  * Block all users access from tor exit nodes
  * Block guest access from unexpected countries
  * Block guest access to non-approved apps
+
 **Block privileged role members from countries except US (other acceptable countries)**
 
 
