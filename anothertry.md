@@ -55,7 +55,17 @@
  * Block privileged role members from unsupported platforms.
  * Block all users access from tor exit nodes
  * Block guest access from unexpected countries
- * Block guest access to non-approved apps
+ 
+---
+
+**Block guest access to non-approved apps**
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  <br /> Excluded: Office 365, Other B2B approved apps |  | Block |  |
+
+**Prereq:**  
+**Comment:** This Conditional Access Policy is used to make sure guest (external B2b) are only allowed to access applications they need access to.  This examples blocks everything but Office 365 so that teams and sharepoint collaberation can continue to work.  Guest should be blocked from things like Microsoft Azure Management, Microsoft Graph PowerShell, Microsoft Graph Explorer, VPNs, and HR Apps
 
 ---
 
