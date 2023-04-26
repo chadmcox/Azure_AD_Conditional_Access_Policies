@@ -63,7 +63,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Networks | Block |  |
 
-**Prereq:** Countries Locations (Countries) should be defined with countries privileged roles are located.  
+**Prereq:** Countries Locations (Countries) should be defined with countries privileged roles members are located.  
 **Comment:** 
 
 **Block directory sync account from non trusted location**
