@@ -58,7 +58,7 @@
  
 ---
 
-**Block guest access to non-approved apps**
+###Block guest access to non-approved apps
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
@@ -74,8 +74,7 @@
  * [Get list of applications guest are successfully logging into](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Get%20list%20of%20applications%20guest%20are%20successfully%20logging%20into.kql)
 
 ---
-
-**Block privileged role members from countries except US (other acceptable countries)**
+###Block privileged role members from countries except US (other acceptable countries)
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
@@ -90,7 +89,7 @@
 
 ---
 
-**Block directory sync account from non trusted location**
+###Block directory sync account from non trusted location
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
@@ -105,7 +104,7 @@
 
 ---
 
-**Block accounts excluded from require MFA policies from non trusted location**
+###Block accounts excluded from require MFA policies from non trusted location
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
