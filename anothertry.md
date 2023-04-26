@@ -60,7 +60,7 @@
  * Block directory sync account from non trusted location
 
 
-**Block accounts excluded from require MFA policies from non trusted location  
+**Block accounts excluded from require MFA policies from non trusted location**
  
  This Conditional access policy is used to make sure accounts excluded from requiring MFA should be required to authenticate from trusted locations. [Link to script](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Conditional%20Access%20Policy/exportConditionalAccessExclusions.ps1) can be used to get a PowerShell script that will scan all the conditional access policy exclusions and return a list of accounts that should be in this list.
 
