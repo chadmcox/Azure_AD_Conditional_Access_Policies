@@ -54,8 +54,22 @@
  * Block privileged role members legacy authentication
  * Block privileged role members from unsupported platforms.
  * Block all users access from tor exit nodes
- * Block guest access from unexpected countries
  
+---
+
+## Block guest access from unexpected countries
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Unapproved Countires | Block |  |
+
+**Prereq:** Country locations should be defined with countries guest users should not be coming from.  
+
+**Comment:** This Conditional Access Policies are used to block guest from accessing an application from countries for example Russia where Business may not be allowed.
+
+**Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Get list of countries guest are signing in from](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Get%20list%20of%20countries%20guest%20are%20signing%20in%20from.kql)
+
 ---
 
 ### Block guest access to non-approved apps
@@ -80,7 +94,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Countries | Block |  |
 
-**Prereq:** Countries Locations should be defined with countries privileged roles members are located.  
+**Prereq:** Country locations should be defined with countries privileged roles members are located.  
 
 **Comment:** This Conditional Access Policy is to force the privileged roles to only allow signing in from countries where these users are located in.  The goal is to prevent a global admin account from logging in from a country for example Russia where there are more than likely no administrators located.
 
