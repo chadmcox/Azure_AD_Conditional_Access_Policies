@@ -63,7 +63,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Unapproved Countires | Block |  |
 
-**Prereq:** Country locations should be defined with countries guest users should not be coming from.  
+**Prereq:** Country locations should be defined with countries guest users should not be signing in from.  
 
 **Comment:** This Conditional Access Policies are used to block guest from accessing an application from countries for example Russia where Business may not be allowed.
 
