@@ -1,4 +1,4 @@
-## Recommended Conditional Access Policies
+# Recommended Conditional Access Policies
 ## Best Practices
  * Minimize the use of location based policies
  * Most companies do not have compliance around MacOS or Linux, In the event you do not, focus those policies on Windows.  Something is better than nothing.
@@ -18,10 +18,62 @@
 * If not specified All Cloud Apps is required for the conditional access policies.
 
 ## Base Protection
- * Require internal users to use trusted or compliant device for register security information
- * Require MFA for Microsoft Intune enrollment
- * Require MFA for device enrollment
- * Require MFA all guest
+### Require internal users to use trusted or compliant device for register security information
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: BreakGlass  | User actions: register security information |  | Require Hybrid Azure AD joined device,   <br /> Require device to be marked as compliant,  <br /> Require one of the selected controls  | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+
+---
+
+### Require MFA for Microsoft Intune enrollment
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune enrollment |  | Require multifactor authentication | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+
+---
+
+### Require MFA for device enrollment
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: BreakGlass  | User actions: Register or join device  |  | Require multifactor authentication | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+
+---
+
+### Require MFA all guest
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+
+---
+
 ### Require MFA for privileged role members
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
@@ -195,7 +247,7 @@
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users   <br /> Exclude: Guest, BreakGlass  | register security information  | Sign-in Risk: low, medium, high | Block | |  
+| Include: All Users   <br /> Exclude: Guest, BreakGlass  | User actions: register security information  | Sign-in Risk: low, medium, high | Block | |  
 
  **Prereq:**
 
