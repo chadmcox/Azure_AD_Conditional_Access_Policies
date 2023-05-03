@@ -23,12 +23,25 @@
  * Require MFA for device enrollment
  * Require MFA all guest
  * Require MFA for privileged role members
- * Require internal users to use compliant or trusted device for office 365
+### Require internal users to use compliant or trusted device for office 365
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: Guest,BreakGlass  | Include: Office 365  | | Require Hybrid Azure AD joined device,   <br /> Require device to be marked as compliant,  <br /> Require one of the selected controls  | |  
+
+ **Prereq:** Requires all known internet egresses to be defined as a trusted network. [Get list of potential trusted ips](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Network%20Locations/Get%20list%20of%20potential%20trusted%20ips.kql)
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+
+---
+
 ### Require MFA for internal users from non trusted location
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Any location  <br /> Excluded: All trusted locations | Require multifactor authentication | |  
+| Include: All users  <br /> Exclude: Guest,BreakGlass  | Include: All Cloud Apps  | Include: Any location  <br /> Excluded: All trusted locations | Require multifactor authentication | |  
 
  **Prereq:** Requires all known internet egresses to be defined as a trusted network. [Get list of potential trusted ips](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Network%20Locations/Get%20list%20of%20potential%20trusted%20ips.kql)
 
