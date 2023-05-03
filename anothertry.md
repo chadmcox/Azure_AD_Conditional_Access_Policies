@@ -115,7 +115,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:** Run the following script to retrieve a list of admin accounts to put into the query. [RetrieveAdminsforKQL.ps1](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/PIM/RetrieveAdminsforKQL.ps1)
 
- **Comment:**
+ **Comment:** This conditional access policy requires members of highly privileged roles to provide MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Find possible impact if privileged role members are required to MFA](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20MFA.kql)
@@ -135,7 +135,7 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
-
+[Possible impact of users that do not use a compliant or trusted device when accessing office apps](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20users%20that%20do%20not%20use%20a%20compliant%20or%20trusted%20device%20when%20accessing%20office%20apps.kql)
 ---
 
 ### Require MFA for internal users from non trusted location
