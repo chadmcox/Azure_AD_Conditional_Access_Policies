@@ -522,24 +522,6 @@ from the use or distribution of the Sample Code.._
 
 ---
 
-### Import the policies from templates
-I have put together a script that will import all of the policies from this github.   
-The scipt can be found here [click here](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/Conditional%20Access%20Policy/Import-AADRecommendedConditionalAccessPolicies.ps1)   
-
-**Instructions**   
-* Copy the contents of the script locally onto a machine.
-* Run the script in PowerShell
-* Select the number of the policy you want to import.
-* Review the results They are always in read-only and have a prefix
-
-_Import menu_   
-![Untitled](./media/importscript1.jpg) 
-
-_finished policy_   
-![Untitled](./media/importresult.jpg)   
-
-
----
 
 ### Create list of privileged users for the kql designed to search for privileged user impact  
 
