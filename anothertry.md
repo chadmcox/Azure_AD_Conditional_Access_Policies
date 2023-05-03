@@ -27,9 +27,20 @@
  * Require MFA for internal users from non trusted location
  * Require privileged role member to use compliant device
  * Require MFA for Azure Subscription Owners
- * Require MFA for all users when accessing Microsoft Intune
- * Require MFA for all users when accessing Microsoft Azure Management
- * Require MFA for all users when accessing Microsoft Graph PowerShell and Graph Explorer
+
+### Require MFA for all users when accessing Microsoft Management Endpoints
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune, Microsoft Azure Management, Microsoft Graph PowerShell, Graph Explorer  |  | Require multifactor authentication | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
 
 ## Identity Protection
 ### Block all users when user risk is high
