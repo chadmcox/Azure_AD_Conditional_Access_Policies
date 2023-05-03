@@ -32,11 +32,61 @@
  * Require MFA for all users when accessing Microsoft Graph PowerShell and Graph Explorer
 
 ## Identity Protection
- * Block all users when user risk is high
- * Block all users when sign-in risk is high
- * Require MFA for all users when sign-in risk is medium
- * Block privileged role members when sign-in risk is low, medium and high
- * Block privileged role members when user risk is low, medium and high
+### Block all users when user risk is high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block all users when sign-in risk is high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block privileged role members when sign-in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block privileged role members when user risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: low, medium, high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
 
 ### Block all users access to Microsoft Azure Management, Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
 
@@ -56,7 +106,7 @@
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: Role - directory sync account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk low, medium, high | Block | |  
+| Include: Role - directory sync account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
 
  **Prereq:**
 
@@ -70,7 +120,7 @@
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users   <br /> Exclude: Guest, BreakGlass  | register security information  | Sign-in Risk low, medium, high | Block | |  
+| Include: All Users   <br /> Exclude: Guest, BreakGlass  | register security information  | Sign-in Risk: low, medium, high | Block | |  
 
  **Prereq:**
 
