@@ -73,7 +73,7 @@ from the use or distribution of the Sample Code.._
  **Comment:** This conditional access policy requires users registering a device to Intune will be prompted for a MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
-  * [Possible impact for users required MFA for Microsoft intune Enrollement](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20for%20users%20required%20MFA%20for%20Microsoft%20intune%20Enrollement.kql)
+  * [Possible impact if all users required MFA for Microsoft intune Enrollement](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20for%20users%20required%20MFA%20for%20Microsoft%20intune%20Enrollement.kql)
 
 ---
 
@@ -150,7 +150,7 @@ from the use or distribution of the Sample Code.._
  **Comment:** This conditional access policy will require users accessing application from a non trusted location to require MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
- * [Possible impact of internal users required to mfa from non trusted location](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20internal%20users%20required%20to%20mfa%20from%20non%20trusted%20location.kql)
+ * [Possible impact if internal users required to mfa from non trusted location](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20internal%20users%20required%20to%20mfa%20from%20non%20trusted%20location.kql)
 
 ---
 
@@ -165,6 +165,9 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Find possible impact if privileged role member is required to use compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20member%20is%20required%20to%20use%20compliant%20device.ps1)
+ * [Using PIM activates find possible impact if privileged role member was required to use a compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20PIM%20activates%20find%20possible%20impact%20if%20privileged%20role%20member%20was%20required%20to%20use%20a%20compliant%20device.kql)
+ * [Using Sentinel UEBA Logs find possible impact if privileged role member was required to use a compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20Sentinel%20UEBA%20Logs%20find%20possible%20impact%20if%20privileged%20%20role%20member%20was%20required%20to%20use%20a%20compliant%20device.kql)
 
 ---
 
