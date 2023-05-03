@@ -46,8 +46,34 @@
  * Restrict guest to less than 8 hour session limit
  * Restrict privileged role members to less than 8 hour session limit
  * Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
- * Restrict internal users using nontrusted or noncompliant device to no persistent browser session
- * Block guest from using mobile apps and desktop apps
+
+### Restrict internal users using nontrusted or noncompliant device to no persistent browser session
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: Guest, BreakGlass  | Include: All Cloud Apps  | Client Apps Include: Browser <br /> Filter for devices Include: device.isCompliant -ne True -or device.trustType -ne "ServerAD" |  | Persistent browser session = False |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block guest from using mobile apps and desktop apps
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guests  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Mobile apps and desktop clients  | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
 
 ## Attack Surface Reduction  
 
@@ -62,7 +88,9 @@
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
-
+ 
+---
+ 
 ### Block privileged role members legacy authentication 
  
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
@@ -76,7 +104,6 @@
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
 ---
- 
  
 ### Block privileged role members from unsupported platforms.  
 
