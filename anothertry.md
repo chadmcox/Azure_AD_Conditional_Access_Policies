@@ -26,10 +26,11 @@
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This conditional access policy will require a user to be on a compliant device in order for them to be able to register MFA settings.  This could easily be swapped to require trusted location.  More than likely this will require an exclusion to make sure new users have a way to set up mfa for the first time. Only apply this to operating systems that are actually sending compliant status to Intune / Azure AD
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
-
+ * No query put together yet.
+ 
 ---
 
 ### Require MFA for Microsoft Intune enrollment
@@ -40,9 +41,10 @@
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This conditional access policy requires users registering a device to Intune will be prompted for a MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact for users required MFA for Microsoft intune Enrollement](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20for%20users%20required%20MFA%20for%20Microsoft%20intune%20Enrollement.kql)
 
 ---
 
@@ -54,9 +56,10 @@
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This condition access policy requires user's to provide mfa when registering devices to Azure AD.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if all users required to mfa when registering devices](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20users%20required%20to%20mfa%20when%20registering%20devices.kql)
 
 ---
 
@@ -68,9 +71,10 @@
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This conditional access policy requires guest to MFA when accessing resources.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Find possible guest impact if required MFA](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Find%20possible%20guest%20impact%20if%20required%20MFA.kql)
 
 ---
 
