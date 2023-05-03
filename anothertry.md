@@ -132,7 +132,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:** 
 
- **Comment:**
+ **Comment:** This conditional access policy requires users accessing office 365 to be using a compliant device.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**  
  * [Possible impact of users that do not use a compliant or trusted device when accessing office 365](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20users%20that%20do%20not%20use%20a%20compliant%20or%20trusted%20device%20when%20accessing%20office%20apps.kql)
