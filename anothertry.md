@@ -43,15 +43,50 @@
  * Block internal users from register security information when sign in risk is low, medium and high
 
 ## Data Protection
- * Restrict guest to less than 8 hour session limit
- * Restrict privileged role members to less than 8 hour session limit
- * Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
+
+### Restrict guest to less than 8 hour session limit
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guest   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  |  | Sign-in frequency = 8 Hour |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+### Restrict privileged role members to less than 8 hour session limit
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  |  | Sign-in frequency = 8 Hour |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+### Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: Guest, BreakGlass  | Include: All Cloud Apps  | Filter for devices Include: device.isCompliant -ne True -or device.trustType -ne "ServerAD" |  | Sign-in frequency = 1 Hour |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
 
 ### Restrict internal users using nontrusted or noncompliant device to no persistent browser session
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users  <br /> Exclude: Guest, BreakGlass  | Include: All Cloud Apps  | Client Apps Include: Browser <br /> Filter for devices Include: device.isCompliant -ne True -or device.trustType -ne "ServerAD" |  | Persistent browser session = False |  
+| Include: All Users  <br /> Exclude: Guest, BreakGlass  | Include: All Cloud Apps  | Client Apps Include: Browser <br /> Filter for devices Include: device.isCompliant -ne True -or device.trustType -ne "ServerAD" |  | Persistent browser session = Never persistent |  
 
  **Prereq:**
 
