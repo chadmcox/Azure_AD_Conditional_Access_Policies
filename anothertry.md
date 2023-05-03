@@ -37,10 +37,48 @@
  * Require MFA for all users when sign-in risk is medium
  * Block privileged role members when sign-in risk is low, medium and high
  * Block privileged role members when user risk is low, medium and high
- * Block all users access to Microsoft Azure Management when sign-in risk is low, medium and high
- * Block all users access to Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
- * Block directory sync account when sign in risk is low, medium and high
- * Block internal users from register security information when sign in risk is low, medium and high
+
+### Block all users access to Microsoft Azure Management, Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Azure Management, Microsoft Graph PowerShel,Graph Explorer | Sign-in Risk low, medium, high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block directory sync account when sign in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - directory sync account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk low, medium, high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block internal users from register security information when sign in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users   <br /> Exclude: Guest, BreakGlass  | register security information  | Sign-in Risk low, medium, high | Block | |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
 
 ## Data Protection
 
@@ -56,6 +94,8 @@
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
+---
+
 ### Restrict privileged role members to less than 8 hour session limit
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
@@ -68,6 +108,8 @@
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
+---
+
 ### Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
