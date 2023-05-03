@@ -60,8 +60,6 @@
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Possible impact if all users required to mfa when registering devices](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20users%20required%20to%20mfa%20when%20registering%20devices.kql)
-  * [Using PIM activates find possible impact if privileged role members are require to mfa](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20PIM%20activates%20find%20possible%20impact%20if%20privileged%20role%20members%20are%20require%20to%20mfa.kql)
-  * [Using Sentinel UEMA Logs find possible impact if privileged role members are required to mfa](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20Sentinel%20UEMA%20Logs%20find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20mfa.kql)
 
 ---
 
@@ -92,7 +90,9 @@
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Find possible impact if privileged role members are required to MFA](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20MFA.kql)
-
+  * [Using PIM activates find possible impact if privileged role members are require to mfa](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20PIM%20activates%20find%20possible%20impact%20if%20privileged%20role%20members%20are%20require%20to%20mfa.kql)
+  * [Using Sentinel UEMA Logs find possible impact if privileged role members are required to mfa](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20Sentinel%20UEMA%20Logs%20find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20mfa.kql)
+ 
 ---
 
 ### Require internal users to use compliant or trusted device for office 365
