@@ -3,7 +3,7 @@
 # Azure AD Conditional Access Policies
 _Author: Chad Cox (Microsoft)_  
 _Created: January 2023_  
-_Updated: February 2023_  
+_Updated: May 2023_  
 
 **Disclaimer**
 _This Sample Code is provided for the purpose of illustration only and is not
