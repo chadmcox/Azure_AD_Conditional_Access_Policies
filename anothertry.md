@@ -60,7 +60,7 @@
 
 ---
 
-### Require MFA all guest
+### Require MFA for all guest
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
