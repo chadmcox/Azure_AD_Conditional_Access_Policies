@@ -32,7 +32,7 @@
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune, Microsoft Azure Management, Microsoft Graph PowerShell, Graph Explorer  |  | Require multifactor authentication | |  
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune,   <br />  Microsoft Azure Management,   <br /> Microsoft Graph PowerShell,   <br /> Graph Explorer  |  | Require multifactor authentication | |  
 
  **Prereq:**
 
