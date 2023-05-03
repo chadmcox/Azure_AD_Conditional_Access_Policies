@@ -135,7 +135,8 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**  
- * [Possible impact of users that do not use a compliant or trusted device when accessing office apps](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20users%20that%20do%20not%20use%20a%20compliant%20or%20trusted%20device%20when%20accessing%20office%20apps.kql)
+ * [Possible impact of users that do not use a compliant or trusted device when accessing office 365](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20users%20that%20do%20not%20use%20a%20compliant%20or%20trusted%20device%20when%20accessing%20office%20apps.kql)
+ 
 ---
 
 ### Require MFA for internal users from non trusted location
@@ -146,9 +147,10 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:** Requires all known internet egresses to be defined as a trusted network. [Get list of potential trusted ips](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Network%20Locations/Get%20list%20of%20potential%20trusted%20ips.kql)
 
- **Comment:**
+ **Comment:** This conditional access policy will require users accessing application from a non trusted location to require MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Possible impact of internal users required to mfa from non trusted location](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20internal%20users%20required%20to%20mfa%20from%20non%20trusted%20location.kql)
 
 ---
 
