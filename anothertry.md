@@ -1,4 +1,33 @@
 # Recommended Conditional Access Policies
+
+# Azure AD Conditional Access Policies
+_Author: Chad Cox (Microsoft)_  
+_Created: January 2023_  
+_Updated: February 2023_  
+
+**Disclaimer**
+_This Sample Code is provided for the purpose of illustration only and is not
+intended to be used in a production environment.  THIS SAMPLE CODE AND ANY
+RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  We grant You a
+nonexclusive, royalty-free right to use and modify the Sample Code and to
+reproduce and distribute the object code form of the Sample Code, provided
+that You agree: (i) to not use Our name, logo, or trademarks to market Your
+software product in which the Sample Code is embedded; (ii) to include a valid
+copyright notice on Your software product in which the Sample Code is embedded;
+and (iii) to indemnify, hold harmless, and defend Us and Our suppliers from and
+against any claims or lawsuits, including attorneys` fees, that arise or result
+from the use or distribution of the Sample Code.._   
+
+---
+
+**Deploy the query pack that contains all the queries from this solution into the Log Analytics Workspace that contains the Azure AD Audit / Signin logs**
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fchadmcox%2FAzure_AD_Conditional_Access_Policies%2Fmain%2Fconditionalaccesspolicyimpactquerypack.json)
+
+---
+
 ## Best Practices
  * Minimize the use of location based policies
  * Most companies do not have compliance around MacOS or Linux, In the event you do not, focus those policies on Windows.  Something is better than nothing.
@@ -471,5 +500,129 @@
  * Require TOU for Guest
 
 ## Notes
+### How to run a Log Analytics Query
+* In the Azure AD Portal
+* Navigate to the Log Analytics Tab
+* Copy the example code from the section you want to review the possible impact
+* Replace the existing text in the query window or open a new query tab and paste in the new one.
+* Then select Run and wait for the results.  
+
+![Untitled](./media/law.jpg)   
+
+**Or Deploy the query pack that contains all the queries from this solution into the Log Analytics Workspace that contains the Azure AD Audit / Signin logs**
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fchadmcox%2FAzure_AD_Conditional_Access_Policies%2Fmain%2Fconditionalaccesspolicyimpactquerypack.json)
+
+* After the query pack is deployed
+* In the Azure AD Portal
+* Navigate to the Log Analytics Tab
+* Select the Queries and change the group by to Label
+
+![Untitled](./media/querypack.jpg)  
+
+---
+
+### Import the policies from templates
+I have put together a script that will import all of the policies from this github.   
+The scipt can be found here [click here](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/Conditional%20Access%20Policy/Import-AADRecommendedConditionalAccessPolicies.ps1)   
+
+**Instructions**   
+* Copy the contents of the script locally onto a machine.
+* Run the script in PowerShell
+* Select the number of the policy you want to import.
+* Review the results They are always in read-only and have a prefix
+
+_Import menu_   
+![Untitled](./media/importscript1.jpg) 
+
+_finished policy_   
+![Untitled](./media/importresult.jpg)   
+
+
+---
+
+### Create list of privileged users for the kql designed to search for privileged user impact  
+
+* Run this in PowerShell
+```
+Connect-MgGraph
+Select-MgProfile -Name beta
+$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
+(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
+```
+* The results of this will be in a file called privuser.txt
+* Open the txt file.  Should look something like this
+```
+8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b
+```
+* Next in the sections titled **Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script** from the section you are reviewing.  Will want to copy the kql statement, and paste in Log Analytics.
+* on line 1 replace the phrase **replace this with the results from the privuser.txt found from the powershell cmdlets** 
+```
+let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
+```
+* to look like
+```
+let privusers = pack_array("8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b","8f47d5a6-a36b-4d99-b6bc-c023cf23ae9b");
+```
+
+---
+
+
+### Find IPAddress not defined as trusted
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+SigninLogs
+| where TimeGenerated > ago(30d)
+| where ResultType == "0"
+| where HomeTenantId == ResourceTenantId
+| where NetworkLocationDetails !contains "trustedNamedLocation"
+| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
+| extend isIPv6 = tostring(iff(IPAddress matches regex @"(([\d|\w]{1,4}\:){7}[\d|\w]{1,4})",'Yes','No'))
+| distinct IPAddress, TrustedLocation, UserPrincipalName, isIPv6
+| summarize uniqueusercountbyip = count() by IPAddress, TrustedLocation, isIPv6
+| where uniqueusercountbyip >= 4
+| sort by uniqueusercountbyip desc 
+```
+
+**Comment**  
+
+This query returns IP addresses where 4 or more unique users have authenticated against Azure AD.  You will want to research each IP and determine if they are owned by the organization or if they belong to something like a public proxy cloud solution like zscaler or umbrella.  Legit ones will need to be defined as a trusted network in Azure AD to make sure any location filtered policy works correctly and to help remediate false positives in Azure Identity Protection
+
+Instructions on how to create named locations can be viewed here [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/location-condition#named-locations)   
+
+The field uniqueusercountbyip is count of unique list of users. It is possible to see ipv6 addresses which usually comes from Azure Networks and will be normal in the near future from the internet.
+
+![Untitled](./media/networkip.jpg)   
+
+---
+### Applications not being protected by Conditional Access Policies
+**Log Analytics AAD SigninLogs Query (KQL)**
+```
+//https://github.com/reprise99/Sentinel-Queries/blob/main/Azure%20Active%20Directory/Identity-Top20AppswithnoCA.kql
+//This query shows applications that are not protected by conditional access policies.
+let apps=
+    SigninLogs
+    | where TimeGenerated > ago (30d)
+    | project TimeGenerated, ConditionalAccessPolicies, AppDisplayName
+//Exclude native Microsoft apps that you can't enforce policy on or that are covered natively in Office 365
+    | where AppDisplayName !in ("Microsoft Office Web Apps Service", "Microsoft App Access Panel", "Office Online Core SSO", "Microsoft Authentication Broker", "Microsoft Account Controls V2", "Microsoft 365 Support Service","Office Online Maker SSO","My Apps","My Profile")
+    | mv-expand ConditionalAccessPolicies
+    | extend CAResult = tostring(ConditionalAccessPolicies.result)
+    | summarize ResultSet=make_set(CAResult) by AppDisplayName
+    | where ResultSet !has "success" or ResultSet !has "failure"
+    | project AppDisplayName;
+SigninLogs
+| where TimeGenerated > ago(30d)
+| where ResultType == 0
+| where AppDisplayName in (apps)
+| summarize Count=count()by AppDisplayName
+| top 20 by Count
+
+```
+
+**Comment**  
+The image below, shows the applications and the logon count of those apps that is not being protected by some sort of Conditional Access Policy. Ideally every application will have a mfa requirement or a trusted/compliant policy requirement.  
+
+![Untitled](./media/applicaationsnotprotectedbyca.jpg)   
 
 ## References
