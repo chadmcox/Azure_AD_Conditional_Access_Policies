@@ -24,7 +24,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: All users  <br /> Exclude: BreakGlass  | User actions: register security information |  | Require Hybrid Azure AD joined device,   <br /> Require device to be marked as compliant,  <br /> Require one of the selected controls  | |  
 
- **Prereq:**
+ **Prereq:** NA
 
  **Comment:** This conditional access policy will require a user to be on a compliant device in order for them to be able to register MFA settings.  This could easily be swapped to require trusted location.  More than likely this will require an exclusion to make sure new users have a way to set up mfa for the first time. Only apply this to operating systems that are actually sending compliant status to Intune / Azure AD
  
@@ -39,7 +39,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: All users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune enrollment |  | Require multifactor authentication | |  
 
- **Prereq:**
+ **Prereq:** NA
 
  **Comment:** This conditional access policy requires users registering a device to Intune will be prompted for a MFA.
  
@@ -54,7 +54,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: All users  <br /> Exclude: BreakGlass  | User actions: Register or join device  |  | Require multifactor authentication | |  
 
- **Prereq:**
+ **Prereq:** NA
 
  **Comment:** This condition access policy requires user's to provide mfa when registering devices to Azure AD.
  
@@ -69,7 +69,7 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
 
- **Prereq:**
+ **Prereq:** NA
 
  **Comment:** This conditional access policy requires guest to MFA when accessing resources.
  
@@ -84,11 +84,12 @@
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
 
- **Prereq:**
+ **Prereq:** Run the following script to retrieve a list of admin accounts to put into the query. [RetrieveAdminsforKQL.ps1](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/PIM/RetrieveAdminsforKQL.ps1)
 
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Find possible impact if privileged role members are required to MFA](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20MFA.kql)
 
 ---
 
