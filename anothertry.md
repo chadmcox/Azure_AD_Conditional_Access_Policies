@@ -1,7 +1,7 @@
 ## Recommended Conditional Access Policies
 ## Best Practices
  * Minimize the use of location based policies
- * Most companies do not have compliance around MacOS or Linux, In the event you do not focus those policies on Windows.  Something is better than nothing.
+ * Most companies do not have compliance around MacOS or Linux, In the event you do not, focus those policies on Windows.  Something is better than nothing.
  * Group based policies are great for one off requirements. Most holes exist because groups are poorly maintain and do not include all the accounts. Base policies should be focus'd on all users.
  * 
 
