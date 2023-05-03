@@ -49,15 +49,65 @@
  * Restrict internal users using nontrusted or noncompliant device to no persistent browser session
  * Block guest from using mobile apps and desktop apps
 
-## Attack Surface Reduction
- * Block all users legacy authentication
- * Block privileged role members legacy authentication
- * Block privileged role members from unsupported platforms.
- * Block all users access from tor exit nodes
+## Attack Surface Reduction  
+
+### Block all users legacy authentication  
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Exchange ActiveSync clients,Other clients  | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+
+### Block privileged role members legacy authentication 
+ 
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Exchange ActiveSync clients,Other clients  | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+ 
+ 
+### Block privileged role members from unsupported platforms.  
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Linux | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
  
 ---
 
-## Block guest access from unexpected countries
+### Block all users access from tor exit nodes  
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Tor Nodes | Block |  |  
+ 
+ **Prereq:** Define all the tor exit nodes and any other set of IP's that need to be blocked. [link to Tor IP list](https://raw.githubusercontent.com/SecOps-Institute/Tor-IP-Addresses/master/tor-exit-nodes.lst)
+ 
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if tor exit nodes are blocked](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/query-SigninsfromKnownTorExitNodes.kql)
+ 
+---
+
+### Block guest access from unexpected countries
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
