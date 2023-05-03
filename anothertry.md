@@ -160,9 +160,9 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require device to be marked as compliant | |  
 
- **Prereq:**
+ **Prereq:** Run the following PowerShell script to retrieve a list of admin accounts to put into the query. [RetrieveAdminsforKQL.ps1](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/PIM/RetrieveAdminsforKQL.ps1)
 
- **Comment:**
+ **Comment:** This policy will require privileged role members to sign-in from a trusted device.  Hopefully they are using a protected admin workstation.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  * [Find possible impact if privileged role member is required to use compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20member%20is%20required%20to%20use%20compliant%20device.ps1)
@@ -177,9 +177,9 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Subscription Owner Group  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
 
- **Prereq:** need to get list of all subscription owners put in a group
+ **Prereq:** need to get list of all subscription owners put in a group. This PowerShell script can be used to retrieve a list of sub owners. [link to script](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Azure/GetAZRBACMembers.ps1)
 
- **Comment:**
+ **Comment:** Azure Subscription owners should require additional protection.  This policy will make sure all azure role owners will be required to MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
@@ -196,6 +196,7 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if user is required MFA accessing Microsogt Management Endpoints](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20user%20is%20required%20MFA%20accessing%20Microsogt%20Management%20Endpoints.kql)
  
 ---
 
