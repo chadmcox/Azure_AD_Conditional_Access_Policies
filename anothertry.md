@@ -28,6 +28,19 @@ from the use or distribution of the Sample Code.._
 
 ---
 
+
+**Table of content**
+ * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#how-to-run-a-log-analytics-query)
+ * [Create list of privileged users for the kql designed to search for privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
+ * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#find-ipaddress-not-defined-as-trusted)
+ * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#applications-not-being-protected-by-conditional-access-policies)
+ * [Base Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#base-protection)
+ * [Identity Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#identity-protection)
+ * [Data Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#data-protection)
+ * [Attack Surface Reduction - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#attack-surface-reduction)
+
+---
+
 ## Best Practices
  * Minimize the use of location based policies
  * Most companies do not have compliance around MacOS or Linux, In the event you do not, focus those policies on Windows.  Something is better than nothing.
@@ -45,16 +58,6 @@ from the use or distribution of the Sample Code.._
 
 ## Apps
 * If not specified All Cloud Apps is required for the conditional access policies.
-
-** Table of content **
- * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#how-to-run-a-log-analytics-query)
- * [Create list of privileged users for the kql designed to search for privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
- * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#find-ipaddress-not-defined-as-trusted)
- * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#applications-not-being-protected-by-conditional-access-policies)
- * [Base Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#base-protection)
- * [Identity Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#identity-protection)
- * [Data Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#data-protection)
- * [Attack Surface Reduction - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#attack-surface-reduction)
 
 ## Base Protection
 ### Require internal users to use trusted or compliant device for register security information
