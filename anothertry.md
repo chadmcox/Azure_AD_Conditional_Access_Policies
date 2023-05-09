@@ -207,12 +207,13 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: high | Block | |  
 
- **Prereq:**
+ **Prereq:** Identity Protection Requires P2 License, make sure old user risk are cleaned up
 
- **Comment:**
+ **Comment:** Microsoft General recommendation is to require a password change.  but every security document from our incident response team says this is not enough and that blocks must be performed.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
- 
+  * [Possible impact if all users are blocked with high user risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20users%20are%20blocked%20with%20high%20user%20risk.kql)
+  
 ---
 
 ### Block all users when sign-in risk is high
@@ -221,11 +222,12 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: high | Block | |  
 
- **Prereq:**
+ **Prereq:** Identity Protection Requires P2 License
 
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if all user are blocked with high sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20user%20are%20blocked%20with%20high%20sign-in%20risk.kql)
  
 ---
 
@@ -235,7 +237,7 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
 
- **Prereq:**
+ **Prereq:** Identity Protection Requires P2 License
 
  **Comment:**
  
@@ -249,7 +251,7 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: low, medium, high | Block | |  
 
- **Prereq:**
+ **Prereq:** Identity Protection Requires P2 License
 
  **Comment:**
  
@@ -257,17 +259,18 @@ from the use or distribution of the Sample Code.._
  
 ---
 
-### Block all users access to Microsoft Azure Management, Microsoft Graph PowerShell and Graph Explorer when sign-in risk is low, medium and high
+### Block all users access to Microsoft Azure Management, Microsoft Graph PowerShell (Microsoft Graph Command Line Tools) and Graph Explorer when sign-in risk is low, medium and high
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Azure Management, Microsoft Graph PowerShel,Graph Explorer | Sign-in Risk low, medium, high | Block | |  
 
- **Prereq:**
+ **Prereq:** Identity Protection Requires P2 License
 
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if users are blocked for all sign-in risk against microsoft management endpoints](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20users%20are%20blocked%20for%20all%20sign-in%20risk%20against%20microsoft%20management%20endpoints.kql)
  
 ---
 
@@ -277,11 +280,12 @@ from the use or distribution of the Sample Code.._
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
 | Include: Role - directory sync account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
 
- **Prereq:**
+ **Prereq:** Identity Protection Requires P2 License
 
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if directory sync account is blocked due to all sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Possible%20impact%20if%20directory%20sync%20account%20is%20blocked%20due%20to%20all%20sign-in%20risk.kql)
  
 ---
 
