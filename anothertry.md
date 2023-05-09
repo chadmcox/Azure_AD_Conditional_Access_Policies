@@ -207,7 +207,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This conditional access policy makes sure each endpoint that can be used for management is protected by requiring mfa.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Possible impact if user is required MFA accessing Microsogt Management Endpoints](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20user%20is%20required%20MFA%20accessing%20Microsogt%20Management%20Endpoints.kql)
@@ -223,7 +223,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:** Identity Protection Requires P2 License, make sure old user risk are cleaned up
 
- **Comment:** Microsoft General recommendation is to require a password change.  but every security document from our incident response team says this is not enough and that blocks must be performed.
+ **Comment:** Microsoft General recommendation is to require a password change.  Every security document from Microsoft incident response team says this is not enough and that blocks must be performed. This policy will block users that are flagged with a high user risk.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Possible impact if all users are blocked with high user risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20users%20are%20blocked%20with%20high%20user%20risk.kql)
@@ -238,7 +238,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:** Identity Protection Requires P2 License
 
- **Comment:**
+ **Comment:** Microsoft General recommendation is to require MFA.  Every security document from Microsoft incident response team says this is not enough and that blocks must be performed. This policy will block users that are flagged with a high user risk.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Possible impact if all user are blocked with high sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20user%20are%20blocked%20with%20high%20sign-in%20risk.kql)
@@ -249,11 +249,11 @@ from the use or distribution of the Sample Code.._
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | Sign-in frequency: Every time |  
 
  **Prereq:** Identity Protection Requires P2 License
 
- **Comment:**
+ **Comment:** Microsoft incident response team says that it is common to see bad actors elevate into a role and usually from a IP/location that is flagged as risky.  This conditional access policy will make sure to block the privileged role member if any risk is detected during sign-in.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
@@ -263,11 +263,11 @@ from the use or distribution of the Sample Code.._
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: low, medium, high | Block | |  
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: low, medium, high | Block |  Sign-in frequency: Every time |  
 
  **Prereq:** Identity Protection Requires P2 License
 
- **Comment:**
+ **Comment:** Microsoft incident response team says that it is common to see bad actors elevate into a role, usually from a IP/location that is flagged as risky and perform action that triggers user risk.  This conditional access policy will make sure to block the privileged role member if any user risk is detected.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
@@ -277,11 +277,11 @@ from the use or distribution of the Sample Code.._
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Azure Management, Microsoft Graph PowerShel,Graph Explorer | Sign-in Risk low, medium, high | Block | |  
+| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Azure Management, Microsoft Graph PowerShel,Graph Explorer | Sign-in Risk low, medium, high | Block | Sign-in frequency: Every time |  
 
  **Prereq:** Identity Protection Requires P2 License
 
- **Comment:**
+ **Comment:** This conditional access policy will block users that are trying to access a management endpoint when any sign-in risk is detected.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Possible impact if users are blocked for all sign-in risk against microsoft management endpoints](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20users%20are%20blocked%20for%20all%20sign-in%20risk%20against%20microsoft%20management%20endpoints.kql)
@@ -296,7 +296,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:** Identity Protection Requires P2 License
 
- **Comment:**
+ **Comment:** The directory sync account is often used to compromise azure ad.  This conditional access policy makes sure the account cannot be used if any risk is detected during sign-in.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * [Possible impact if directory sync account is blocked due to all sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Possible%20impact%20if%20directory%20sync%20account%20is%20blocked%20due%20to%20all%20sign-in%20risk.kql)
@@ -311,7 +311,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** It is common for bad actors to register their own MFA after successfully password sparying an account that hasnt registered MFA already.  This conditional access policy will make sure to block mfa registration if any risk is detected during sign-in.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * No query put together yet.
@@ -328,7 +328,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This conditional access policy will make sure guest will need to reauthenticate every 8 hours.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * No query put together yet.
@@ -343,7 +343,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This conditional access policy will make sure guest will need to reauthenticate every x hours.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * No query put together yet.
@@ -358,7 +358,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network.
+ **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network. This conditional access policy will require users authenticating from non trusted devices will have to reauthenticate every hour.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
   * No query put together yet.
@@ -373,7 +373,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network.
+ **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network. This conditional access policy will make sure that browsers will not stayed signed in.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
