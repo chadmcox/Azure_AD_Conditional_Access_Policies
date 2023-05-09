@@ -182,6 +182,7 @@ from the use or distribution of the Sample Code.._
  **Comment:** Azure Subscription owners should require additional protection.  This policy will make sure all azure role owners will be required to MFA.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
  
 ---
 
@@ -300,6 +301,7 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
  
 ---
 
@@ -316,6 +318,7 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
  
 ---
 
@@ -330,6 +333,7 @@ from the use or distribution of the Sample Code.._
  **Comment:**
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
  
 ---
 
@@ -341,9 +345,10 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
  
 ---
 
@@ -355,7 +360,7 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
  
@@ -369,9 +374,10 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:**
+ **Comment:** The goal would be to keep guest users from using actual office apps 
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
+   * No query put together yet.
  
 ---
 
