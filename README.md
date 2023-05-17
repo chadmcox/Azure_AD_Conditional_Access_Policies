@@ -205,7 +205,7 @@ from the use or distribution of the Sample Code.._
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune,   <br />  Microsoft Azure Management,   <br /> Microsoft Graph PowerShell,   <br /> Graph Explorer  |  | Require multifactor authentication | |  
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune,   <br />  Microsoft Azure Management,   <br /> Microsoft Graph PowerShell,   <br /> Graph Explorer  |  | Require multifactor authentication | Sign-in frequency = 8 Hours |  
 
  **Prereq:**
 
