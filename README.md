@@ -1,5 +1,7 @@
 # Recommended Conditional Access Policies
 
+[old list can be found here](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/readmeold.md)
+
 # Azure AD Conditional Access Policies
 _Author: Chad Cox (Microsoft)_  
 _Created: January 2023_  
