@@ -389,10 +389,11 @@ from the use or distribution of the Sample Code.._
 
  **Prereq:**
 
- **Comment:** The goal would be to keep guest users from using actual office apps 
+ **Comment:** The goal would be to keep guest users from using actual office apps and restrict to browser.  
+ [Create a more secure guest sharing environment - Set up web-only access for guests with unmanaged devices](https://learn.microsoft.com/en-us/microsoft-365/solutions/create-secure-guest-sharing-environment?view=o365-worldwide#set-up-web-only-access-for-guests-with-unmanaged-devices)
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
-   * No query put together yet.
+   * [Find possible impact if blocking guest from using mobile or desktop apps](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Find%20possible%20impact%20if%20blocking%20guest%20from%20using%20mobile%20or%20desktop%20apps.kql)
  
 ---
 
