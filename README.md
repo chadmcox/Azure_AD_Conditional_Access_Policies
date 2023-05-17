@@ -1,7 +1,9 @@
+# Recommended Conditional Access Policies
+
 # Azure AD Conditional Access Policies
 _Author: Chad Cox (Microsoft)_  
 _Created: January 2023_  
-_Updated: February 2023_  
+_Updated: May 2023_  
 
 **Disclaimer**
 _This Sample Code is provided for the purpose of illustration only and is not
@@ -26,68 +28,507 @@ from the use or distribution of the Sample Code.._
 
 ---
 
-**How to use this guide**
-* Below is a list of Conditional Access Policies that Microsoft recommends in an Azure AD Tenant.
-* Each link in the table of content contains information about a policy with notes about how to evaluate the impact of the policy.
-* Use this method to shorten the amount of time it takes to deploy Conditional Access Policies in Azure AD, by proactively leveraging existing signinlogs and filtering to show the users that could be impacted.
-* Yes it is posible and every organization should still use conditional access policies even if they have a third party IDP.  More information in the requirements section.
+
+**Table of content**
+ * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#how-to-run-a-log-analytics-query)
+ * [Create list of privileged users for the kql designed to search for privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
+ * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#find-ipaddress-not-defined-as-trusted)
+ * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#applications-not-being-protected-by-conditional-access-policies)
+ * [Base Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#base-protection)
+ * [Identity Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#identity-protection)
+ * [Data Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#data-protection)
+ * [Attack Surface Reduction - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#attack-surface-reduction)
 
 ---
 
-**Table of Content**
-* [Goals](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#goals)
-* [Requirements](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#requirements)
-* [Introduction](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#introduction)
-* [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#how-to-run-a-log-analytics-query)
-* [Import the policies from templates](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#import-the-policies-from-templates)
-* [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#find-ipaddress-not-defined-as-trusted)
-* [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#applications-not-being-protected-by-conditional-access-policies)
-* [Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#percentage-of-mfa--compliant-device--trusted-device--trusted-location--conditional-access-policies-by-applications)
-* [Create list of privileged users with powershell for the kql statement for findings related to privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
-* [Conditional Access Policy Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#conditional-access-policy-matrix)  
+## Best Practices
+ * Minimize the use of location based policies
+ * Most companies do not have compliance around MacOS or Linux, In the event you do not, focus those policies on Windows.  Something is better than nothing.
+ * Group based policies are great for one off requirements. Most holes exist because groups are poorly maintain and do not include all the accounts. Base policies should be focus'd on all users.
+ * 
+
+## Persona's
+ * **All Users** = All Users
+ * **Internal Users** = All Users Exclude Guest
+ * **Privileged Role Members** = Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
+ * **Directory Sync Account** = Directory Role (Directory Sync Account)
+ * **Break Glass Account** = Emergency Account that needs to be excluded from all policies
+ * **Accounts Excluded** = Usually Service accounts or vault accounts that present an issue because MFA cannot be used.
+ * **Azure Subscription Owners** = These are actual owners of Azure Subscriptions.
+
+## Apps
+* If not specified All Cloud Apps is required for the conditional access policies.
+
+## Base Protection
+### Require internal users to use trusted or compliant device for register security information
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: BreakGlass  | User actions: register security information |  | Require Hybrid Azure AD joined device,   <br /> Require device to be marked as compliant,  <br /> Require one of the selected controls  | |  
+
+ **Prereq:** NA
+
+ **Comment:** This conditional access policy will require a user to be on a compliant device in order for them to be able to register MFA settings.  This could easily be swapped to require trusted location.  More than likely this will require an exclusion to make sure new users have a way to set up mfa for the first time. Only apply this to operating systems that are actually sending compliant status to Intune / Azure AD
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ * No query put together yet.
+ 
+---
+
+### Require MFA for Microsoft Intune enrollment
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune enrollment |  | Require multifactor authentication | |  
+
+ **Prereq:** NA
+
+ **Comment:** This conditional access policy requires users registering a device to Intune will be prompted for a MFA.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if all users required MFA for Microsoft intune Enrollement](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20for%20users%20required%20MFA%20for%20Microsoft%20intune%20Enrollement.kql)
 
 ---
 
-### Conditional Access Policy Matrix
-|   |  Conditional Access Policy  |
-| ------------- | ------------- |
-| Start (Pick 1) | [Always require MFA from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-from-untrusted-networks)  <br />  [Always require MFA or Trusted Device or Compliant Device from untrusted networks](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-or-trusted-device-or-compliant-device-from-untrusted-networks) <br /> [Always require MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa)  <br />  [Always require MFA or Trusted Device or Compliant Device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#always-require-mfa-or-trusted-device-or-compliant-device) <br /> 
-| Entry | [Block Exchange ActiveSync](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-clients-that-do-not-support-modern-authentication) <br /> [Require MFA when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high) <br /> [Require password change when user risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-user-risk-is-high) <br /> [Require privileged role member to MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-mfa) |
-| Intermediate | [Block when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high) <br /> [Block when user risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-user-risk-is-high) <br /> [Block privileged  role member from legacy authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-privileged-user-from-legacy-authentication) <br /> [Require MFA for Microsoft Graph PowerShell and Explorer](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-for-microsoft-graph-powershell-and-explorer) <br /> [Require MFA for Microsoft Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-for-microsoft-azure-management) <br /> [Require privileged  role member to MFA with Auth Strengths (Fido2,CBA, Microsoft Authenticator password-less)](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-mfa) <br /> [Require privileged role member to use compliant device](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-privileged-user-to-use-compliant-device) <br /> [Require Compliant Device for Office 365](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-compliant-device-for-office-365-or-all-apps) <br /> [Block Guest for Medium and High Sign-in Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-for-low-medium-and-high-sign-in-risk) <br /> [Block Guest from Azure Management](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-from-azure-management) |
-| Mature | Always require MFA with Auth Strengths (Fido2,CBA, Microsoft Authenticator password-less or Windows Hello for Business) <br />  Limit session to 12 Hours <br /> [Block Legacy Authentication](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-legacy-authentication) <br /> [Block the Directory Sync Account from non-trusted locations](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-the-directory-sync-account-from-non-trusted-locations) <br /> [Require guest to MFA](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-guest-to-mfa) <br /> [Require Compliant Device for All Apps](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-compliant-device-for-office-365-or-all-apps) <br /> [No Persistent Browser and 1 Hour Session for Unmanaged Devices](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#no-persistent-browser-and-1-hour-session-for-unmanaged-devices) <br /> [Block when user risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-user-risk-is-high) <br /> [Block when sign-in risk is high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-sign-in-risk-is-high) <br /> [Require MFA when sign-in risk is low, medium, or high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#require-mfa-when-sign-in-risk-is-low-medium-or-high) <br /> [Block when privileged role member user risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-user-risk-is-low-medium-high) <br />[ Block when privileged  role member sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-privileged-role-member-sign-in-risk-is-low-medium-high) <br /> [Block when Directory Sync Account sign in risk is low medium high](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-when-directory-sync-account-sign-in-risk-is-low-medium-high) <br /> [Block Guest for Low, Medium and High Sign-in Risk](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies#block-guest-for-low-medium-and-high-sign-in-risk) <br /> Restrict guest to approved apps <br /> Restrict Office 365 service accounts to Office 365 API's <br /> Restrict Azure service accounts to Azure Management API's endpoints  |
+### Require MFA for device enrollment
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: BreakGlass  | User actions: Register or join device  |  | Require multifactor authentication | |  
+
+ **Prereq:** NA
+
+ **Comment:** This condition access policy requires user's to provide mfa when registering devices to Azure AD.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if all users required to mfa when registering devices](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20users%20required%20to%20mfa%20when%20registering%20devices.kql)
 
 ---
-### Goals
-* Protect Privileged Credentials
-* Require trusted devices
-* Do not depend on trusted networks / locations
-* Always require multifactor
-* Minimize the use of filters
-* Know the potential impact of a policy.
+
+### Require MFA for all guest
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
+
+ **Prereq:** NA
+
+ **Comment:** This conditional access policy requires guest to MFA when accessing resources.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Find possible guest impact if required MFA](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Find%20possible%20guest%20impact%20if%20required%20MFA.kql)
 
 ---
-### Requirements
-* The best way to do this is sending the Azure AD Sign In Logs to Azure Monitor (LogAnalytics).
-  * Instructions on how to set up: [Integrate Azure AD logs with Azure Monitor logs](https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/howto-integrate-activity-logs-with-log-analytics)
-* Azure AD Premium 1 License are required for:
-  * Conditional Access Policies
-  * Sign in Logs to be sent to Log Analytics
-  * Ability to query Sign in logs via microsoft graph
-* **If a third party IDP or ADFS is used to federate the tenant and mfa is being performed there instead of AAD, it must send the multiauthn claim when it performs mfa, so that Azure AD knows a mfa was performed and is reflcted in the logs and bypasses MFA.** Here is more info about the settings that needs to be done for this: [Set federatedIdpMfaBehavior to enforceMfaByFederatedIdp](https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-migrate-mfa-server-to-azure-mfa-with-federation#set-federatedidpmfabehavior-to-enforcemfabyfederatedidp).  Without this data the queries will not provide to much value and Azure AD will have no idea 
-* Third Party IDP notes for MFA and Conditional Access Policies
-  * [Use Okta MFA for Azure Active Directory](https://help.okta.com/en-us/Content/Topics/Apps/Office365/Use_Okta_MFA_Azure_AD_MFA.htm) - OKTA does have some known issues though.
-  * [PingID as on premises MFA for federated Office 365 users](https://support.pingidentity.com/s/article/PingID-as-on-premises-MFA-for-federated-Office-365-users)
-* Risk Policies require P2 License.
-* Workload Identity License is required to view those risk.   
+
+### Require MFA for privileged role members
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
+
+ **Prereq:** Run the following script to retrieve a list of admin accounts to put into the query. [RetrieveAdminsforKQL.ps1](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/PIM/RetrieveAdminsforKQL.ps1)
+
+ **Comment:** This conditional access policy requires members of highly privileged roles to provide MFA.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Find possible impact if privileged role members are required to MFA](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20MFA.kql)
+  * [Using PIM activates find possible impact if privileged role members are require to mfa](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20PIM%20activates%20find%20possible%20impact%20if%20privileged%20role%20members%20are%20require%20to%20mfa.kql)
+  * [Using Sentinel UEMA Logs find possible impact if privileged role members are required to mfa](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20Sentinel%20UEMA%20Logs%20find%20possible%20impact%20if%20privileged%20role%20members%20are%20required%20to%20mfa.kql)
+ 
+---
+
+### Require internal users to use compliant or trusted device for office 365
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: Guest,BreakGlass  | Include: Office 365  | | Require Hybrid Azure AD joined device,   <br /> Require device to be marked as compliant,  <br /> Require one of the selected controls  | |  
+
+ **Prereq:** 
+
+ **Comment:** This conditional access policy requires users accessing office 365 to be using a compliant device.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**  
+ * [Possible impact of users that do not use a compliant or trusted device when accessing office 365](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20users%20that%20do%20not%20use%20a%20compliant%20or%20trusted%20device%20when%20accessing%20office%20apps.kql)
+ 
+---
+
+### Require MFA for internal users from non trusted location
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users  <br /> Exclude: Guest,BreakGlass  | Include: All Cloud Apps  | Include: Any location  <br /> Excluded: All trusted locations | Require multifactor authentication | |  
+
+ **Prereq:** Requires all known internet egresses to be defined as a trusted network. [Get list of potential trusted ips](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Network%20Locations/Get%20list%20of%20potential%20trusted%20ips.kql)
+
+ **Comment:** This conditional access policy will require users accessing application from a non trusted location to require MFA.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Possible impact if internal users required to mfa from non trusted location](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20of%20internal%20users%20required%20to%20mfa%20from%20non%20trusted%20location.kql)
 
 ---
-### Introduction
+
+### Require privileged role member to use compliant device
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require device to be marked as compliant | |  
+
+ **Prereq:** Run the following PowerShell script to retrieve a list of admin accounts to put into the query. [RetrieveAdminsforKQL.ps1](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/PIM/RetrieveAdminsforKQL.ps1)
+
+ **Comment:** This policy will require privileged role members to sign-in from a trusted device.  Hopefully they are using a protected admin workstation.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Find possible impact if privileged role member is required to use compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20impact%20if%20privileged%20role%20member%20is%20required%20to%20use%20compliant%20device.ps1)
+ * [Using PIM activates find possible impact if privileged role member was required to use a compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20PIM%20activates%20find%20possible%20impact%20if%20privileged%20role%20member%20was%20required%20to%20use%20a%20compliant%20device.kql)
+ * [Using Sentinel UEBA Logs find possible impact if privileged role member was required to use a compliant device](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20Sentinel%20UEBA%20Logs%20find%20possible%20impact%20if%20privileged%20%20role%20member%20was%20required%20to%20use%20a%20compliant%20device.kql)
+
+---
+
+### Require MFA for Azure Subscription Owners
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Subscription Owner Group  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  | Require multifactor authentication | |  
+
+ **Prereq:** need to get list of all subscription owners put in a group. This PowerShell script can be used to retrieve a list of sub owners. [link to script](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Azure/GetAZRBACMembers.ps1)
+
+ **Comment:** Azure Subscription owners should require additional protection.  This policy will make sure all azure role owners will be required to MFA.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
+ 
+---
+
+### Require MFA for all users when accessing Microsoft Management Endpoints
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Intune,   <br />  Microsoft Azure Management,   <br /> Microsoft Graph PowerShell,   <br /> Graph Explorer  |  | Require multifactor authentication | |  
+
+ **Prereq:**
+
+ **Comment:** This conditional access policy makes sure each endpoint that can be used for management is protected by requiring mfa.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if user is required MFA accessing Microsogt Management Endpoints](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20user%20is%20required%20MFA%20accessing%20Microsogt%20Management%20Endpoints.kql)
+ 
+---
+
+## Identity Protection
+### Block all users when user risk is high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: high | Block | |  
+
+ **Prereq:** Identity Protection Requires P2 License, make sure old user risk are cleaned up
+
+ **Comment:** Microsoft General recommendation is to require a password change.  Every security document from Microsoft incident response team says this is not enough and that blocks must be performed. This policy will block users that are flagged with a high user risk.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if all users are blocked with high user risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20users%20are%20blocked%20with%20high%20user%20risk.kql)
   
-While working with organizations to determine impact using read only and the built-in reporting, I found this was taking longer than needed and could be done another way. I have thrown together a few PowerShell Scripts and Log Analytics Queries (KQL) in addition to notes about each policy that will help identify potential impact before a particular policy is created or applied.  The idea is to use the results to determine impact of a policy and put in the exclusions or policy adjustments needed to minimize impact and get the desired affect of the policy.
+---
 
-Not everything here is perfect and is being updated as I learn new things or new guidance becomes published.  Also do not hesitate to comment and let me know what is not working or is working.   
+### Block all users when sign-in risk is high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: high | Block | |  
+
+ **Prereq:** Identity Protection Requires P2 License
+
+ **Comment:** Microsoft General recommendation is to require MFA.  Every security document from Microsoft incident response team says this is not enough and that blocks must be performed. This policy will block users that are flagged with a high user risk.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if all user are blocked with high sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20all%20user%20are%20blocked%20with%20high%20sign-in%20risk.kql)
+ 
+---
+
+### Block privileged role members when sign-in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | Sign-in frequency: Every time |  
+
+ **Prereq:** Identity Protection Requires P2 License
+
+ **Comment:** Microsoft incident response team says that it is common to see bad actors elevate into a role and usually from a IP/location that is flagged as risky.  This conditional access policy will make sure to block the privileged role member if any risk is detected during sign-in.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block privileged role members when user risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | User Risk: low, medium, high | Block |  Sign-in frequency: Every time |  
+
+ **Prereq:** Identity Protection Requires P2 License
+
+ **Comment:** Microsoft incident response team says that it is common to see bad actors elevate into a role, usually from a IP/location that is flagged as risky and perform action that triggers user risk.  This conditional access policy will make sure to block the privileged role member if any user risk is detected.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block all users access to Microsoft Azure Management, Microsoft Graph PowerShell (Microsoft Graph Command Line Tools) and Graph Explorer when sign-in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Azure Management, Microsoft Graph PowerShel,Graph Explorer | Sign-in Risk low, medium, high | Block | Sign-in frequency: Every time |  
+
+ **Prereq:** Identity Protection Requires P2 License
+
+ **Comment:** This conditional access policy will block users that are trying to access a management endpoint when any sign-in risk is detected.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if users are blocked for all sign-in risk against microsoft management endpoints](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20users%20are%20blocked%20for%20all%20sign-in%20risk%20against%20microsoft%20management%20endpoints.kql)
+ 
+---
+
+### Block directory sync account when sign in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - directory sync account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
+
+ **Prereq:** Identity Protection Requires P2 License
+
+ **Comment:** The directory sync account is often used to compromise azure ad.  This conditional access policy makes sure the account cannot be used if any risk is detected during sign-in.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if directory sync account is blocked due to all sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Possible%20impact%20if%20directory%20sync%20account%20is%20blocked%20due%20to%20all%20sign-in%20risk.kql)
+ 
+---
+
+### Block internal users from register security information when sign in risk is low, medium and high
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users   <br /> Exclude: Guest, BreakGlass  | User actions: register security information  | Sign-in Risk: low, medium, high | Block | |  
+
+ **Prereq:**
+
+ **Comment:** It is common for bad actors to register their own MFA after successfully password sparying an account that hasnt registered MFA already.  This conditional access policy will make sure to block mfa registration if any risk is detected during sign-in.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
+ 
+---
+
+## Data Protection
+
+### Restrict guest to less than 8 hour session limit
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guest   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  |  | Sign-in frequency = 8 Hour |  
+
+ **Prereq:**
+
+ **Comment:** This conditional access policy will make sure guest will need to reauthenticate every 8 hours.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
+ 
+---
+
+### Restrict privileged role members to less than 8 hour session limit
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  |  |  | Sign-in frequency = 8 Hour |  
+
+ **Prereq:**
+
+ **Comment:** This conditional access policy will make sure guest will need to reauthenticate every x hours.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
+ 
+---
+
+### Restrict internal users using nontrusted or noncompliant device to 1 hour session limit
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: Guest, BreakGlass  | Include: All Cloud Apps  | Filter for devices Include: device.isCompliant -ne True -or device.trustType -ne "ServerAD" |  | Sign-in frequency = 1 Hour |  
+
+ **Prereq:**
+
+ **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network. This conditional access policy will require users authenticating from non trusted devices will have to reauthenticate every hour.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * No query put together yet.
+ 
+---
+
+### Restrict internal users using nontrusted or noncompliant device to no persistent browser session
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: Guest, BreakGlass  | Include: All Cloud Apps  | Client Apps Include: Browser <br /> Filter for devices Include: device.isCompliant -ne True -or device.trustType -ne "ServerAD" |  | Persistent browser session = Never persistent |  
+
+ **Prereq:**
+
+ **Comment:** This will more than likely affect Linux or Mac users.  If Mac is reporting the compliance state then should be Ok to add.  Also consider at minimum doing this to devices outside the trusted network. This conditional access policy will make sure that browsers will not stayed signed in.
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block guest from using mobile apps and desktop apps
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guests  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Mobile apps and desktop clients  | Block |  |  
+
+ **Prereq:**
+
+ **Comment:** The goal would be to keep guest users from using actual office apps 
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+   * No query put together yet.
+ 
+---
+
+## Attack Surface Reduction  
+
+### Block all users legacy authentication  
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Exchange ActiveSync clients,Other clients  | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+ 
+### Block privileged role members legacy authentication 
+ 
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Exchange ActiveSync clients,Other clients  | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+ 
+### Block privileged role members from unsupported platforms.  
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Linux | Block |  |  
+
+ **Prereq:**
+
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+ 
+---
+
+### Block all users access from tor exit nodes  
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Tor Nodes | Block |  |  
+ 
+ **Prereq:** Define all the tor exit nodes and any other set of IP's that need to be blocked. [link to Tor IP list](https://raw.githubusercontent.com/SecOps-Institute/Tor-IP-Addresses/master/tor-exit-nodes.lst)
+ 
+ **Comment:**
+ 
+ **Log Analytics Queries (KQL) against AAD Signin Logs**
+  * [Possible impact if tor exit nodes are blocked](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/query-SigninsfromKnownTorExitNodes.kql)
+ 
+---
+
+### Block guest access from unexpected countries
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: Unapproved Countries | Block |  |
+
+**Prereq:** Country locations should be defined with countries guest users should not be signing in from.  
+
+**Comment:** This Conditional Access Policies are used to block guest from accessing an application from countries for example Russia where Business may not be allowed.
+
+**Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Get list of countries guest are signing in from](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Get%20list%20of%20countries%20guest%20are%20signing%20in%20from.kql)
 
 ---
+
+### Block guest access to non-approved apps
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: guest  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  <br /> Excluded: Office 365, Other B2B approved apps |  | Block |  |
+
+**Prereq:**  
+
+**Comment:** This Conditional Access Policy is used to make sure guest (external B2B) are only allowed to access applications they need access to.  This examples blocks everything but Office 365 so that teams and sharepoint collaberation can continue to work.  **Guest should be blocked from things like Microsoft Azure Management, Microsoft Graph PowerShell, Microsoft Graph Explorer, VPNs, and HR Apps.**  
+
+**Log Analytics Queries (KQL) against AAD Signin Logs**
+ * [Find possible guest impact by blocking Graph Explorer and MS Graph PowerShell](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Find%20possible%20guest%20impact%20by%20blocking%20Graph%20Explorer%20and%20MS%20Graph%20PowerShell.kql)
+ * [Find possible guest impact by blocking Microsoft Azure Management](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Find%20possible%20guest%20impact%20by%20blocking%20Microsoft%20Azure%20Management.kql)
+ * [Get list of applications guest are successfully logging into](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Guest%20Scenerios/Get%20list%20of%20applications%20guest%20are%20successfully%20logging%20into.kql)
+
+---
+### Block privileged role members from countries except US (other acceptable countries)
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - privileged roles  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Countries | Block |  |
+
+**Prereq:** Country locations should be defined with countries privileged roles members are located.  
+
+**Comment:** This Conditional Access Policy is to force the privileged roles to only allow signing in from countries where these users are located in.  The goal is to prevent a global admin account from logging in from a country for example Russia where there are more than likely no administrators located.
+
+**Log Analytics Queries (KQL) against AAD Signin Logs**  
+ * [Using PIM activates find countries privileged role members are logging in from](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Using%20PIM%20activates%20find%20countries%20privileged%20role%20members%20are%20logging%20in%20from.kql)
+
+---
+
+### Block directory sync account from non trusted location
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: Role - directory sync account  <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Networks | Block |  |
+
+**Prereq:** Trusted Locations (IP Ranges) should be defined.  
+
+**Comment:** This Conditional Access Policy is used to make sure if the credentials for the directory sync account are stolen that they cannot be accessed outside of the trusted network.  
+
+**Log Analytics Queries (KQL) against AAD Signin Logs**  
+* [Find possible Directory Sync Account impact if blocked from untrusted network](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/Privileged%20Role%20Members/Find%20possible%20Directory%20Sync%20Account%20impact%20if%20blocked%20from%20untrusted%20network.kql)
+
+---
+
+### Block accounts excluded from require MFA policies from non trusted location
+
+| Users | Cloud Apps or Actions | Conditions | Grant | Session |
+| --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
+| Include: (Group of excluded users) <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Include: All Networks  <br /> Exclude: Trusted Networks | Block |  |
+
+**Prereq:** Trusted Locations (IP Ranges) should be defined.  
+
+**Comment:** This Conditional Access Policy is used to make sure accounts excluded from requiring MFA should be required to authenticate from trusted locations. Link below contains the script that can be used to scan all the conditional access policy exclusions and return a list of accounts that should be in this list.  Do not include the breakglass account.
+ * [Link to PowerShell script](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Conditional%20Access%20Policy/exportConditionalAccessExclusions.ps1)
+
+## Compliance
+ * Require TOU for Guest
+
+## Notes
 ### How to run a Log Analytics Query
 * In the Azure AD Portal
 * Navigate to the Log Analytics Tab
@@ -110,24 +551,6 @@ Not everything here is perfect and is being updated as I learn new things or new
 
 ---
 
-### Import the policies from templates
-I have put together a script that will import all of the policies from this github.   
-The scipt can be found here [click here](https://raw.githubusercontent.com/chadmcox/Azure_Active_Directory/master/Conditional%20Access%20Policy/Import-AADRecommendedConditionalAccessPolicies.ps1)   
-
-**Instructions**   
-* Copy the contents of the script locally onto a machine.
-* Run the script in PowerShell
-* Select the number of the policy you want to import.
-* Review the results They are always in read-only and have a prefix
-
-_Import menu_   
-![Untitled](./media/importscript1.jpg) 
-
-_finished policy_   
-![Untitled](./media/importresult.jpg)   
-
-
----
 
 ### Create list of privileged users for the kql designed to search for privileged user impact  
 
@@ -213,1255 +636,7 @@ The image below, shows the applications and the logon count of those apps that i
 
 ![Untitled](./media/applicaationsnotprotectedbyca.jpg)   
 
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Percentage of MFA / Compliant Device / Trusted Device / Trusted Location / Conditional Access Policies by Applications
-
-**Log Analytics AAD SigninLogs Query (KQL)**  
-```
-SigninLogs
-| where TimeGenerated > ago(30d)
-| where ResultType == 0 and AppDisplayName <> 'Windows Sign In' and UserType <> "Guest"
-| where ResourceTenantId == HomeTenantId and AADTenantId == HomeTenantId
-| extend trustType = tostring(DeviceDetail.trustType)
-| extend isCompliant = tostring(DeviceDetail.isCompliant)
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| summarize
-    ['Total Signin Count']=count(),
-    ['Total MFA Count']=countif(AuthenticationRequirement == "multiFactorAuthentication"),
-    ['Total non MFA Count']=countif(AuthenticationRequirement == "singleFactorAuthentication"),
-    ['Total Trusted device']=countif(trustType == "Hybrid Azure AD joined"),
-    ['Total Compliant device']=countif(isCompliant == 'true'),
-    ['Total Trusted Location']=countif(TrustedLocation == 'trustedNamedLocation'),
-    ['Total CAP Applied']=countif(ConditionalAccessStatus == 'success')
-    by AppDisplayName
-| project
-    AppDisplayName,TotalSigninCount = ['Total Signin Count'],
-    MFAPercentage=(todouble(['Total MFA Count']) * 100 / todouble(['Total Signin Count'])),
-    TrustedDevicePercentage=(todouble(['Total Trusted device']) * 100 / todouble(['Total Signin Count'])),
-    CompliantDevicePercentage=(todouble(['Total Compliant device']) * 100 / todouble(['Total Signin Count'])),
-    TrustedLocationPercentage=(todouble(['Total Trusted Location']) * 100 / todouble(['Total Signin Count'])),
-    ConditionalPolicyAppliedPercentage=(todouble(['Total CAP Applied']) * 100 / todouble(['Total Signin Count']))
-| where MFAPercentage <> 100
-| sort by MFAPercentage desc  
-```
-
-
-
-**Comment**  
-My lab has no good data for this.  This query will show the percentage of each of the major things we are looking for.  The idea here is to look and make sure applications actually have the desired protections whether its from a compliant device or MFA.  
-
-This is what I would expect to see.
-* Every Application is 100% convered by Conditional Access Policies.
-* At minimum the MFAPercentage + TrustedLocationPercentage should equal 100%
-* And in a true zero trust envrionment the CompliantDevicePercentage should be 100%
-* Im most cases if MFAPercentage + TrustedDevicePercentage + CompliantDevicePercentage = 100%, then a Org is doing a decent job.
-
-![Untitled](./media/percent.jpg)   
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-
-### Always require MFA
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
-* This policy will require all users logging into any application to MFA.  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: Windows Store
-* Conditions
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication
-  * Require all the selected controls  
-
-_Note: this policy will more than likely break on premise sync accounts, make sure the Directory Sync Accounts Role is in the exclusion group._  
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
-let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
-let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-AADNonInteractiveUserSignInLogs 
-| where TimeGenerated > ago(14d)
-| where Status !contains "MFA requirement satisfied by claim in the token"
-| union SigninLogs 
-| where TimeGenerated > ago(14d) 
-| where UserType <> "Guest" and UserId !in (guests)
-| where HomeTenantId == ResourceTenantId
-| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  !in (excludeapps) and AppDisplayName <> ''
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category 
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category
-```
-
-**Comment**  
-This policy is a harder policy to implement.  This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded such as faceless user objects or "service accounts".  
-
-Expect to see most of the users in a org in this list.  The goal is to find the users and applications that need to be excluded because it would cause impact.
-
-Looking at the image below.  I would make sure to exclude the breakglass account and the sync account as those are accounts that should not have this policy applied to it.  
-
-![Untitled](./media/alwaysrequiremfa.jpg)   
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Always require MFA from untrusted networks
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa)  
-* This policy will require all users logging into any application to MFA when signing in from networks not flagged as trusted.  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_, Guest
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: Windows Store
-* Conditions
-  * Locations
-  * Include: Any Location
-  * Exclude: All trusted locations
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication
-  * Require all the selected controls 
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
-let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
-let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-AADNonInteractiveUserSignInLogs 
-| where TimeGenerated > ago(14d)
-| where Status !contains "MFA requirement satisfied by claim in the token"
-| where NetworkLocationDetails !contains "trustedNamedLocation"
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
-| union SigninLogs 
-| where TimeGenerated > ago(14d) 
-| where UserType <> "Guest" and UserId !in (guests)
-| where HomeTenantId == ResourceTenantId
-| where NetworkLocationDetails !contains "trustedNamedLocation"
-| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
-| where AppDisplayName  !in (excludeapps) and AppDisplayName <> ''
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,TrustedLocation
-```
-
-**Comment**  
-This policy is not required if you were able to implement: Always require MFA  
-Also this policy has a network based filter which means if someone was able to "trick" the ip they would bypass important protections.  
-This query will return a unique list of users and applications that are not hitting up against a conditional access policy and not providing multifactor authentication.  Things to look for in the KQL results are applications that might have problems like the Windows Store and accounts that need to be excluded such as faceless user objects or "service accounts".  
-
-The goal is to find the users and applications that need to be excluded because it would cause impact. Also note if users are in this list that never access outside of the org then there is a good chance the IP that user is coming from is not trusted.  
-
-Looking at the image below.  I would make sure to exclude the breakglass account from the policy and I would research the sync account to figure out why its being used outside a trusted network.  
-
-![Untitled](./media/alwaysrequiremfauntrustednetwork.jpg)   
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Always require MFA or Trusted Device or Compliant Device
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: Windows Store
-* Conditions
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication,  Require Hybrid Azure AD joined device, and Require device to be marked as compliant
-  * Require one of the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
-let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
-let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-//query the non interactive logs
-let AADNon = AADNonInteractiveUserSignInLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where Status !contains "MFA requirement satisfied by claim in the token"
-| where UserId !in (guests)
-| where AppDisplayName  !in (excludeapps)
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category;
-//query the interactive logs
-let AAD = SigninLogs 
-| where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  !in (excludeapps) 
-| where UserType <> "Guest" and UserId !in (guests)
-| where HomeTenantId == ResourceTenantId
-| extend trustType = tostring(DeviceDetail.trustType) 
-| extend isCompliant = tostring(DeviceDetail.isCompliant) 
-| extend os = tostring(DeviceDetail.operatingSystem) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os,Category;
-//combine the results
-AADNon
-| union AAD
-| where AppDisplayName <> ''
-| summarize apps=make_set(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
-```
-
-**Comment**  
-This policy is not required if you were able to implement: Always require MFA  
- 
-
-![Untitled](./media/mfacomptrust.jpg)   
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Always require MFA or Trusted Device or Compliant Device from untrusted networks
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require a compliant device, hybrid Azure AD joined device, or multifactor authentication for all users](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device)
-* Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations)  
-* This policy will require all trusted networks to be defined.
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: Windows Store
-* Conditions
-  * Locations
-  * Include: Any Location
-  * Exclude: All trusted locations
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication,  Require Hybrid Azure AD joined device, and Require device to be marked as compliant
-  * Require one of the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let thisTenantId = SigninLogs | take 1 | distinct AADTenantId;
-let guests = AADNonInteractiveUserSignInLogs | union SigninLogs | where TimeGenerated > ago(14d) | where HomeTenantId !in (thisTenantId) and HomeTenantId <> '' | distinct UserId;
-let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-let AADNon = AADNonInteractiveUserSignInLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  !in (excludeapps)
-| where UserId !in (guests)
-| where Status !contains "MFA requirement satisfied by claim in the token"
-| where NetworkLocationDetails !contains "trustedNamedLocation"
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category;
-//query the interactive logs
-let AAD = SigninLogs 
-| where TimeGenerated > ago(14d) and UserType <> "Guest" and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  !in (excludeapps) 
-| where NetworkLocationDetails !contains "trustedNamedLocation"
-| where UserType <> "Guest" and UserId !in (guests)
-| where HomeTenantId == ResourceTenantId
-| extend trustType = tostring(DeviceDetail.trustType) 
-| extend isCompliant = tostring(DeviceDetail.isCompliant) 
-| extend os = tostring(DeviceDetail.operatingSystem) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os,Category;
-//combine the results
-AADNon
-| union AAD
-| where AppDisplayName <> ''
-| summarize apps=make_set(AppDisplayName),ostypes=make_set(os) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation,trustType,isCompliant
-```
-
-**Comment**  
-This policy is not required if you were able to implement: Always require MFA  
- 
-
-![Untitled](./media/mfacomptrust.jpg)  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Require MFA for Microsoft Graph PowerShell and Explorer
-* Link to Microsoft Documentation: [Blocking PowerShell for EDU Tenants](https://learn.microsoft.com/en-us/schooldatasync/blocking-powershell-for-edu)
-* May not be available for China or Gov Cloud
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud Apps
-  * Include: Microsoft Graph PowerShell, Graph Explorer
-* Conditions
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication
-  * Require all the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let includeapps = pack_array("Graph Explorer","Microsoft Graph PowerShell");
-AADNonInteractiveUserSignInLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
-| where AppDisplayName in (includeapps) 
-| union SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName in (includeapps)
-| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement
-```
-
-**Comment**  
-This policy is great for organizations that have trusted network based filters on the base conditional access policy.  This will make sure users that use tools that can be used to perform queries or changes agaisnt the tenant must require MFA from both trusted and non trusted networks.   
-
-Revew the list of users in the results. in the example image below, the breakglass account is the only account being used to signin to those end points.  That particular account should be excluded from the policy.  But also shouldnt be used.  Any other account such as possible service accounts used for azure ad automation will need to be excluded from the policy and should eventually transition to using a service principal instead.  
-
-![Untitled](./media/graph.jpg)  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Require MFA for Microsoft Azure Management
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management) 
-* This may not be available for Gov or China Tenant
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud Apps
-  * Include: Microsoft Azure Management / (Gov Tenant) Azure Government Cloud Management API
-* Conditions
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication
-  * Require all the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-//https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management
-//Common Conditional Access policy: Require MFA for Azure management
-let includeapps = pack_array("Windows Azure Service Management API","Azure Resource Manager","Azure portal","Azure Data Lake","Application Insights API","Log Analytics API");
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AADTenantId == ResourceTenantId
-| where  ResourceDisplayName in (includeapps) or AppDisplayName in (includeapps)
-| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
-```
-
-**Comment**  
-This policy is great for organizations that have trusted network based filters on the base conditional access policy.  This will make sure users that use tools that can be used to perform queries or changes against Azure subscriptions must require MFA from both trusted and non trusted networks.   
-
-Revew the list of users in the results. in the example image below, the breakglass account is the only account being used to signin to those end points.  That particular account should be excluded from the policy.  But also shouldnt be used.  Any other account such as possible service accounts used for azure automation will need to be excluded from the policy and should eventually transition to using a service principal instead.
- 
-![Untitled](./media/azureman.jpg)  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block Legacy Authentication
-* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
-* This policy will require 
-* Ideally use a block over MFA
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud Apps
-  * Include: All Cloud Apps
-* Conditions
-  * Client apps
-  * Exchange ActiveSync clients
-  * Other clients
-* Grant
-  * Block Access
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0
-| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
-| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
-| where isLegacyAuth == "Yes"
-| distinct UserDisplayName, UserPrincipalName, AppDisplayName, ClientAppUsed, isLegacyAuth, UserAgent, Category
-```
-
-**Comment**  
-No example image to show what these results look like.  Review the results from the query which pulls from both the interactive and non interactive logs.  work with the users to remove the dependancy. The sooner this policy is in place the better.   
- 
- [Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
- 
----
-### Require privileged user to MFA
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa)  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication
-  * Require all the selected controls
-* Session
-  * Sign-in frequency 2 Hours
-
-**Get list of Privileged Users using PowerShell to use in the kql below**
-```
-Connect-MgGraph
-Select-MgProfile -Name beta
-$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
-(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
-```
-**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
-```
-let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
-```
-**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = AuditLogs 
-| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
-| extend Caller = tostring(InitiatedBy.user.userPrincipalName) 
-| extend Role = tostring(TargetResources[0].displayName) 
-| where Role in (privroles) 
-| distinct Caller;
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
-```
-**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN;
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication" 
-| where AppDisplayName  <> "Windows Sign In" and AppDisplayName <> "Microsoft Authentication Broker" and AppDisplayName <> 'Microsoft Account Controls V2' 
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category
-```
-
-**Comment**  
-The results of these queries will show privileged users that are not using MFA when signing in.  Review the results and look for for user based service accounts that will be affected by this policy and exclude them.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block privileged user from legacy authentication
-* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Client apps
-    * Exchange ActiveSync clients
-    * Other clients
-* Grant
-  * Block Access
-
-**Get list of Privileged Users using PowerShell to use in the kql below**
-```
-Connect-MgGraph
-Select-MgProfile -Name beta
-$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
-(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
-```
-**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
-```
-let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and ResultType == 0 
-| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
-| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
-| where isLegacyAuth == "Yes"
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth
-```
-**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = AuditLogs 
-| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
-| extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;
-AADNonInteractiveUserSignInLogs 
-| union SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
-| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
-| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
-| where isLegacyAuth == "Yes"
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth
-```
-**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN
-AADNonInteractiveUserSignInLogs 
-| union SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
-| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
-| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
-| where isLegacyAuth == "Yes"
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, isLegacyAuth
-```
-
-**Comment**  
-The list from the results are privileged users that would be affected by this policy.  I have found it easier for orgs to apply these restrictions to privileged users before applying to all users.  The goal of this policy is to make sure no privileged user is actively using basic authentication.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block the Directory Sync Account from non trusted locations
-* Link to Microsoft Documentation: [Named locations](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa#named-locations) 
-* Requires Named Locations to be created and trusted
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Directory Role (Directory Sync Account)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Locations
-  * Include: Any Location
-  * Exclude: All trusted locations
-* Grant
-  * Block Access
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-AADNonInteractiveUserSignInLogs 
-| union SigninLogs 
-| where TimeGenerated > ago(14d) 
-| where UserPrincipalName startswith "Sync_" 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
-| distinct IPAddress, TrustedLocation, UserPrincipalName
-```
-
-**Comment**  
-This account if compromised is limited to a particular endpoint, however it is possible to compromise the account.  The goal is to make sure it is limited to trusted networks.  This query will show if any of the accounts are being used from untrusted networks.  the idea is to review the ip address and define it if it is trusted.
-
-![Untitled](./media/syncnontrustedlocation.jpg)  
-
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block Guest from Azure Management
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require MFA for Azure management](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-azure-management)   
-* Link to Microsoft Documentation: [Conditional Access: Block access](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-access)  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All guest and external users
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: Microsoft Azure Management  / (Gov Tenant) Azure Government Cloud Management API
-  * Exclude: None
-* Conditions
-* Grant
-  * Block Access
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let includeapps = pack_array("Windows Azure Service Management API","Azure Resource Manager","Azure portal","Azure Data Lake","Application Insights API","Log Analytics API");
-SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"  and UserType == "Guest"  
-| where  ResourceDisplayName in (includeapps)  or AppDisplayName in (includeapps)
-| where AADTenantId == ResourceTenantId
-| distinct AppDisplayName, UserPrincipalName, ConditionalAccessStatus, AuthenticationRequirement, ResourceDisplayName
-```
-
-**Comment**  
-This policy is designed to stop guest accounts from using management portals.  The idea is guest should be restricted from doing admin type work.
-
-The results from this query are straight forward.  The goal is to provide a list of users that might be affected by applying this policy.  Review the results of this and put in exclusions as needed.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Require guest to MFA
-* Link to Microsoft Documentation: [change me]()  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Guest
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-* Grant
-  * Grant Access
-  * Require Multi-Factor Authentication
-  * Require all the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-// URL: https://learn.microsoft.com/en-us/azure/active-directory/external-identities/b2b-tutorial-require-mfa
-let excludeapps = pack_array("Windows Sign In","Microsoft Authentication Broker","Microsoft Account Controls V2","Microsoft Intune Company Portal","Microsoft Mobile Application Management");
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserType == "Guest" and AppDisplayName !in (excludeapps)
-| where ResultType == 0 and AuthenticationRequirement == "singleFactorAuthentication"
-| where AADTenantId == ResourceTenantId
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category, UserType
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, Category, UserType
-```
-
-**Comment**  
-Guest users should be treated no differently than regular users.  Having a guest register and use mfa adds an additional layer of security as there is no way to know if the guest's email is as secure.  The results from this query show users that did not get prompted for MFA when logging into the tenant, review the list and exclude guest or applications that need to be excluded.  One thing to note is the guest user may need a way outside of self service to reset their MFA.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Require Compliant Device for Office 365 or All Apps
-* Link to Microsoft Documentation: [Require compliant PCs and mobile devices](https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/identity-access-policies?view=o365-worldwide#require-compliant-pcs-and-mobile-devices)  
-* This policy will require Intune
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_, Directory Role (Directory Sync Accounts), Guest
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps (or at minimum Office 365)
-* Conditions
-* Grant
-  * Grant Access
-  * Require device to be marked as compliant
-  * Require one of the selected controls
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let includeapps = pack_array("Exchange Online","Microsoft 365 Search Service","Microsoft Forms","Microsoft Planner","Microsoft Stream","Microsoft Teams","Microsoft To-Do","Microsoft Flow","Microsoft Office 365 Portal","Microsoft Office client application","Microsoft Stream","Microsoft To-Do WebApp","Microsoft Whiteboard Services","Office Delve","Office Online","OneDrive","Power Apps","Power Automate","Security & compliance portal","SharePoint Online","Skype for Business Online","Skype and Teams Tenant Admin API","Sway","Yammer");
-AADNonInteractiveUserSignInLogs
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| project-away DeviceDetail
-| union SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| where AADTenantId == ResourceTenantId
-| where  ResourceDisplayName in (includeapps) or AppDisplayName in (includeapps)
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, trustType,isCompliant,os,Category;
-```
-
-**Comment**  
-These results show users logging in with non compliant devices.  The initial goal is to have it only apply to users using office 365, ultimately requiring it for all applications.  Will want to review these results and determine the impact of this policy.
-
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### No Persistent Browser and 1 Hour Session for Unmanaged Devices
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require reauthentication and disable browser persistence](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-policy-persistent-browser-session)  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_,
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All cloud apps
-  * Exclude: None
-* Conditions
-   * Filter for device
-   * device.isCompliant -ne True -or device.trustType -ne "ServerAD"
-* Session
-  * Sign-in frequency: 1 Hour
-  * Persistent browser session: Never persistent
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-SigninLogs 
-| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> "Guest" 
-| extend trustType = tostring(DeviceDetail.trustType) 
-| extend isCompliant = tostring(DeviceDetail.isCompliant) 
-| extend deviceName = tostring(DeviceDetail.displayName) 
-| extend os = tostring(DeviceDetail.operatingSystem) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) 
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined" and ClientAppUsed == "Browser" 
-| distinct UserPrincipalName, os, deviceName, trustType, isCompliant, TrustedLocation
-```
-
-**Comment**  
-This policy is to make sure that token session are limited on non trusted devices.  This is to help prevent tokens from being compromised and replayed.  The results show users that will be affected by this policy.  Do not put this in if the device / compliance journey is still under works as users will be prompted frequently.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block clients that do not support modern authentication
-* Link to Microsoft Documentation: [Common Conditional Access policy: Block legacy authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy)  
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud Apps
-  * Include: All Cloud Apps
-* Conditions
-  * Client apps
-  * Exchange ActiveSync clients
-  * Other clients
-* Grant
-  * Block Access
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-AADNonInteractiveUserSignInLogs
-| union SigninLogs
-| where TimeGenerated > ago(14d) and ResultType == 0
-| extend ClientAppUsed = iff(isempty(ClientAppUsed) == true, "Unknown", ClientAppUsed)  
-| extend isLegacyAuth = case(ClientAppUsed contains "Browser", "No", ClientAppUsed contains "Mobile Apps and Desktop clients", "No", ClientAppUsed contains "Exchange ActiveSync", "Yes", ClientAppUsed contains "Exchange Online PowerShell","Yes", ClientAppUsed contains "Unknown", "Unknown", "Yes") 
-| where isLegacyAuth == "Yes"
-| distinct UserDisplayName, UserPrincipalName, AppDisplayName, ClientAppUsed, isLegacyAuth, UserAgent, Category
-```
-
-**Comment**  
-These results show users using basic auth.  Find users being called out in this and put them in as an exception while working with the account owners to stop using basic authentication.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Require privileged user to use compliant device
-* Link to Microsoft Documentation: [Common Conditional Access policy: Require compliant or hybrid Azure AD joined device for administrators](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-compliant-device-admin)  
-* This policy will require Intune
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-* Grant
-  * Grant Access
-  * Require device to be marked as compliant
-  * Require Hybrid Azure AD joined device
-  * Require one of the selected controls
-**Get list of Privileged Users using PowerShell to use in the kql below**
-```
-Connect-MgGraph
-Select-MgProfile -Name beta
-$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
-(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
-```
-**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
-```
-let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and ResultType == 0 
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category
-```
-**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = AuditLogs 
-| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
-| extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category
-```
-**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and ResultType == 0 
-| extend trustType = tostring(parse_json(DeviceDetail).trustType) 
-| extend isCompliant = tostring(parse_json(DeviceDetail).isCompliant) 
-| extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation',''))
-| extend os = tostring(parse_json(DeviceDetail).operatingSystem) 
-| where isCompliant <> 'true' and trustType <> "Hybrid Azure AD joined"  
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, TrustedLocation, trustType,isCompliant,os, Category
-```
-
-**Comment**  
-This shows privileged users that are logging in without a compliant devices.  I have found most orgs are not to a point to be able to require this for all users.  the goal is to focus on the privileged accounts to make sure an admin is not logging into random machines where tokens could be exploited.
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block when user risk is high
-* Link to Microsoft Documentation: [Common Conditional Access policy: User risk-based password change](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk-user)  
-* This policy will require 
-* Ideally use a block over Change Password
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Guests, Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * User risk: High
-* Grant
-  * Block Access
-* Session
-  * Sign-in frequency
-  * Every time
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-SigninLogs 
-| where TimeGenerated > ago(14d) 
-| where RiskState == "atRisk" and RiskLevelAggregated == "high"
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail,IsRisky, RiskEventTypes_V2, MfaDetail, ConditionalAccessStatus, AuthenticationRequirement, ResultType
-```
-
-**Comment**  
-Having two conditional access policies one blocking high sign-in risk and one blocking high user risk is really important.  The image below shows the importance of this.  I took a user and logged into a tenant with a tor browser, This action alone only had a sign in risk of medium.  Next I went to add a MFA into my profile and immediately the user risk went up to high and would have instantly blocked me if the policy was enabled preventing the "bad actor" from registering their own MFA creds.
-
-![Untitled](./media/userriskhigh.jpg) 
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block when sign-in risk is high
-* Link to Microsoft Documentation: [Common Conditional Access policy: Sign-in risk-based multifactor authentication](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-risk)  
-* This policy will require 
-* Ideally use a block over MFA
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Guest, Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Sign-in risk: High
-* Grant
-  * Block Access
-* Session
-  * Sign-in frequency
-  * Every time
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-SigninLogs 
-| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> "Guest"
-| where RiskLevelDuringSignIn in ("high") 
-| project ResultType, ResultDescription,AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
-```
-
-**Comment**  
-Microsoft documents say to require the user to MFA, But all of Microsoft actual security documents say that this should be a block instead.  From personal experience and the guidance from the lapsus incidents is that this needs be a block action.  Specially if spammable MFA is present and who knows what admins could be easily convinced to accept a mfa prompt for a price.  
-
-No image available, the results to this will be very similiar to the results from the Require MFA when sign-in risk is low, medium, or high query.  The users with a high sign-in risk will be blocked.  The goal will be to have a user adjust how they are logging in to make sure it does not come in as high.  An orgonization should not want to leverage any exclusion on this and I find that most orgs have no issues putting this one in place.
-
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Require MFA when sign-in risk is low, medium, or high
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over Change Password.
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All Users
-  * Exclude: Guest, Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Sign-in risk: High, Medium, Low
-* Grant
-  * Require MFA
-* Session
-  * Sign-in frequency
-  * Every time
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-SigninLogs 
-| where TimeGenerated > ago(14d) and ResultType == 0 and UserType <> "Guest"
-| where RiskLevelDuringSignIn in ("high","medium","low") 
-| distinct AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement
-```
-
-**Comment**  
-This policy will require anyone with a risky sign-in to have to provide mfa, The High will be blocked due to the other policy so the mfa will only occur for low and medium.  The image below is an example of the results, It will more than likely be a lot more users in an actual production tenant.  
-
-![Untitled](./media/risksignin.jpg) 
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block when privileged role member user risk is low medium high
-* Link to Microsoft Documentation: [change me]()  
-* This policy will require 
-* Ideally use a block over MFA
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * User risk: High, Medium, Low
-* Grant
-  * Block Access
-* Session
-  * Sign-in frequency
-  * Every time
-
-**Get list of Privileged Users using PowerShell to use in the kql below**
-```
-Connect-MgGraph
-Select-MgProfile -Name beta
-$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
-(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
-```
-**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
-```
-let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
-```
-**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = AuditLogs 
-| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
-| extend Caller = tostring(InitiatedBy.user.userPrincipalName) 
-| extend Role = tostring(TargetResources[0].displayName) 
-| where Role in (privroles) 
-| distinct Caller;
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
-
-```
-**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelAggregated in ("high","medium","low") 
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
-```
-
-**Comment**  
-Privileged Role Members should not be allowed to log in when Identity Protection finds the user to be risky.  These accounts are highly sensitive and there should be no question if they are secure or not.   
-
-The results from thw query finds users that would have triggered this issue.  This is a harder query as every company is not using pim or sentinal.  may need to use the all users query and research which ones are in the roles.  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block when privileged role member sign in risk is low medium high
-* Ideally use a block over MFA
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Directory Roles (Application Administrator,Authentication Administrator,Cloud Application Administrator,Conditional Access Administrator,Exchange Administrator,Global Administrator,Helpdesk Administrator,Hybrid Identity Administrator,Password Administrator,Privileged Authentication Administrator,Privileged Role Administrator,Security Administrator,SharePoint Administrator,User Administrator)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Sign-in risk: High, Medium, Low
-* Grant
-  * Block Access
-* Session
-  * Sign-in frequency
-    * Every time
-
-**Get list of Privileged Users using PowerShell to use in the kql below**
-```
-Connect-MgGraph
-Select-MgProfile -Name beta
-$roles = @("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator")
-(Get-MgDirectoryRole -ExpandProperty members -all | where {$_.displayname -In $roles} | select -ExpandProperty members).id  -join('","') | out-file .\privuser.txt
-```
-**Log Analytics AAD SigninLogs Query (KQL) needs results from the PowerShell script**
-```
-let privusers = pack_array("**replace this with the results from the privuser.txt found from the powershell cmdlets**");
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserId  in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
-```
-**Log Analytics AAD SigninLogs and AuditLogs PIM Query (KQL)**
-```
-//https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy%20Impact%20KQL/Possible%20impact%20of%20Block%20privileged%20user%20if%20sign-in%20risk%20is%20low%20medium%20or%20high.kql
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = AuditLogs 
-| where TimeGenerated > ago(60d) and ActivityDisplayName == 'Add member to role completed (PIM activation)' and Category == "RoleManagement" 
-| extend Caller = tostring(InitiatedBy.user.userPrincipalName) | extend Role = tostring(TargetResources[0].displayName) | where Role in (privroles) | distinct Caller;
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
-
-```
-**Sentinel AAD SigninLogs Query (KQL) requires UEBA turned on**
-```
-let privroles = pack_array("Application Administrator","Authentication Administrator","Cloud Application Administrator","Conditional Access Administrator","Exchange Administrator","Global Administrator","Helpdesk Administrator","Hybrid Identity Administrator","Password Administrator","Privileged Authentication Administrator","Privileged Role Administrator","Security Administrator","SharePoint Administrator","User Administrator");
-let privusers = IdentityInfo | where TimeGenerated > ago(60d) and AssignedRoles != "[]" | mv-expand AssignedRoles | extend Roles = tostring(AssignedRoles) | where Roles in (privroles) | distinct AccountUPN
-SigninLogs 
-| where TimeGenerated > ago(14d) and UserPrincipalName in~ (privusers) and RiskLevelDuringSignIn in ("high","medium","low") 
-| project AppDisplayName, UserPrincipalName, RiskLevelAggregated, RiskLevelDuringSignIn, RiskState, RiskDetail, RiskEventTypes_V2, ConditionalAccessStatus, AuthenticationRequirement, Category
-```
-
-**Comment**  
-Privileged Role Members should not be allowed to log in when Identity Protection finds the sign-in to be risky.  These accounts are highly sensitive and there should be no question if they are secure or not.   
-
-The results from thw query finds users that would have triggered this issue.  This is a harder query as every company is not using pim or sentinal.  may need to use the all users query and research which ones are in the roles.  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block when Directory Sync Account sign in risk is low medium high
-* Link to Microsoft Documentation: NA  
-* This policy will require P2 License
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: Directory Roles (Directory Sync Account)
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Sign-in risk: High, Medium, Low
-* Grant
-  * Block Access
-* Session
-  * Sign-in frequency
-    * Every time
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-//if an account is used other than the default one created by azure ad connect you will need to
-//update the syncaccount variable with the other account name instead of sync_
-let syncaccount = "sync_";
-AADNonInteractiveUserSignInLogs 
-| union SigninLogs
-| where TimeGenerated > ago(14d) 
-| where UserPrincipalName startswith syncaccount
-| where RiskLevelDuringSignIn in ("high","medium","low") 
-| project AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail 
-```
-
-**Comment**  
-This query looks in the logs to see if the Azure AD Connect Sync Account is experiencing any sign in risk.  Hopefully it is not.  
-No example to show with this one.  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block guest for Low, Medium and High Sign-in Risk
-* Link to Microsoft Documentation: NA 
-* This policy will require P2 License
-* Ideally use a block over MFA
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users
-  * Include: All guest and external users
-  * Exclude: Breakglass, _Exclusion Group_
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud apps
-  * Include: All Cloud Apps
-  * Exclude: None
-* Conditions
-  * Sign-in risk: High, Medium, Low
-* Grant
-  * Block Access   
-_Ideally use a block over MFA, but MFA can be used if non spammable MFA is used_
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-SigninLogs | where TimeGenerated > ago(14d) and UserType == "Guest" and ResultType == 0 
-| where AADTenantId <> HomeTenantId
-| where RiskLevelDuringSignIn in ("high","medium") 
-| distinct AppDisplayName,UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement,Category,RiskLevelDuringSignIn,RiskDetail 
-| summarize apps=make_list(AppDisplayName) by UserPrincipalName,ConditionalAccessStatus,AuthenticationRequirement, RiskLevelDuringSignIn,RiskDetail
-```
-
-**Comment**  
-The results of this query show guest from other tenants that may be impacted by this policy.  The goal is if there is any chance an external guest account is trying to access a resource with any kind of risk that they need to bbe blocked.  The guest user should be able to change how they are logging in or from and try again.  This policy only looks at the risk during signin. This particular sign in risk was due to this guest account using a tor browser.    
-
-The results below show a guest account trying to sign into the Azure Portal with a signin risk of medium. Review the results and determine if this policy is going to cause any problems.  
-
-![Untitled](./media/riskygust.jpg)  
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
-
----
-### Block Service Principal from Non Trusted Networks
-* Link to Microsoft Documentation: NA
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users or Workload identities
-  * What does this apply to?  Workload identities
-  * Include: All owned service principals
-  * Exclude: 
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud Apps
-  * Include: All cloud apps
-* Conditions
-  * Locations
-  * Include: Any Location
-  * Exclude: All trusted locations
-* Grant
-  * Block Access
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-let trustedNamedLocations = SigninLogs | where TimeGenerated > ago(30d) | where ResultType == "0" | extend TrustedLocation = tostring(iff(NetworkLocationDetails contains 'trustedNamedLocation', 'trustedNamedLocation','')) | where TrustedLocation == "trustedNamedLocation" | distinct IPAddress;
-AADServicePrincipalSignInLogs  
-| where TimeGenerated > ago(30d)
-| where ResultType == 0
-| extend TrustedLocation = tostring(iff(IPAddress in (trustedNamedLocations), 'trustedNamedLocation',''))
-| extend City = tostring(parse_json(LocationDetails).city)
-| extend State = tostring(parse_json(LocationDetails).state)
-| extend Country = tostring(parse_json(LocationDetails).countryOrRegion)
-| distinct IPAddress, ServicePrincipalName, City, State, Country, TrustedLocation
-| summarize spcountbyip = count() by IPAddress, City, State, Country, TrustedLocation
-```
-
-**Comment**  
-the AADServicePrincipalSignInLogs only have a subset of the useful properties provided unlike the user signinlogs.
-
-In order to get the current list of trusted location, Had to pull in a unique list of IP's from the user Signinlogs. Then compare them to the list returned from the serviceprincipal logs.  The results do very and some of the ip not showing as trusted could actually be trusted so you will want to research and confirm.
-
-The goal is to look at the ones that are showing that they are coming from outside the trusted network and determine impact if they where blocked.
-
-If trustedlocation column is empty that means the query was unable to find a matching ip from the user signin logs that were marked as trusted. 
-
-![Untitled](./media/splocation.jpg)   
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
----
-### Block Service Principal with High Medium Low Risk
-* Link to Microsoft Documentation: [Conditional Access for workload identities](https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/workload-identity)  
-* This policy will require Workload Identities Premium licenses
-
-**Conditional Access Policy Setup**
-* Create Conditional Access Policy:
-* Users or Workload identities
-  * What does this apply to?  Workload identities
-  * Include: All owned service principals
-  * Exclude: 
-* Cloud Apps or Actions
-  * Select what this policy applies to: Cloud Apps
-  * Include: All cloud apps
-* Conditions
-  * Service principal risk
-  * Include: High, Medium, Low
-* Grant
-  * Block Access
-
-**Log Analytics AAD SigninLogs Query (KQL)**
-```
-//nothing has been written yet to look into these logs
-//ServicePrincipalRiskEvents
-//RiskyServicePrincipals
-```
-
-[Back to Matrix](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#conditional-access-policy-matrix)   
----
-### References
+## References
 * [CISA - Microsoft Azure Active Directory M365 Minimum Viable Secure Configuration Baseline](https://www.cisa.gov/sites/default/files/publications/Microsoft%20Azure%20Active%20Directory%20M365%20Minimum%20Viable%20SCB%20Draft%20v0.1.pdf)  
 * [CISA SECURE CLOUD BUSINESS APPLICATIONS (SCUBA)](https://www.cisa.gov/scuba)
 * [DEV-0537 criminal actor targeting organizations for data exfiltration and destruction](https://www.microsoft.com/security/blog/2022/03/22/dev-0537-criminal-actor-targeting-organizations-for-data-exfiltration-and-destruction/)
