@@ -34,14 +34,14 @@ from the use or distribution of the Sample Code.._
 **Table of content**
  * [Best Practices](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/tree/main#best-practices)
  * [Persona's](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/tree/main#personas)
- * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#how-to-run-a-log-analytics-query)
- * [Create list of privileged users for the kql designed to search for privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
- * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#find-ipaddress-not-defined-as-trusted)
- * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#applications-not-being-protected-by-conditional-access-policies)
- * [Base Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#base-protection)
- * [Identity Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#identity-protection)
- * [Data Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#data-protection)
- * [Attack Surface Reduction - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/anothertry.md#attack-surface-reduction)
+ * [How to run a Log Analytics Query](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#how-to-run-a-log-analytics-query)
+ * [Create list of privileged users for the kql designed to search for privileged user impact](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#create-list-of-privileged-users-for-the-kql-designed-to-search-for-privileged-user-impact)
+ * [Find IPAddress not defined as trusted](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#find-ipaddress-not-defined-as-trusted)
+ * [Applications not being protected by Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#applications-not-being-protected-by-conditional-access-policies)
+ * [Base Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#base-protection)
+ * [Identity Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#identity-protection)
+ * [Data Protection - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#data-protection)
+ * [Attack Surface Reduction - Conditional Access Policies](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/blob/main/README.md#attack-surface-reduction)
 
 ---
 
