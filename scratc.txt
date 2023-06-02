@@ -1,0 +1,62 @@
+for NIST AAL 3 https://learn.microsoft.com/en-us/azure/active-directory/standards/nist-authenticator-assurance-level-3
+Require phishing-resistant authentication for all users
+Require all users to use compliant device
+Limit all users to 12 hours session
+Block all users legacy authentication
+
+for NIST AAL 2 https://learn.microsoft.com/en-us/azure/active-directory/standards/nist-authenticator-assurance-level-2
+Require password-less authentication for all users
+Require all users to use compliant device
+Limit all users to 12 hours session
+Block all users legacy authentication
+
+for NIST AAL 1 https://learn.microsoft.com/en-us/azure/active-directory/standards/nist-authenticator-assurance-level-1
+Require MFA for all users
+Block all users legacy authentication
+
+FedRAMP https://learn.microsoft.com/en-us/azure/active-directory/standards/fedramp-access-controls
+Require password-less authentication for all users
+Require all users to use compliant device
+Limit all users to 12 hours session
+Block all users when sign-in risk is high
+Block all users when user risk is high
+Require all users to accept terms of use.
+Require phishing-resistant authentication for privileged role members
+Block all users legacy authentication
+
+CMMC Level 1 https://learn.microsoft.com/en-us/azure/active-directory/standards/configure-cmmc-level-1-controls
+Require all users to use compliant device
+Block users signing in from unapproved locations
+Require all users to accept terms of use.
+Limit all users to 12 hours session
+Block all users legacy authentication
+
+CMMC Level 2 https://learn.microsoft.com/en-us/azure/active-directory/standards/configure-cmmc-level-2-identification-and-authentication
+Require all users to use compliant device
+Block users signing in from unapproved locations
+Require all users to accept terms of use.
+Require password-less authentication for all users
+Block all users when sign-in risk is high
+Block all users when user risk is high
+Require phishing-resistant authentication for privileged role members
+Require Temporary Access Pass for users to register security information
+Limit all users to 12 hours session
+Block all users legacy authentication
+
+Memorandum 22-09 https://learn.microsoft.com/en-us/azure/active-directory/standards/memo-22-09-meet-identity-requirements
+Require MFA for all users
+Require all users to use compliant device
+Block all users legacy authentication
+
+HIPAA
+Require MFA for all users
+Require all users to use compliant device
+Limit all users to 12 hours session
+Block all users legacy authentication
+
+PCI-DSS
+Require Temporary Access Pass for users to register security information
+Require password-less authentication for all users
+Require all users to use compliant device
+Limit all users to 12 hours session
+Block all users legacy authentication
