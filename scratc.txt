@@ -60,3 +60,6 @@ Require password-less authentication for all users
 Require all users to use compliant device
 Limit all users to 12 hours session
 Block all users legacy authentication
+
+What should be dome for a compliant device
+Secure endpoints with Zero Trust https://learn.microsoft.com/en-us/security/zero-trust/deploy/endpoints
