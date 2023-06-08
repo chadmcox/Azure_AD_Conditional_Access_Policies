@@ -63,3 +63,6 @@ Block all users legacy authentication
 
 What should be dome for a compliant device
 Secure endpoints with Zero Trust https://learn.microsoft.com/en-us/security/zero-trust/deploy/endpoints
+
+
+iOS/iPadOS personal device security configurations https://learn.microsoft.com/en-us/mem/intune/enrollment/ios-ipados-personal-device-security-configurations
