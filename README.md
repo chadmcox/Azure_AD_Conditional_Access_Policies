@@ -281,7 +281,7 @@ from the use or distribution of the Sample Code.._
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Azure Management, Microsoft Graph PowerShel,Graph Explorer | Sign-in Risk low, medium, high | Block | Sign-in frequency: Every time |  
+| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, Microsoft Azure Management, Microsoft Graph Command Line Tools ,Graph Explorer | Sign-in Risk low, medium, high | Block | Sign-in frequency: Every time |  
 
  **Prereq:** Identity Protection Requires P2 License
 
