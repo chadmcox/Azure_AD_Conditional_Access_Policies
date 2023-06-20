@@ -277,7 +277,7 @@ from the use or distribution of the Sample Code.._
  
 ---
 
-### Block all users access to Microsoft Azure Management, Microsoft Graph PowerShell (Microsoft Graph Command Line Tools) and Graph Explorer when sign-in risk is low, medium and high
+### Block all users access to Microsoft Management Endpoints (Microsoft Azure Management, Microsoft Graph Command Line Tools and Graph Explorer) when sign-in risk is low, medium and high
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
