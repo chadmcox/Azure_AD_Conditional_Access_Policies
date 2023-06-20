@@ -5,7 +5,7 @@
 # Azure AD Conditional Access Policies
 _Author: Chad Cox (Microsoft)_  
 _Created: January 2023_  
-_Updated: May 2023_  
+_Updated: June 2023_  
 
 **Disclaimer**
 _This Sample Code is provided for the purpose of illustration only and is not
@@ -29,7 +29,10 @@ from the use or distribution of the Sample Code.._
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fchadmcox%2FAzure_AD_Conditional_Access_Policies%2Fmain%2Fconditionalaccesspolicyimpactquerypack.json)
 
 ---
+Updates to Microsoft Management Endpoints to include Microsoft Admin Portals 
 
+
+---
 
 **Table of content**
  * [Best Practices](https://github.com/chadmcox/Azure_AD_Conditional_Access_Policies/tree/main#best-practices)
