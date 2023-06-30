@@ -338,7 +338,7 @@ Updates to Microsoft Management Endpoints to include Microsoft Admin Portals
  **Comment:** It is common for bad actors to register their own MFA after successfully password sparying an account that hasnt registered MFA already.  This conditional access policy will make sure to block mfa registration if any risk is detected during sign-in.
  
  **Log Analytics Queries (KQL) against AAD Signin Logs**
-  * No query put together yet.
+  * [Possible impact if block MFA registration with any sign-in risk](https://github.com/chadmcox/Azure_Active_Directory/blob/master/Log%20Analytics/Conditional%20Access%20Policy/User%20Scenerios/Possible%20impact%20if%20block%20MFA%20registration%20with%20any%20sign-in%20risk.kql)
  
 ---
 
