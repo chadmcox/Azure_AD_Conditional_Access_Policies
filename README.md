@@ -227,7 +227,7 @@ Updates to Microsoft Management Endpoints to include Microsoft Admin Portals
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, <br /> Microsoft Intune,   <br /> Microsoft Azure Management,   <br /> Microsoft Graph PowerShell,   <br /> Graph Explorer  |  | Require multifactor authentication | Sign-in frequency = 8 Hours |  
+| Include: All Users  <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, <br /> Microsoft Azure Management  |  | Require multifactor authentication | Sign-in frequency = 8 Hours |  
 
  **Prereq:**
 
@@ -301,7 +301,7 @@ Updates to Microsoft Management Endpoints to include Microsoft Admin Portals
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, Microsoft Azure Management, Microsoft Graph Command Line Tools ,Graph Explorer | Sign-in Risk low, medium, high | Block | Sign-in frequency: Every time |  
+| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, Microsoft Azure Management | Sign-in Risk low, medium, high | Block |  |  
 
  **Prereq:** Identity Protection Requires P2 License
 
