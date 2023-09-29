@@ -316,7 +316,7 @@ Updates to Microsoft Management Endpoints to include Microsoft Admin Portals
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: Role - directory sync account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, medium, high | Block | |  
+| Include: Role - Directory Sync Account   <br /> Exclude: BreakGlass  | Include: All Cloud Apps  | Sign-in Risk: low, <br /> medium, <br /> high | Block | |  
 
  **Prereq:** Identity Protection Requires P2 License
 
@@ -331,7 +331,7 @@ Updates to Microsoft Management Endpoints to include Microsoft Admin Portals
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All Users   <br /> Exclude: Guest, BreakGlass  | User actions: register security information  | Sign-in Risk: low, medium, high | Block | |  
+| Include: All Users   <br /> Exclude: Guest, BreakGlass  | User actions: <br /> Register Security Information  | Sign-in Risk: low, <br /> medium, <br /> high | Block | |  
 
  **Prereq:**
 
