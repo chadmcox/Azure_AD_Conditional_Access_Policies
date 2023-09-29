@@ -301,7 +301,7 @@ Updates to Microsoft Management Endpoints to include Microsoft Admin Portals
 
 | Users | Cloud Apps or Actions | Conditions | Grant | Session |
 | --------------------- | --------------------- | --------------------- | --------------------- | --------------------- |
-| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, <br /> Microsoft Azure Management | Sign-in Risk low, <br /> medium, <br /> high | Block |  |  
+| Include: All users <br /> Exclude: BreakGlass  | Include: Microsoft Admin Portals, <br /> Microsoft Azure Management | Sign-in Risk: low, <br /> medium, <br /> high | Block |  |  
 
  **Prereq:** Identity Protection Requires P2 License
 
